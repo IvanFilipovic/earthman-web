@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.primary-btn {
+  @apply self-end bg-text_color text-background_color font-bold uppercase hover:bg-primary_button_color hover:text-background_color transition-colors;
+}
+.secondary-btn {
+  @apply self-end bg-background_color border border-text_color text-text_color hover:bg-secondary_button_color hover:border-secondary_button_color hover:text-text_color transition-colors;
+}
+.input {
+  @apply w-full border-b border-text_color/30 focus:border-text_color/80 focus:bg-project_gray/5 outline-none py-2 bg-background_color px-3;
+}
+.checkbox {
+  @apply w-4 h-4 border border-text_color/30 px-3;
+}
