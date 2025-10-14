@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 
     // Public keys (exposed to client-side)
     public: {
-      apiBase: 'https://earthmanweb.pythonanywhere.com/', // 👈 your backend endpoint
+      apiBase: 'https://earthmanweb.pythonanywhere.com', // 👈 your backend endpoint
     },
   },
   app: {
