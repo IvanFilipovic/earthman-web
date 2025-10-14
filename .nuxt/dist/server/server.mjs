@@ -675,7 +675,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-B5nJs3bB.js")
+        component: () => import("./_nuxt/index-DbmSDMoj.js")
       }
     ]
   },
@@ -7450,6 +7450,20 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
+const fetch_global_lJp1dvWraSmW3AFGBoV4bNlmfitvlNY8VGmz5N1q_00 = /* @__PURE__ */ defineNuxtPlugin(() => {
+  const config = /* @__PURE__ */ useRuntimeConfig();
+  const apiFetch = $fetch.create({
+    baseURL: config.public.apiBase,
+    headers: {
+      "ngrok-skip-browser-warning": "true"
+    }
+  });
+  return {
+    provide: {
+      api: apiFetch
+    }
+  };
+});
 const ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs = /* @__PURE__ */ defineNuxtPlugin({
   name: "i18n:plugin:ssg-detect",
   dependsOn: ["i18n:plugin", "i18n:plugin:route-locale-detect"],
@@ -7471,6 +7485,7 @@ const plugins = [
   i18n_EI7LsD1KYQADczz5hrChviGQCdVM8yUkvFEZLJpmnvM,
   nuxt_MRCpd4MlwW7Usx98C5_0G0cDAHOYg0Mdh1ELZxL1HYQ,
   plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8,
+  fetch_global_lJp1dvWraSmW3AFGBoV4bNlmfitvlNY8VGmz5N1q_00,
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {

@@ -188,7 +188,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "duJlO0bJ.js",
+    "file": "D_OPysis.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -419,7 +419,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DhzvUGRa.js",
+    "file": "C8acZZLk.js",
     "name": "index",
     "src": "pages/shop/index.vue",
     "isDynamicEntry": true,
@@ -435,8 +435,8 @@ export default {
       "black_logo1.CQVFfuO7.png"
     ]
   },
-  "index.rchQ-CRV.css": {
-    "file": "index.rchQ-CRV.css",
+  "index.BUCH6pJm.css": {
+    "file": "index.BUCH6pJm.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

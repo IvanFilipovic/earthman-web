@@ -152,7 +152,11 @@ async function fetchColors () {
   }
 }
 async function fetchProducts() {
-  const res = await $fetch(`${config.public.apiBase}/public/products-all/?${buildQuery()}`) as { count: number; results: any[] }
+  const res = await $fetch(`${config.public.apiBase}/public/products-all/?${buildQuery()}`, {
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+    },
+  }) as { count: number; results: any[] }
   count.value = res.count
   products.value = res.results.map(r => ({
     ...r,
