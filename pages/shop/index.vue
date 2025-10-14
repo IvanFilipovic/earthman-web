@@ -127,11 +127,7 @@ function buildQuery() {
 -------------------------- */
 async function fetchCategories () {
   try {
-    const res = await $fetch(`${config.public.apiBase}/public/categories/`,{
-      headers: {
-      'ngrok-skip-browser-warning': 'true',
-    },
-    })
+    const res = await $fetch(`${config.public.apiBase}/public/categories/`)
     facets.value.categories = Array.isArray(res) ? res : []
   } catch {
     facets.value.categories = []
@@ -139,11 +135,7 @@ async function fetchCategories () {
 }
 async function fetchSizes () {
   try {
-    const res = await $fetch(`${config.public.apiBase}/public/sizes/`,{
-      headers: {
-      'ngrok-skip-browser-warning': 'true',
-    },
-    })
+    const res = await $fetch(`${config.public.apiBase}/public/sizes/`)
     facets.value.sizes = Array.isArray(res) ? res : []
   } catch {
     facets.value.sizes = []
@@ -151,11 +143,7 @@ async function fetchSizes () {
 }
 async function fetchColors () {
   try {
-    const res = await $fetch(`${config.public.apiBase}/public/colors/`,{
-      headers: {
-      'ngrok-skip-browser-warning': 'true',
-    },
-    })
+    const res = await $fetch(`${config.public.apiBase}/public/colors/`)
     facets.value.colors = Array.isArray(res)
       ? res.map((c: any) => ({ name: c.name, image: c.image }))
       : []

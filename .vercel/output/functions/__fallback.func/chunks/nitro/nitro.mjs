@@ -4443,7 +4443,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "1be2e9de-5a82-4fd6-b25a-62e70f6757e9",
+    "buildId": "3840f28c-9dea-45ff-8838-167d21a0f766",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4477,7 +4477,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiBase": "https://2a1c9c13ff6a.ngrok-free.app",
+    "apiBase": "https://earthmanweb.pythonanywhere.com/",
     "vgsap": {},
     "i18n": {
       "baseUrl": "",
