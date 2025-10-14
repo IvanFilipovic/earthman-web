@@ -53,6 +53,7 @@ import { useRoute, useRouter } from '#imports'
 /* ──────────────────────────────
    Route + gender state
 ────────────────────────────── */
+const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
 const slug = computed(() => String(route.params.slug))
@@ -87,12 +88,11 @@ function genderBtnClass(target) {
 /* ──────────────────────────────
    API calls
 ────────────────────────────── */
-const API = 'http://127.0.0.1:8000'
 
 // fetch collection data (not dependent on gender)
 const { data: collectionData, pending: cPending } = await useAsyncData(
   () => `collection:${slug.value}`,
-  () => $fetch(`${API}/public/collections/${slug.value}/`)
+  () => $fetch(`${config.public.apiBase}/public/collections/${slug.value}/`)
 )
 
 // fetch ALL products, refetches when slug or gender changes
@@ -101,7 +101,7 @@ const { data: productsData, pending: pPending, refresh } = await useAsyncData(
   // 👇 include gender in the key so Nuxt refetches when it changes
   () => `products-all:${slug.value}:${gender.value}`,
   async () => {
-    let url = `${API}/public/products-all/?page=1&page_size=${pageSize}&collection=${slug.value}&gender=${gender.value}`
+    let url = `${config.public.apiBase}/public/products-all/?page=1&page_size=${pageSize}&collection=${slug.value}&gender=${gender.value}`
     const all = []
 
     while (url) {

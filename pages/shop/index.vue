@@ -55,7 +55,8 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import AppNavigation from '~/components/AppNavigation.vue'
 
-const API_BASE = 'http://127.0.0.1:8000'
+const config = useRuntimeConfig()
+
 const router = useRouter()
 const route = useRoute()
 const gender = ref(route.query.gender === 'male' ? 'male' : 'female')
@@ -126,7 +127,7 @@ function buildQuery() {
 -------------------------- */
 async function fetchCategories () {
   try {
-    const res = await $fetch(`${API_BASE}/public/categories/`)
+    const res = await $fetch(`${config.public.apiBase}/public/categories/`)
     facets.value.categories = Array.isArray(res) ? res : []
   } catch {
     facets.value.categories = []
@@ -134,7 +135,7 @@ async function fetchCategories () {
 }
 async function fetchSizes () {
   try {
-    const res = await $fetch(`${API_BASE}/public/sizes/`)
+    const res = await $fetch(`${config.public.apiBase}/public/sizes/`)
     facets.value.sizes = Array.isArray(res) ? res : []
   } catch {
     facets.value.sizes = []
@@ -142,7 +143,7 @@ async function fetchSizes () {
 }
 async function fetchColors () {
   try {
-    const res = await $fetch(`${API_BASE}/public/colors/`)
+    const res = await $fetch(`${config.public.apiBase}/public/colors/`)
     facets.value.colors = Array.isArray(res)
       ? res.map((c: any) => ({ name: c.name, image: c.image }))
       : []
@@ -151,7 +152,7 @@ async function fetchColors () {
   }
 }
 async function fetchProducts() {
-  const res = await $fetch(`${API_BASE}/public/products-all/?${buildQuery()}`) as { count: number; results: any[] }
+  const res = await $fetch(`${config.public.apiBase}/public/products-all/?${buildQuery()}`) as { count: number; results: any[] }
   count.value = res.count
   products.value = res.results.map(r => ({
     ...r,

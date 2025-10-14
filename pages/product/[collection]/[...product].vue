@@ -37,7 +37,7 @@
             <img
               v-for="(img, i) in imagesToShow"
               :key="i"
-              :src="img.image"
+              :src="img"
               class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"
               :alt="productName"
               loading="lazy"
@@ -156,7 +156,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useAsyncData } from '#imports'
 import { useToast } from '~/composables/useToast'
 /** Types (lightweight) */
 type SizeItem = { slug: string; size: { name: string }, available: boolean }
@@ -168,9 +167,7 @@ type ProductApi = {
   collection_slug: string; available: boolean;
   variant_groups: VariantGroup[]; selected_variant: Variant | null
 }
-const nuxtApp = useNuxtApp()
-const API = 'http://127.0.0.1:8000'
-const CART_ITEM_URL = 'http://127.0.0.1:8000/public/cart/item/'
+const config = useRuntimeConfig()
 const route = useRoute()
 const collectionParam = computed(() => String(route.params.collection ?? ''))
 const variantParam    = computed(() => String(route.params.product ?? ''))
@@ -182,7 +179,7 @@ const selectedVariantSlug = ref('')
 const { data } = await useAsyncData<ProductApi | null>(
   () => `product:${collectionParam.value}:${variantParam.value}`,
   async () => {
-    const url = `${API}/public/products/${collectionParam.value}/${variantParam.value}/`
+    const url = `${config.public.apiBase}/public/products/${collectionParam.value}/${variantParam.value}/`
     return await $fetch(url)
   },
   { watch: [collectionParam, variantParam] }
@@ -204,7 +201,6 @@ const imagesToShow = computed<string[]>(() => {
   return variantGroups.value.map(vg => vg?.avatar_image).filter(Boolean)
 })
 
-/** Initialize UI when product loads */
 watch(
   () => product.value,
   (p) => {
@@ -245,8 +241,7 @@ function slugForColor(index: number, preferredSizeName?: string): string | undef
   if (!pick) pick = sizes[0]
   return pick?.slug
 }
-
-/** Navigate to a new variant slug (keeps collection param and any query params) */
+/** Navigate to a given variant slug (if different) */
 function goToVariantSlug(nextSlug?: string) {
   if (!nextSlug || nextSlug === variantParam.value) return
   router.replace({
@@ -255,7 +250,6 @@ function goToVariantSlug(nextSlug?: string) {
   })
 }
 
-/** Handlers */
 function setActiveColor(i: number) {
   // remember the currently selected size name (if any)
   const currentSizeName =
@@ -282,7 +276,7 @@ async function addToCart() {
     return
   }
   try {
-    await $fetch(CART_ITEM_URL, {
+    await $fetch(`${config.public.apiBase}/public/cart/item/`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

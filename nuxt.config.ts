@@ -2,6 +2,15 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
+  runtimeConfig: {
+    // Private keys (only available on the server)
+    apiSecret: '',
+
+    // Public keys (exposed to client-side)
+    public: {
+      apiBase: 'https://b18133985b8b.ngrok-free.app', // 👈 your backend endpoint
+    },
+  },
   app: {
     head: {
       title: 'Earthman • webshop',

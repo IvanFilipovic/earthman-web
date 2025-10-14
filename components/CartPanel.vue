@@ -175,10 +175,11 @@
 import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 
+const config = useRuntimeConfig()
 const props = defineProps({
   open: { type: Boolean, default: false },
   dark: { type: Boolean, default: false },
-  apiBase: { type: String, default: 'http://127.0.0.1:8000' }
+  apiBase: { type: String, default: `${config.public.apiBase}` }
 })
 const emit = defineEmits<{
   (e: 'update:open', v: boolean): void
@@ -251,7 +252,7 @@ async function removeItem(it: any) {
   }
 
   try {
-    await $fetch(`${props.apiBase}/public/cart/item/delete/`, {
+    await $fetch(`${config.public.apiBase}/public/cart/item/delete/`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -281,7 +282,7 @@ function toNum(x: unknown): number {
 }
 function formatMoney(n: number): string {
   // Match your UI style (e.g., €220). Change toFixed(2) if you prefer cents.
-  return (Number.isInteger(n) ? n : n.toFixed(2))
+  return Number.isInteger(n) ? n.toString() : n.toFixed(2)
 }
 
 /** Merchandise total from server (discounted / toPay) */

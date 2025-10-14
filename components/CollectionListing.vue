@@ -41,8 +41,9 @@
 
   
 <script setup>
+const config = useRuntimeConfig()
   const { data: collections, pending, error } = useFetch(
-    'http://127.0.0.1:8000/public/collections/'
+    `${config.public.apiBase}/public/collections/`
   )
 </script>
 <style scoped>

@@ -258,9 +258,9 @@
 <script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
+const config = useRuntimeConfig()
 const API = 'http://127.0.0.1:8000'
-const ORDER_URL = `${API}/public/orders/create/` // adjust to your route if different
-const CART_URL  = `${API}/public/cart/`
+
 // --- Money helpers + shipping rules ---
 const FREE_THRESHOLD = 200
 const FLAT_SHIPPING = 12.99
@@ -377,7 +377,7 @@ type CartItem = {
 async function fetchCart () {
   try {
     loadingCart.value = true
-    const res = await $fetch(CART_URL, { credentials: 'include' }) as any
+    const res = await $fetch(`${config.public.apiBase}/public/cart/`, { credentials: 'include' }) as any
     // map optional size if present in another key
     res.items = (res.items ?? []).map((i: any) => ({ ...i, size: i.size ?? i.product_size }))
     cart.value = res
@@ -406,7 +406,7 @@ async function submitOrder () {
 
   try {
     submitting.value = true
-    const res = await $fetch(ORDER_URL, {
+    const res = await $fetch(`${config.public.apiBase}/public/orders/create/`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

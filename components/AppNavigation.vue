@@ -118,7 +118,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
 import {
   Menu, MenuButton, MenuItems, MenuItem,
   TransitionRoot, TransitionChild
@@ -127,6 +126,9 @@ import {
 const props = defineProps({ dark: { type: Boolean, default: false } })
 const route = useRoute()
 const cartOpen = ref(false)
+const config = useRuntimeConfig()
+const itemCount = ref(0)
+
 
 // --- NAV LOGIC ---
 const isPathActive = (path: string) =>
@@ -139,8 +141,6 @@ const linkColorClass = computed(() =>
 )
 
 // --- CART LOGIC ---
-const API = 'http://127.0.0.1:8000'
-const itemCount = ref(0)
 
 interface CartResponse {
   items: unknown[]
@@ -148,7 +148,7 @@ interface CartResponse {
 
 async function fetchCart() {
   try {
-    const res = await $fetch<CartResponse>(`${API}/public/cart/`, {
+    const res = await $fetch<CartResponse>(`${config.public.apiBase}/public/cart/`, {
       credentials: 'include'
     })
     itemCount.value = Array.isArray(res.items) ? res.items.length : 0
@@ -156,7 +156,6 @@ async function fetchCart() {
     console.warn('Cart fetch failed', err)
   }
 }
-// listener ref so we can remove exactly the same fn
 const onCartUpdated = () => { fetchCart() }
 
 onMounted(() => {
