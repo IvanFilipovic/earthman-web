@@ -1,41 +1,39 @@
-import { _ as __nuxt_component_0 } from './index-DTKfBZ1X.mjs';
-import { defineComponent, ref, watch, computed, mergeProps, useSSRContext } from 'vue';
-import { ssrRenderAttrs, ssrRenderComponent, ssrRenderList, ssrRenderClass, ssrInterpolate, ssrRenderAttr, ssrRenderStyle } from 'vue/server-renderer';
-import { useRouter as useRouter$1 } from 'vue-router';
-import { _ as _export_sfc, b as useRouter, c as useRoute, d as __nuxt_component_0$2, e as useRuntimeConfig } from './server.mjs';
-import { _ as _sfc_main$2 } from './AppNavigation-BjLkWSMF.mjs';
-import '@iconify/vue';
-import '@iconify/utils/lib/css/icon';
-import '../nitro/nitro.mjs';
-import 'node:http';
-import 'node:https';
-import 'node:events';
-import 'node:buffer';
-import 'node:fs';
-import 'node:path';
-import 'node:crypto';
-import '@intlify/utils';
-import '@iconify/utils';
-import 'consola';
-import 'node:url';
-import 'ipx';
-import 'pinia';
-import 'gsap';
-import '../routes/renderer.mjs';
-import 'vue-bundle-renderer/runtime';
-import 'unhead/server';
-import 'devalue';
-import 'unhead/utils';
-import 'unhead/plugins';
-import './nuxt-link-B-CASStw.mjs';
-
+import { _ as __nuxt_component_0 } from "./index-DTKfBZ1X.js";
+import { ref, mergeProps, useSSRContext, defineComponent, watch, computed } from "vue";
+import { ssrRenderAttrs, ssrRenderList, ssrRenderAttr, ssrRenderClass, ssrRenderStyle, ssrInterpolate, ssrRenderComponent } from "vue/server-renderer";
+import { useRouter } from "vue-router";
+import { b as useRouter$1, c as useRoute, d as __nuxt_component_0$1, e as useRuntimeConfig, _ as _export_sfc } from "../server.mjs";
+import { _ as _sfc_main$2 } from "./AppNavigation-BjLkWSMF.js";
+import "@iconify/vue";
+import "@iconify/utils/lib/css/icon";
+import "/home/kai/Projekti/webshop/node_modules/nuxt/node_modules/perfect-debounce/dist/index.mjs";
+import "ofetch";
+import "#internal/nuxt/paths";
+import "/home/kai/Projekti/webshop/node_modules/hookable/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/unctx/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/h3/dist/index.mjs";
+import "pinia";
+import "/home/kai/Projekti/webshop/node_modules/defu/dist/defu.mjs";
+import "/home/kai/Projekti/webshop/node_modules/radix3/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/klona/dist/index.mjs";
+import "@intlify/utils";
+import "/home/kai/Projekti/webshop/node_modules/cookie-es/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/destr/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/ohash/dist/index.mjs";
+import "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
+import "@vue/devtools-api";
+import "gsap/Draggable.js";
+import "gsap/all.js";
+import "gsap";
+import "gsap/TextPlugin.js";
+import "./nuxt-link-B-CASStw.js";
 const _sfc_main$1 = {
   __name: "ShopListing",
   __ssrInlineRender: true,
   props: { products: { type: Array, default: () => [] } },
   setup(__props) {
     const hoveredSlug = ref(null);
-    useRouter$1();
+    useRouter();
     const hoveredColorBySlug = ref({});
     function isColorHovered(item, color) {
       return hoveredColorBySlug.value[item.slug] === color.variant_slug;
@@ -65,7 +63,7 @@ const _sfc_main$1 = {
         } else {
           _push(`<!---->`);
         }
-        _push(`</div><p class="mt-1 text-xs font-light">\u20AC${ssrInterpolate(parseFloat(item.price).toFixed(2))}</p></div></div></div></div>`);
+        _push(`</div><p class="mt-1 text-xs font-light">€${ssrInterpolate(parseFloat(item.price).toFixed(2))}</p></div></div></div></div>`);
       });
       _push(`<!--]--></div>`);
     };
@@ -83,7 +81,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const config = useRuntimeConfig();
-    useRouter();
+    useRouter$1();
     const route = useRoute();
     const gender = ref(route.query.gender === "male" ? "male" : "female");
     watch(
@@ -137,14 +135,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     watch([filters, page, gender, route], fetchProducts);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_ShopListing = _sfc_main$1;
-      const _component_ClientOnly = __nuxt_component_0$2;
-      _push(`<section${ssrRenderAttrs(_attrs)} data-v-f30a9673><div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30" data-v-f30a9673><div class="w-full md:w-1/2" data-v-f30a9673><div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]" data-v-f30a9673></div></div><div class="w-full md:w-1/2 flex flex-col" data-v-f30a9673>`);
+      const _component_ClientOnly = __nuxt_component_0$1;
+      _push(`<section${ssrRenderAttrs(_attrs)} data-v-fca0669f><div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30" data-v-fca0669f><div class="w-full md:w-1/2" data-v-fca0669f><div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]" data-v-fca0669f></div></div><div class="w-full md:w-1/2 flex flex-col" data-v-fca0669f>`);
       _push(ssrRenderComponent(_sfc_main$2, { dark: false }, null, _parent));
-      _push(`<div class="flex gap-3 justify-end w-full" data-v-f30a9673><div class="flex items-center gap-3" data-v-f30a9673><span class="uppercase text-xs tracking-widest ml-4" data-v-f30a9673>View</span><!--[-->`);
+      _push(`<div class="flex gap-3 justify-end w-full" data-v-fca0669f><div class="flex items-center gap-3" data-v-fca0669f><span class="uppercase text-xs tracking-widest ml-4" data-v-fca0669f>View</span><!--[-->`);
       ssrRenderList(totalPages.value, (p) => {
-        _push(`<button class="${ssrRenderClass([p === page.value ? "underline" : "opacity-60", "text-sm uppercase tracking-widest"])}" data-v-f30a9673>${ssrInterpolate(p)}</button>`);
+        _push(`<button class="${ssrRenderClass([p === page.value ? "underline" : "opacity-60", "text-sm uppercase tracking-widest"])}" data-v-fca0669f>${ssrInterpolate(p)}</button>`);
       });
-      _push(`<!--]--><button class="text-md uppercase tracking-widest px-4" data-v-f30a9673>Filters</button></div></div></div></div><div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 pt-1 gap-6" data-v-f30a9673><div class="flex justify-end w-full" data-v-f30a9673><div class="flex items-center" data-v-f30a9673><button class="${ssrRenderClass(genderBtnClass("female"))}" data-v-f30a9673>WOMAN</button><button class="${ssrRenderClass(genderBtnClass("male"))}" data-v-f30a9673>MAN</button></div></div></div>`);
+      _push(`<!--]--><button class="text-md uppercase tracking-widest px-4" data-v-fca0669f>Filters</button></div></div></div></div><div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 pt-1 gap-6" data-v-fca0669f><div class="flex justify-end w-full" data-v-fca0669f><div class="flex items-center" data-v-fca0669f><button class="${ssrRenderClass(genderBtnClass("female"))}" data-v-fca0669f>WOMAN</button><button class="${ssrRenderClass(genderBtnClass("male"))}" data-v-fca0669f>MAN</button></div></div></div>`);
       _push(ssrRenderComponent(_component_ShopListing, {
         class: "mt-6",
         products: products.value
@@ -160,7 +158,8 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/shop/index.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-f30a9673"]]);
-
-export { index as default };
-//# sourceMappingURL=index-DbmSDMoj.mjs.map
+const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-fca0669f"]]);
+export {
+  index as default
+};
+//# sourceMappingURL=index-CiH0SmgG.js.map

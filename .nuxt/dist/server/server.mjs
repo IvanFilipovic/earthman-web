@@ -675,7 +675,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-DbmSDMoj.js")
+        component: () => import("./_nuxt/index-CiH0SmgG.js")
       }
     ]
   },
@@ -721,7 +721,7 @@ const _routes = [
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-D1p_QG5W.js")
+    component: () => import("./_nuxt/_...product_-BVvNaiZA.js")
   }
 ];
 const _wrapInTransition = (props, children) => {

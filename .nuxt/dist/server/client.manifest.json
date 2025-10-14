@@ -188,7 +188,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "D_OPysis.js",
+    "file": "pR3WoRel.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -377,7 +377,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "D6-2nFId.js",
+    "file": "CPjJyB_t.js",
     "name": "_...product_",
     "src": "pages/product/[collection]/[...product].vue",
     "isDynamicEntry": true,
@@ -419,7 +419,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C8acZZLk.js",
+    "file": "uIJxbDeK.js",
     "name": "index",
     "src": "pages/shop/index.vue",
     "isDynamicEntry": true,
@@ -435,8 +435,8 @@
       "black_logo1.CQVFfuO7.png"
     ]
   },
-  "index.BUCH6pJm.css": {
-    "file": "index.BUCH6pJm.css",
+  "index.BajjrcbK.css": {
+    "file": "index.BajjrcbK.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

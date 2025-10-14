@@ -79,7 +79,7 @@
                 class="w-8 h-8 border relative"
                 :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
                 :title="vg.color?.name"
-                :style="{ backgroundImage: `url(${vg.avatar_image})` }"
+                :style="{ backgroundColor: swatchBg(vg.color?.image) }"
               >
                 <span class="sr-only">{{ vg.color?.name }}</span>
               </button>

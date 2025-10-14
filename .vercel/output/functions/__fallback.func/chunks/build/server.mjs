@@ -7608,7 +7608,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-DbmSDMoj.mjs')
+        component: () => import('./index-CiH0SmgG.mjs')
       }
     ]
   },
@@ -7654,7 +7654,7 @@ const _routes = [
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-D1p_QG5W.mjs')
+    component: () => import('./_...product_-BVvNaiZA.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {

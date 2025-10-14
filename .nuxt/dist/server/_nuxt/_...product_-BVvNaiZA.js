@@ -253,6 +253,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       { immediate: true }
     );
     useRouter();
+    function swatchBg(hex) {
+      if (!hex) return "#e5e7eb";
+      return `#${hex}`;
+    }
     return (_ctx, _push, _parent, _attrs) => {
       const _component_AppNavigation = _sfc_main$2;
       const _component_NuxtLink = __nuxt_component_0$1;
@@ -321,7 +325,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (unref(variantGroups).length) {
         _push(`<div class="mt-4"><div class="text-xs uppercase tracking-widest mb-2">Color</div><div class="flex gap-3"><!--[-->`);
         ssrRenderList(unref(variantGroups), (vg, idx) => {
-          _push(`<button class="${ssrRenderClass([unref(activeColorIndex) === idx ? "ring-2 ring-text_color" : "", "w-8 h-8 border relative"])}"${ssrRenderAttr("title", vg.color?.name)} style="${ssrRenderStyle({ backgroundImage: `url(${vg.avatar_image})` })}"><span class="sr-only">${ssrInterpolate(vg.color?.name)}</span></button>`);
+          _push(`<button class="${ssrRenderClass([unref(activeColorIndex) === idx ? "ring-2 ring-text_color" : "", "w-8 h-8 border relative"])}"${ssrRenderAttr("title", vg.color?.name)} style="${ssrRenderStyle({ backgroundColor: swatchBg(vg.color?.image) })}"><span class="sr-only">${ssrInterpolate(vg.color?.name)}</span></button>`);
         });
         _push(`<!--]--></div></div>`);
       } else {
@@ -378,4 +382,4 @@ _sfc_main.setup = (props, ctx) => {
 export {
   _sfc_main as default
 };
-//# sourceMappingURL=_...product_-D1p_QG5W.js.map
+//# sourceMappingURL=_...product_-BVvNaiZA.js.map

@@ -1,4 +1,4 @@
-import { i as index_vue_vue_type_style_index_0_scoped_f30a9673_lang } from './index-styles-1.mjs-BE3-dyY4.mjs';
+import { i as index_vue_vue_type_style_index_0_scoped_fca0669f_lang } from './index-styles-1.mjs-CAeBz34N.mjs';
 import '../nitro/nitro.mjs';
 import 'node:http';
 import 'node:https';
@@ -14,7 +14,7 @@ import 'consola';
 import 'node:url';
 import 'ipx';
 
-const indexStyles_DHhOzgW_ = [index_vue_vue_type_style_index_0_scoped_f30a9673_lang];
+const indexStyles_p3fZUDxm = [index_vue_vue_type_style_index_0_scoped_fca0669f_lang];
 
-export { indexStyles_DHhOzgW_ as default };
-//# sourceMappingURL=index-styles.DHhOzgW_.mjs.map
+export { indexStyles_p3fZUDxm as default };
+//# sourceMappingURL=index-styles.p3fZUDxm.mjs.map
