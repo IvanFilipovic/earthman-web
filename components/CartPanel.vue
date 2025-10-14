@@ -178,8 +178,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 const config = useRuntimeConfig()
 const props = defineProps({
   open: { type: Boolean, default: false },
-  dark: { type: Boolean, default: false },
-  apiBase: { type: String, default: `${config.public.apiBase}` }
+  dark: { type: Boolean, default: false }
 })
 const emit = defineEmits<{
   (e: 'update:open', v: boolean): void
@@ -201,7 +200,7 @@ const totals = computed(() => ({
 
 async function fetchCart () {
   try {
-    raw.value = await $fetch(`${props.apiBase}/public/cart/`, { credentials: 'include' })
+    raw.value = await $fetch(`${config.public.apiBase}/public/cart/`, { credentials: 'include' })
   } catch (e) {
     raw.value = { items: [], cart_total_original_price: '0.00', cart_total_to_pay: '0.00' }
     console.warn('Cart fetch failed', e)

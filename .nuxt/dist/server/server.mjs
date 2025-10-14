@@ -658,22 +658,14 @@ const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defin
 function toArray$2(value) {
   return Array.isArray(value) ? value : [value];
 }
-const __nuxt_page_meta$3 = null;
 const __nuxt_page_meta$2 = null;
 const __nuxt_page_meta$1 = null;
 const __nuxt_page_meta = null;
 const _routes = [
   {
-    name: __nuxt_page_meta$3?.name,
+    name: "cart",
     path: "/cart",
-    component: () => import("./_nuxt/cart-CIa96NCt.js"),
-    children: [
-      {
-        name: "cart",
-        path: "",
-        component: () => import("./_nuxt/index-DU56VP2A.js")
-      }
-    ]
+    component: () => import("./_nuxt/cart-CIa96NCt.js")
   },
   {
     name: __nuxt_page_meta$2?.name,
@@ -683,7 +675,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-dcqkqEH1.js")
+        component: () => import("./_nuxt/index-B5nJs3bB.js")
       }
     ]
   },
@@ -695,19 +687,19 @@ const _routes = [
       {
         name: "about",
         path: "",
-        component: () => import("./_nuxt/index-DTFm14J0.js")
+        component: () => import("./_nuxt/index-CuRONl8-.js")
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-B69m579l.js")
+    component: () => import("./_nuxt/index-PKMgEyrk.js")
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-Cc2KH5gU.js")
+    component: () => import("./_nuxt/checkout-B9gGTRS3.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -717,19 +709,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-BREroykV.js")
+        component: () => import("./_nuxt/index-BhLYhrRx.js")
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-LOIE8fwT.js")
+        component: () => import("./_nuxt/_...slug_-DevmD-dK.js")
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-DwCaCl1c.js")
+    component: () => import("./_nuxt/_...product_-D1p_QG5W.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1422,7 +1414,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     };
   }
 });
-const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-Bc_SW2bH.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
+const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-DTKfBZ1X.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["Icon", LazyIcon]
 ];
@@ -7482,7 +7474,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-D1O5uNFg.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-C0OZ1N6p.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -7752,7 +7744,7 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-BAGJ4NJq.js"));
+    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-CONkWLzZ.js"));
     const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-DUMWIG05.js"));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
@@ -7840,13 +7832,13 @@ export {
   useRoute as c,
   __nuxt_component_0$2 as d,
   entry$1 as default,
-  useRequestEvent as e,
-  encodeParam as f,
-  encodePath as g,
+  useRuntimeConfig as e,
+  useRequestEvent as f,
+  encodeParam as g,
   hasProtocol as h,
-  useNuxtApp as i,
+  encodePath as i,
   joinURL as j,
-  useRuntimeConfig as k,
+  useNuxtApp as k,
   fetchDefaults as l,
   useRequestFetch as m,
   navigateTo as n,

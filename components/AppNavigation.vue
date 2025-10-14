@@ -110,7 +110,6 @@
         <CartPanel
           v-model:open="cartOpen"
           :dark="false"
-          api-base="http://127.0.0.1:8000"
         />
       </ClientOnly>
     </div>

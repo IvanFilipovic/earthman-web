@@ -247,6 +247,8 @@ declare module 'nuxt/schema' {
       cdnURL: string,
    },
 
+   apiSecret: string,
+
    nitro: {
       envPrefix: string,
    },
@@ -256,6 +258,8 @@ declare module 'nuxt/schema' {
    },
   }
   interface PublicRuntimeConfig {
+   apiBase: string,
+
    vgsap: any,
 
    i18n: {
