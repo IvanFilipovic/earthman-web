@@ -4443,7 +4443,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "64ee8990-038d-4d37-949e-2fc3f9867e34",
+    "buildId": "5592b9e4-9abc-43dc-bcdf-9ec7ab652c49",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4477,7 +4477,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiBase": "https://b18133985b8b.ngrok-free.app",
+    "apiBase": "https://2a1c9c13ff6a.ngrok-free.app",
     "vgsap": {},
     "i18n": {
       "baseUrl": "",

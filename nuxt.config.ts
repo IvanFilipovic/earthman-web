@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 
     // Public keys (exposed to client-side)
     public: {
-      apiBase: 'https://b18133985b8b.ngrok-free.app', // 👈 your backend endpoint
+      apiBase: 'https://2a1c9c13ff6a.ngrok-free.app', // 👈 your backend endpoint
     },
   },
   app: {
