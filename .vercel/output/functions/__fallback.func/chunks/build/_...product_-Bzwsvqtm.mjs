@@ -1,34 +1,35 @@
-import { _ as _sfc_main$2 } from "./AppNavigation-BjLkWSMF.js";
-import { _ as __nuxt_component_0$1 } from "./nuxt-link-B-CASStw.js";
-import { _ as __nuxt_component_0, u as useAsyncData } from "./index-DTKfBZ1X.js";
-import { defineComponent, mergeProps, unref, withCtx, createVNode, createBlock, createCommentVNode, toDisplayString, openBlock, resolveDynamicComponent, Transition, useSSRContext, computed, ref, withAsyncContext, watch, createTextVNode } from "vue";
-import { ssrRenderAttrs, ssrRenderList, ssrRenderComponent, ssrInterpolate, ssrRenderVNode, ssrRenderAttr, ssrRenderClass, ssrRenderStyle, ssrIncludeBooleanAttr } from "vue/server-renderer";
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import "./useToast-pOzf8V9B.js";
-import { c as useRoute, e as useRuntimeConfig, b as useRouter } from "../server.mjs";
-import "/home/kai/Projekti/webshop/node_modules/hookable/dist/index.mjs";
-import "@iconify/vue";
-import "@iconify/utils/lib/css/icon";
-import "/home/kai/Projekti/webshop/node_modules/nuxt/node_modules/perfect-debounce/dist/index.mjs";
-import "ofetch";
-import "#internal/nuxt/paths";
-import "/home/kai/Projekti/webshop/node_modules/unctx/dist/index.mjs";
-import "/home/kai/Projekti/webshop/node_modules/h3/dist/index.mjs";
-import "pinia";
-import "/home/kai/Projekti/webshop/node_modules/defu/dist/defu.mjs";
-import "vue-router";
-import "/home/kai/Projekti/webshop/node_modules/radix3/dist/index.mjs";
-import "/home/kai/Projekti/webshop/node_modules/klona/dist/index.mjs";
-import "@intlify/utils";
-import "/home/kai/Projekti/webshop/node_modules/cookie-es/dist/index.mjs";
-import "/home/kai/Projekti/webshop/node_modules/destr/dist/index.mjs";
-import "/home/kai/Projekti/webshop/node_modules/ohash/dist/index.mjs";
-import "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
-import "@vue/devtools-api";
-import "gsap/Draggable.js";
-import "gsap/all.js";
-import "gsap";
-import "gsap/TextPlugin.js";
+import { _ as _sfc_main$2 } from './AppNavigation-BjLkWSMF.mjs';
+import { _ as __nuxt_component_0 } from './nuxt-link-B-CASStw.mjs';
+import { u as useAsyncData, _ as __nuxt_component_0$1 } from './index-DTKfBZ1X.mjs';
+import { defineComponent, computed, ref, withAsyncContext, watch, withCtx, createTextVNode, unref, toDisplayString, mergeProps, createVNode, createBlock, createCommentVNode, openBlock, resolveDynamicComponent, Transition, useSSRContext } from 'vue';
+import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderAttr, ssrRenderClass, ssrRenderStyle, ssrIncludeBooleanAttr, ssrRenderVNode } from 'vue/server-renderer';
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { c as useRoute, b as useRouter, e as useRuntimeConfig } from './server.mjs';
+import '@iconify/vue';
+import '@iconify/utils/lib/css/icon';
+import '../nitro/nitro.mjs';
+import 'node:http';
+import 'node:https';
+import 'node:events';
+import 'node:buffer';
+import 'node:fs';
+import 'node:path';
+import 'node:crypto';
+import '@intlify/utils';
+import 'vue-router';
+import '@iconify/utils';
+import 'consola';
+import 'node:url';
+import 'ipx';
+import 'pinia';
+import 'gsap';
+import '../routes/renderer.mjs';
+import 'vue-bundle-renderer/runtime';
+import 'unhead/server';
+import 'devalue';
+import 'unhead/utils';
+import 'unhead/plugins';
+
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "ProductAccordion",
   __ssrInlineRender: true,
@@ -37,7 +38,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_Icon = __nuxt_component_0;
+      const _component_Icon = __nuxt_component_0$1;
       _push(`<div${ssrRenderAttrs(mergeProps({ class: "bg-inherit text-text_color max-w-2xl mx-auto py-[150px]" }, _attrs))}><ul class="divide-y divide-text_color/30"><!--[-->`);
       ssrRenderList(__props.items, (item, i) => {
         _push(`<li class="py-4">`);
@@ -210,8 +211,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     let __temp, __restore;
     const config = useRuntimeConfig();
     const route = useRoute();
-    const collectionParam = computed(() => String(route.params.collection ?? ""));
-    const variantParam = computed(() => String(route.params.product ?? ""));
+    const collectionParam = computed(() => {
+      var _a;
+      return String((_a = route.params.collection) != null ? _a : "");
+    });
+    const variantParam = computed(() => {
+      var _a;
+      return String((_a = route.params.product) != null ? _a : "");
+    });
     const activeColorIndex = ref(0);
     const selectedVariantSlug = ref("");
     const { data } = ([__temp, __restore] = withAsyncContext(async () => useAsyncData(
@@ -222,32 +229,55 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       },
       { watch: [collectionParam, variantParam] }
     )), __temp = await __temp, __restore(), __temp);
-    const product = computed(() => data.value ?? null);
-    const productName = computed(() => product.value?.name ?? "");
-    const productCategory = computed(() => product.value?.category ?? "");
-    const variantGroups = computed(() => product.value?.variant_groups ?? []);
-    const activeSizes = computed(() => variantGroups.value[activeColorIndex.value]?.sizes ?? []);
-    const inStock = computed(() => activeSizes.value.some((s) => s?.available));
-    const activeColorName = computed(() => variantGroups.value[activeColorIndex.value]?.color?.name ?? "");
+    const product = computed(() => {
+      var _a;
+      return (_a = data.value) != null ? _a : null;
+    });
+    const productName = computed(() => {
+      var _a, _b;
+      return (_b = (_a = product.value) == null ? void 0 : _a.name) != null ? _b : "";
+    });
+    const productCategory = computed(() => {
+      var _a, _b;
+      return (_b = (_a = product.value) == null ? void 0 : _a.category) != null ? _b : "";
+    });
+    const variantGroups = computed(() => {
+      var _a, _b;
+      return (_b = (_a = product.value) == null ? void 0 : _a.variant_groups) != null ? _b : [];
+    });
+    const activeSizes = computed(() => {
+      var _a, _b;
+      return (_b = (_a = variantGroups.value[activeColorIndex.value]) == null ? void 0 : _a.sizes) != null ? _b : [];
+    });
+    const inStock = computed(() => activeSizes.value.some((s) => s == null ? void 0 : s.available));
+    const activeColorName = computed(() => {
+      var _a, _b, _c;
+      return (_c = (_b = (_a = variantGroups.value[activeColorIndex.value]) == null ? void 0 : _a.color) == null ? void 0 : _b.name) != null ? _c : "";
+    });
     const imagesToShow = computed(() => {
-      const primary = (product.value?.selected_variant?.images ?? []).filter(Boolean);
+      var _a, _b, _c;
+      const primary = ((_c = (_b = (_a = product.value) == null ? void 0 : _a.selected_variant) == null ? void 0 : _b.images) != null ? _c : []).filter(Boolean);
       if (primary.length) return primary;
-      return variantGroups.value.map((vg) => vg?.avatar_image).filter(Boolean);
+      return variantGroups.value.map((vg) => vg == null ? void 0 : vg.avatar_image).filter(Boolean);
     });
     watch(
       () => product.value,
       (p) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _i;
         if (!p) return;
-        const groupIndex = p.variant_groups?.findIndex(
-          (g) => (g?.sizes ?? []).some((s) => s?.slug === variantParam.value)
-        ) ?? -1;
+        const groupIndex = (_b = (_a = p.variant_groups) == null ? void 0 : _a.findIndex(
+          (g) => {
+            var _a2;
+            return ((_a2 = g == null ? void 0 : g.sizes) != null ? _a2 : []).some((s) => (s == null ? void 0 : s.slug) === variantParam.value);
+          }
+        )) != null ? _b : -1;
         activeColorIndex.value = groupIndex >= 0 ? groupIndex : 0;
-        const match = (p.variant_groups?.[activeColorIndex.value]?.sizes ?? []).find((s) => s?.slug === variantParam.value && s?.available);
+        const match = ((_e = (_d = (_c = p.variant_groups) == null ? void 0 : _c[activeColorIndex.value]) == null ? void 0 : _d.sizes) != null ? _e : []).find((s) => (s == null ? void 0 : s.slug) === variantParam.value && (s == null ? void 0 : s.available));
         if (match) {
           selectedVariantSlug.value = match.slug;
         } else {
-          const firstAvail = (p.variant_groups?.[activeColorIndex.value]?.sizes ?? []).find((s) => s?.available);
-          selectedVariantSlug.value = firstAvail?.slug ?? "";
+          const firstAvail = ((_h = (_g = (_f = p.variant_groups) == null ? void 0 : _f[activeColorIndex.value]) == null ? void 0 : _g.sizes) != null ? _h : []).find((s) => s == null ? void 0 : s.available);
+          selectedVariantSlug.value = (_i = firstAvail == null ? void 0 : firstAvail.slug) != null ? _i : "";
         }
       },
       { immediate: true }
@@ -258,8 +288,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return `#${hex}`;
     }
     return (_ctx, _push, _parent, _attrs) => {
+      var _a, _b, _c, _d, _e, _f;
       const _component_AppNavigation = _sfc_main$2;
-      const _component_NuxtLink = __nuxt_component_0$1;
+      const _component_NuxtLink = __nuxt_component_0;
       const _component_ProductAccordion = _sfc_main$1;
       _push(`<section${ssrRenderAttrs(_attrs)}><div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30"><div class="w-full md:w-1/2"><div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]"></div></div><div class="w-full md:w-1/2 flex flex-col">`);
       _push(ssrRenderComponent(_component_AppNavigation, { dark: false }, null, _parent));
@@ -279,27 +310,28 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<span>›</span>`);
+      _push(`<span>\u203A</span>`);
       _push(ssrRenderComponent(_component_NuxtLink, {
-        to: `/collections/${unref(product)?.collection_slug}`,
+        to: `/collections/${(_a = unref(product)) == null ? void 0 : _a.collection_slug}`,
         class: "hover:underline"
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
+          var _a2, _b2;
           if (_push2) {
-            _push2(`${ssrInterpolate(unref(product)?.collection_slug)}`);
+            _push2(`${ssrInterpolate((_a2 = unref(product)) == null ? void 0 : _a2.collection_slug)}`);
           } else {
             return [
-              createTextVNode(toDisplayString(unref(product)?.collection_slug), 1)
+              createTextVNode(toDisplayString((_b2 = unref(product)) == null ? void 0 : _b2.collection_slug), 1)
             ];
           }
         }),
         _: 1
       }, _parent));
-      _push(`<span>›</span><span class="text-text_color">${ssrInterpolate(unref(productName))}</span></nav><div class="relative grid grid-cols-12 gap-8 pt-8 md:px-8 product-grid"><div class="col-span-12 lg:col-span-8">`);
+      _push(`<span>\u203A</span><span class="text-text_color">${ssrInterpolate(unref(productName))}</span></nav><div class="relative grid grid-cols-12 gap-8 pt-8 md:px-8 product-grid"><div class="col-span-12 lg:col-span-8">`);
       if (unref(imagesToShow).length > 0) {
         _push(`<div class="grid grid-cols-2 gap-y-7 pr-2 place-content-between"><!--[-->`);
         ssrRenderList(unref(imagesToShow), (img, i) => {
-          _push(`<img${ssrRenderAttr("src", img)} class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"${ssrRenderAttr("alt", unref(productName))} loading="lazy">`);
+          _push(`<img${ssrRenderAttr("src", img.image)} class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"${ssrRenderAttr("alt", unref(productName))} loading="lazy">`);
         });
         _push(`<!--]--></div>`);
       } else {
@@ -316,16 +348,17 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         _push(`<!---->`);
       }
       _push(`</div><div class="text-right">`);
-      if (unref(product)?.discount) {
-        _push(`<div class="space-x-2"><span class="text-lg font-semibold text-text_color">€${ssrInterpolate(unref(product)?.discount_price)}</span><span class="line-through text-text_color">€${ssrInterpolate(unref(product)?.price)}</span></div>`);
+      if ((_b = unref(product)) == null ? void 0 : _b.discount) {
+        _push(`<div class="space-x-2"><span class="text-lg font-semibold text-text_color">\u20AC${ssrInterpolate((_c = unref(product)) == null ? void 0 : _c.discount_price)}</span><span class="line-through text-text_color">\u20AC${ssrInterpolate((_d = unref(product)) == null ? void 0 : _d.price)}</span></div>`);
       } else {
-        _push(`<div class="text-lg font-semibold text-text_color">€${ssrInterpolate(unref(product)?.price)}</div>`);
+        _push(`<div class="text-lg font-semibold text-text_color">\u20AC${ssrInterpolate((_e = unref(product)) == null ? void 0 : _e.price)}</div>`);
       }
       _push(`</div></div>`);
       if (unref(variantGroups).length) {
         _push(`<div class="mt-4"><div class="text-xs uppercase tracking-widest mb-2">Color</div><div class="flex gap-3"><!--[-->`);
         ssrRenderList(unref(variantGroups), (vg, idx) => {
-          _push(`<button class="${ssrRenderClass([unref(activeColorIndex) === idx ? "ring-2 ring-text_color" : "", "w-8 h-8 border relative"])}"${ssrRenderAttr("title", vg.color?.name)} style="${ssrRenderStyle({ backgroundColor: swatchBg(vg.color?.image) })}"><span class="sr-only">${ssrInterpolate(vg.color?.name)}</span></button>`);
+          var _a2, _b2, _c2;
+          _push(`<button class="${ssrRenderClass([unref(activeColorIndex) === idx ? "ring-2 ring-text_color" : "", "w-8 h-8 border relative"])}"${ssrRenderAttr("title", (_a2 = vg.color) == null ? void 0 : _a2.name)} style="${ssrRenderStyle({ backgroundColor: swatchBg((_b2 = vg.color) == null ? void 0 : _b2.image) })}"><span class="sr-only">${ssrInterpolate((_c2 = vg.color) == null ? void 0 : _c2.name)}</span></button>`);
         });
         _push(`<!--]--></div></div>`);
       } else {
@@ -340,21 +373,22 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         }
         _push(`</div></div><div class="mt-2 grid grid-cols-5 gap-2"><!--[-->`);
         ssrRenderList(unref(activeSizes), (s) => {
+          var _a2;
           _push(`<button class="${ssrRenderClass([[
             s.available ? "cursor-pointer" : "opacity-40 cursor-not-allowed",
             unref(selectedVariantSlug) === s.slug ? "border-text_color" : "border-project_gray/50"
-          ], "border px-2 py-2 text-sm text-text_color"])}"${ssrIncludeBooleanAttr(!s.available) ? " disabled" : ""}>${ssrInterpolate(s.size?.name)}</button>`);
+          ], "border px-2 py-2 text-sm text-text_color"])}"${ssrIncludeBooleanAttr(!s.available) ? " disabled" : ""}>${ssrInterpolate((_a2 = s.size) == null ? void 0 : _a2.name)}</button>`);
         });
         _push(`<!--]--></div></div>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`<div class="mt-6 space-y-3"><button class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"${ssrIncludeBooleanAttr(!unref(selectedVariantSlug)) ? " disabled" : ""}><span class="btn-label">ADD TO CART</span><span class="sweep-overlay" aria-hidden="true"></span></button></div><ul class="mt-5 space-y-2 text-sm text-text_color/80"><li>✓ Free delivery over €250,-</li><li>✓ Easy returns within 14 days</li></ul></div></aside></div>`);
+      _push(`<div class="mt-6 space-y-3"><button class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"${ssrIncludeBooleanAttr(!unref(selectedVariantSlug)) ? " disabled" : ""}><span class="btn-label">ADD TO CART</span><span class="sweep-overlay" aria-hidden="true"></span></button></div><ul class="mt-5 space-y-2 text-sm text-text_color/80"><li>\u2713 Free delivery over \u20AC250,-</li><li>\u2713 Easy returns within 14 days</li></ul></div></aside></div>`);
       _push(ssrRenderComponent(_component_ProductAccordion, {
         items: [
           {
             title: "Size & Fit",
-            content: "Coming soon – sizing guidance for this product."
+            content: "Coming soon \u2013 sizing guidance for this product."
           },
           {
             title: "Shipping & Returns",
@@ -365,7 +399,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           },
           {
             title: "Description",
-            content: unref(product)?.description || "No additional description."
+            content: ((_f = unref(product)) == null ? void 0 : _f.description) || "No additional description."
           }
         ]
       }, null, _parent));
@@ -379,7 +413,6 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/product/[collection]/[...product].vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-export {
-  _sfc_main as default
-};
-//# sourceMappingURL=_...product_-B2QnTWcO.js.map
+
+export { _sfc_main as default };
+//# sourceMappingURL=_...product_-Bzwsvqtm.mjs.map

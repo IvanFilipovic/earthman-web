@@ -37,7 +37,7 @@
             <img
               v-for="(img, i) in imagesToShow"
               :key="i"
-              :src="img"
+              :src="img.image"
               class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"
               :alt="productName"
               loading="lazy"

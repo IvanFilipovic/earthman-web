@@ -721,7 +721,7 @@ const _routes = [
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-B2QnTWcO.js")
+    component: () => import("./_nuxt/_...product_-Bzwsvqtm.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
