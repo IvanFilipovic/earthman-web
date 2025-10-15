@@ -709,7 +709,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-Dg8mpuwX.js")
+        component: () => import("./_nuxt/index-C6gzVtHG.js")
       },
       {
         name: "collections-slug",

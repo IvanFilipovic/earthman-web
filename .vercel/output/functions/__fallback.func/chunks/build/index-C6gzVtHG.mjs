@@ -60,7 +60,7 @@ const _sfc_main$1 = {
           _push(`<div class="relative h-full w-full bg-cover bg-center" style="${ssrRenderStyle({ backgroundImage: `url(${item.element_one_image})` })}"><div class="absolute inset-0 bg-black bg-opacity-25"></div><div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center text-white px-4"><h2 class="text-3xl font-semibold mb-4 bg-text_color/60">${ssrInterpolate(item.name)}</h2>`);
           _push(ssrRenderComponent(_component_NuxtLink, {
             to: `/collections/${encodeURIComponent(item.slug)}`,
-            class: "primary-btn sweep group inline-flex items-center justify-center px-8 py-3 rounded-full"
+            class: "primary-btn sweep group inline-flex items-center justify-center px-8 py-3"
           }, {
             default: withCtx((_, _push2, _parent2, _scopeId) => {
               if (_push2) {
@@ -121,4 +121,4 @@ _sfc_main.setup = (props, ctx) => {
 const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender]]);
 
 export { index as default };
-//# sourceMappingURL=index-Dg8mpuwX.mjs.map
+//# sourceMappingURL=index-C6gzVtHG.mjs.map

@@ -7642,7 +7642,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-Dg8mpuwX.mjs')
+        component: () => import('./index-C6gzVtHG.mjs')
       },
       {
         name: "collections-slug",

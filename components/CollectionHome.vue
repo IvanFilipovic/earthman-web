@@ -20,7 +20,7 @@
           <h2 class="text-3xl font-semibold mb-4 bg-text_color/60">{{ item.name }}</h2>
           <NuxtLink
             :to="`/collections/${encodeURIComponent(item.slug)}`"
-            class="primary-btn sweep group inline-flex items-center justify-center px-8 py-3 rounded-full"
+            class="primary-btn sweep group inline-flex items-center justify-center px-8 py-3"
           >
             <span class="btn-label">View collection</span>
             <span class="sweep-overlay" aria-hidden="true"></span>
