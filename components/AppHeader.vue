@@ -1,9 +1,9 @@
 <template>
-    <section class="flex flex-col w-full bg-transparent z-50">
+    <section class="flex flex-col w-full bg-transparent z-50 my-auto">
       <div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]">
       </div>
-      <div class="flex flex-row mx-auto space-x-8 pt-4">
-        <div class="flex flex-auto">
+      <div class="flex pt-4">
+        <div class="flex flex-row justify-center w-full mx-auto space-x-4 py-4">
           <ClientOnly>
           <Menu as="div" class="text-sm my-auto font-light" v-slot="{ open }">
             <MenuButton
@@ -71,19 +71,16 @@
               <Icon name="lucide:chevron-down" class="w-4 h-4" :class="linkColorClass" />
             </NuxtLink>
           </template>
-        </ClientOnly>
-          
-        <NuxtLink
-          to="/collections"
-          :class="[linkColorClass, navWeight('/collections'), 'text-sm my-auto px-4']"
-        >COLLECTIONS</NuxtLink>
-        <NuxtLink
-          to="/about"
-          :class="[linkColorClass, navWeight('/about'), 'text-sm my-auto px-4']"
-        >ABOUT</NuxtLink>
-        </div>
-
-        <div class="flex flex-auto">
+          </ClientOnly>
+            
+          <NuxtLink
+            to="/collections"
+            :class="[linkColorClass, navWeight('/collections'), 'text-sm my-auto px-4']"
+          >COLLECTIONS</NuxtLink>
+          <NuxtLink
+            to="/about"
+            :class="[linkColorClass, navWeight('/about'), 'text-sm my-auto px-4']"
+          >ABOUT</NuxtLink>
           <ClientOnly>
             <NuxtLink
               class="relative my-auto px-4"
@@ -93,7 +90,8 @@
               <Icon name="lucide:shopping-cart" class="w-6 h-6" :class="linkColorClass" />
               <span
                 v-if="itemCount > 0"
-                class="absolute -top-1 -right-1 bg-text_color text-background_color text-[12px] w-4 h-4 flex items-center justify-center"
+                class="absolute -top-1 -right-1  text-[12px] w-4 h-4 flex items-center justify-center"
+                :class="backgroundColor"
               >
                 {{ itemCount }}
               </span>
@@ -110,6 +108,12 @@
             />
           </NuxtLink>
         </div>
+        <ClientOnly>
+        <CartPanel
+          v-model:open="cartOpen"
+          :dark="false"
+        />
+        </ClientOnly>
       </div>
     </section>
   </template>
@@ -145,6 +149,9 @@ const props = defineProps({
 // compute a single Tailwind class you can re-use
 const linkColorClass = computed(() =>
 props.dark ? 'text-background_color' : 'text-text_color'
+)
+const backgroundColor = computed(() =>
+props.dark ? 'bg-background_color text-text_color' : 'bg-text_color text-background_color'
 )
 interface CartResponse {
   items: unknown[]

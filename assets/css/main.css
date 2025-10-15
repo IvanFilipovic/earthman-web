@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.primary-btn {
+.primary-btn-two {
   @apply self-end bg-text_color text-background_color font-bold uppercase hover:bg-primary_button_color hover:text-background_color transition-colors;
 }
 .secondary-btn {
@@ -13,4 +13,30 @@
 }
 .checkbox {
   @apply w-4 h-4 border border-text_color/30 px-3;
+}
+.primary-btn {
+  /* base look stays the same */
+  @apply relative overflow-hidden self-end bg-text_color text-background_color
+         font-bold uppercase transition-colors;
+}
+
+/* label sits above the sweeping overlay */
+.primary-btn .btn-label {
+  @apply relative z-10;
+}
+
+/* sweeping overlay: starts off-screen left, slides in on hover */
+.sweep .sweep-overlay {
+  @apply absolute inset-0 -translate-x-full bg-primary_button_color
+         transition-transform duration-300 ease-out;
+}
+
+/* animate on hover */
+.sweep:hover .sweep-overlay {
+  @apply translate-x-0;
+}
+
+/* disabled: keep overlay hidden / no animation */
+.primary-btn:disabled .sweep-overlay {
+  transform: translateX(-100%);
 }

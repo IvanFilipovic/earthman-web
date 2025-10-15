@@ -115,11 +115,12 @@
           <!-- CTA Buttons -->
           <div class="mt-6 space-y-3">
             <button
-              class="primary-btn w-full py-3"
+              class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="!selectedVariantSlug"
               @click="addToCart"
             >
-              ADD TO CART
+              <span class="btn-label">ADD TO CART</span>
+              <span class="sweep-overlay" aria-hidden="true"></span>
             </button>
           </div>
 

@@ -7627,7 +7627,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-BV85WZeC.mjs')
+    component: () => import('./index-DkNQX_4d.mjs')
   },
   {
     name: "checkout",
@@ -7642,7 +7642,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-BAn4dM9p.mjs')
+        component: () => import('./index-CKStOQ6H.mjs')
       },
       {
         name: "collections-slug",
@@ -7654,7 +7654,7 @@ const _routes = [
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-BVvNaiZA.mjs')
+    component: () => import('./_...product_-B2QnTWcO.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
