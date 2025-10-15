@@ -82,7 +82,23 @@
           :class="[linkColorClass, navWeight('/about'), 'text-sm my-auto px-4']"
         >ABOUT</NuxtLink>
         </div>
+
         <div class="flex flex-auto">
+          <ClientOnly>
+            <NuxtLink
+              class="relative my-auto px-4"
+              :class="[linkColorClass, navWeight('/cart')]"
+              @click="cartOpen = true"
+            >
+              <Icon name="lucide:shopping-cart" class="w-6 h-6" :class="linkColorClass" />
+              <span
+                v-if="itemCount > 0"
+                class="absolute -top-1 -right-1 bg-text_color text-background_color text-[12px] w-4 h-4 flex items-center justify-center"
+              >
+                {{ itemCount }}
+              </span>
+            </NuxtLink>
+          </ClientOnly>
           <NuxtLink
             to="/"
             :class="[linkColorClass, , navWeight('/profile'), 'my-auto font-light px-4']"
@@ -106,7 +122,9 @@ import {
 } from '@headlessui/vue'
 
 const route = useRoute()
-
+const config = useRuntimeConfig()
+const cartOpen = ref(false)
+const itemCount = ref(0)
 // path helpers
 const isPathActive = (path: string) =>
   route.path === path || route.path.startsWith(path + '/')
@@ -128,6 +146,35 @@ const props = defineProps({
 const linkColorClass = computed(() =>
 props.dark ? 'text-background_color' : 'text-text_color'
 )
+interface CartResponse {
+  items: unknown[]
+}
+
+async function fetchCart() {
+  try {
+    const res = await $fetch<CartResponse>(`${config.public.apiBase}/public/cart/`, {
+      credentials: 'include'
+    })
+    itemCount.value = Array.isArray(res.items) ? res.items.length : 0
+  } catch (err) {
+    console.warn('Cart fetch failed', err)
+  }
+}
+const onCartUpdated = () => { fetchCart() }
+
+onMounted(() => {
+  fetchCart()
+  // attach listeners only on client
+  window.addEventListener('cart:updated', onCartUpdated)
+  // (optional) refresh when tab regains focus
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') fetchCart()
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('cart:updated', onCartUpdated)
+})
 </script>
 
 <style scoped>

@@ -278,6 +278,8 @@ async function addToCart() {
   try {
     await $fetch(`${config.public.apiBase}/public/cart/item/`, {
       method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: {
         product_variant_slug: selectedVariantSlug.value,
         quantity: 1

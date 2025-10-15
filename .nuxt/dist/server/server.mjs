@@ -675,7 +675,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-DbmSDMoj.js")
+        component: () => import("./_nuxt/index-B5nJs3bB.js")
       }
     ]
   },
@@ -694,7 +694,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-PKMgEyrk.js")
+    component: () => import("./_nuxt/index-BV85WZeC.js")
   },
   {
     name: "checkout",
@@ -709,7 +709,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-BhLYhrRx.js")
+        component: () => import("./_nuxt/index-BAn4dM9p.js")
       },
       {
         name: "collections-slug",

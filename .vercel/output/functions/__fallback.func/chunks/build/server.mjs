@@ -7608,7 +7608,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-DbmSDMoj.mjs')
+        component: () => import('./index-B5nJs3bB.mjs')
       }
     ]
   },
@@ -7627,7 +7627,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-PKMgEyrk.mjs')
+    component: () => import('./index-BV85WZeC.mjs')
   },
   {
     name: "checkout",
@@ -7642,7 +7642,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-BhLYhrRx.mjs')
+        component: () => import('./index-BAn4dM9p.mjs')
       },
       {
         name: "collections-slug",
