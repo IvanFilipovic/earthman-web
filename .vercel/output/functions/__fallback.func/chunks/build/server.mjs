@@ -7627,7 +7627,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-DkNQX_4d.mjs')
+    component: () => import('./index-DhV6DM7s.mjs')
   },
   {
     name: "checkout",
@@ -7642,7 +7642,7 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-CKStOQ6H.mjs')
+        component: () => import('./index-Dg8mpuwX.mjs')
       },
       {
         name: "collections-slug",

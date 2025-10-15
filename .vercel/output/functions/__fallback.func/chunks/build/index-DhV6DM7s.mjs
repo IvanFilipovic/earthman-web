@@ -85,19 +85,23 @@ const _sfc_main$3 = {
       const _component_NuxtLink = __nuxt_component_0$2;
       ssrRenderSuspense(_push, {
         default: () => {
-          _push(`<div class="grid grid-cols-2 w-full h-auto lg:h-screen overflow-hidden" data-v-cd3a1a60><!--[-->`);
+          _push(`<div class="grid grid-cols-2 w-full h-auto lg:h-screen overflow-hidden" data-v-e80ddfec><!--[-->`);
           ssrRenderList(unref(collections), (collection) => {
-            _push(`<div class="relative w-full pt-[100%] bg-cover bg-center overflow-hidden" style="${ssrRenderStyle({ backgroundImage: `url(${collection.element_one_image})` })}" data-v-cd3a1a60><div class="overlay absolute top-0 left-0 right-0 text-text_color flex flex-col justify-end h-full hover:bg-background_color" data-v-cd3a1a60><div class="flex flex-col space-y-2 p-4 self-end" data-v-cd3a1a60><h2 class="mb-2 text-2xl font-bold self-end bg-background_color/60 px-2" data-v-cd3a1a60>${ssrInterpolate(collection.name)}</h2>`);
+            _push(`<div class="relative w-full pt-[100%] bg-cover bg-center overflow-hidden" style="${ssrRenderStyle({ backgroundImage: `url(${collection.element_one_image})` })}" data-v-e80ddfec><div class="overlay absolute top-0 left-0 right-0 text-text_color flex flex-col justify-end h-full hover:bg-background_color" data-v-e80ddfec><div class="flex flex-col space-y-2 p-4 self-end" data-v-e80ddfec><h2 class="mb-2 text-2xl font-bold self-end bg-background_color/60 px-2" data-v-e80ddfec>${ssrInterpolate(collection.name)}</h2>`);
             _push(ssrRenderComponent(_component_NuxtLink, {
               to: `/collections/${encodeURIComponent(collection.slug)}`,
-              class: "primary-btn px-4 py-2"
+              class: "primary-btn sweep group inline-flex items-center justify-center px-4 py-2"
             }, {
               default: withCtx((_, _push2, _parent2, _scopeId) => {
                 if (_push2) {
-                  _push2(` View Collection `);
+                  _push2(`<span class="btn-label" data-v-e80ddfec${_scopeId}>View Collection</span><span class="sweep-overlay" aria-hidden="true" data-v-e80ddfec${_scopeId}></span>`);
                 } else {
                   return [
-                    createTextVNode(" View Collection ")
+                    createVNode("span", { class: "btn-label" }, "View Collection"),
+                    createVNode("span", {
+                      class: "sweep-overlay",
+                      "aria-hidden": "true"
+                    })
                   ];
                 }
               }),
@@ -108,7 +112,7 @@ const _sfc_main$3 = {
           _push(`<!--]--></div>`);
         },
         fallback: () => {
-          _push(`<div class="flex items-center justify-center h-screen" data-v-cd3a1a60> Loading collections\u2026 </div>`);
+          _push(`<div class="flex items-center justify-center h-screen" data-v-e80ddfec> Loading collections\u2026 </div>`);
         },
         _: 1
       });
@@ -121,7 +125,7 @@ _sfc_main$3.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/CollectionListing.vue");
   return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-cd3a1a60"]]);
+const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-e80ddfec"]]);
 async function imageMeta(_ctx, url) {
   const meta = await _imageMeta(url).catch((err) => {
     console.error("Failed to get image meta for " + url, err + "");
@@ -798,4 +802,4 @@ _sfc_main.setup = (props, ctx) => {
 const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender]]);
 
 export { index as default };
-//# sourceMappingURL=index-DkNQX_4d.mjs.map
+//# sourceMappingURL=index-DhV6DM7s.mjs.map

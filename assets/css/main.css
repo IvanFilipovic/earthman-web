@@ -28,7 +28,7 @@
 /* sweeping overlay: starts off-screen left, slides in on hover */
 .sweep .sweep-overlay {
   @apply absolute inset-0 -translate-x-full bg-primary_button_color
-         transition-transform duration-350 ease-out;
+         transition-transform duration-300 ease-out;
 }
 
 /* animate on hover */

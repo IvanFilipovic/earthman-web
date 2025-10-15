@@ -1,6 +1,6 @@
 import { _ as __nuxt_component_0, u as useFetch } from './AppHeader-DxgFpAbD.mjs';
 import { _ as __nuxt_component_0$1 } from './nuxt-link-B-CASStw.mjs';
-import { ref, computed, mergeProps, withCtx, createTextVNode, unref, useSSRContext } from 'vue';
+import { ref, computed, mergeProps, withCtx, createVNode, unref, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderList, ssrRenderClass, ssrRenderStyle, ssrInterpolate } from 'vue/server-renderer';
 import { _ as _export_sfc, e as useRuntimeConfig } from './server.mjs';
 import '../nitro/nitro.mjs';
@@ -60,14 +60,18 @@ const _sfc_main$1 = {
           _push(`<div class="relative h-full w-full bg-cover bg-center" style="${ssrRenderStyle({ backgroundImage: `url(${item.element_one_image})` })}"><div class="absolute inset-0 bg-black bg-opacity-25"></div><div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center text-white px-4"><h2 class="text-3xl font-semibold mb-4 bg-text_color/60">${ssrInterpolate(item.name)}</h2>`);
           _push(ssrRenderComponent(_component_NuxtLink, {
             to: `/collections/${encodeURIComponent(item.slug)}`,
-            class: "primary-btn px-8 py-3"
+            class: "primary-btn sweep group inline-flex items-center justify-center px-8 py-3 rounded-full"
           }, {
             default: withCtx((_, _push2, _parent2, _scopeId) => {
               if (_push2) {
-                _push2(` View collection `);
+                _push2(`<span class="btn-label"${_scopeId}>View collection</span><span class="sweep-overlay" aria-hidden="true"${_scopeId}></span>`);
               } else {
                 return [
-                  createTextVNode(" View collection ")
+                  createVNode("span", { class: "btn-label" }, "View collection"),
+                  createVNode("span", {
+                    class: "sweep-overlay",
+                    "aria-hidden": "true"
+                  })
                 ];
               }
             }),
@@ -117,4 +121,4 @@ _sfc_main.setup = (props, ctx) => {
 const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender]]);
 
 export { index as default };
-//# sourceMappingURL=index-CKStOQ6H.mjs.map
+//# sourceMappingURL=index-Dg8mpuwX.mjs.map

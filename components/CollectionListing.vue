@@ -20,9 +20,10 @@
               </h2>
               <NuxtLink
                 :to="`/collections/${encodeURIComponent(collection.slug)}`"
-                class="primary-btn px-4 py-2"
+                class="primary-btn sweep group inline-flex items-center justify-center px-4 py-2"
               >
-                View Collection
+                <span class="btn-label">View Collection</span>
+                <span class="sweep-overlay" aria-hidden="true"></span>
               </NuxtLink>
             </div>
           </div>
