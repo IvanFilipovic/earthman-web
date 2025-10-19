@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.primary-btn-two {
-  @apply self-end bg-text_color text-background_color font-bold uppercase hover:bg-primary_button_color hover:text-background_color transition-colors;
-}
-.secondary-btn {
-  @apply self-end bg-background_color border border-text_color text-text_color hover:bg-secondary_button_color hover:border-secondary_button_color hover:text-text_color transition-colors;
-}
 .input {
   @apply w-full border-b border-text_color/30 focus:border-text_color/80 focus:bg-project_gray/5 outline-none py-2 bg-background_color px-3;
 }
@@ -16,19 +10,18 @@
 }
 .primary-btn {
   /* base look stays the same */
-  @apply relative overflow-hidden self-end bg-text_color text-background_color
-         font-bold uppercase transition-colors;
+  @apply relative overflow-hidden md:self-end bg-text_color text-background_color
+         font-normal uppercase transition-colors;
 }
 
 /* label sits above the sweeping overlay */
 .primary-btn .btn-label {
-  @apply relative z-10;
+  @apply relative z-10 text-sm md:text-base;
 }
 
 /* sweeping overlay: starts off-screen left, slides in on hover */
 .sweep .sweep-overlay {
-  @apply absolute inset-0 -translate-x-full bg-primary_button_color
-         transition-transform duration-300 ease-out;
+  @apply absolute inset-0 -translate-x-full bg-primary_button_color transition-transform duration-500 ease-in-out;
 }
 
 /* animate on hover */
@@ -39,4 +32,76 @@
 /* disabled: keep overlay hidden / no animation */
 .primary-btn:disabled .sweep-overlay {
   transform: translateX(-100%);
+}
+/* Base secondary style (keeps your look) */
+.secondary-btn {
+  @apply relative overflow-hidden self-end bg-background_color text-text_color border border-text_color font-normal uppercase transition-colors;
+}
+
+/* Label sits above the sweeping overlay */
+.secondary-btn .btn-label { 
+  @apply relative z-10; 
+}
+
+/* Sweep overlay: slides in from the left */
+.sweep-secondary .sweep-overlay {
+  @apply absolute inset-0 -translate-x-full bg-secondary_button_color
+         transition-transform duration-500 ease-in-out;
+}
+
+/* Animate on hover */
+.sweep-secondary:hover .sweep-overlay {
+  @apply translate-x-0;
+}
+
+/* Disabled guard (if you’ll use disabled on <button>) */
+.secondary-btn:disabled .sweep-overlay {
+  transform: translateX(-100%);
+}
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-ExtraLight.woff2") format("woff2");
+  font-weight: 200; /* ExtraLight */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-Light.woff2") format("woff2");
+  font-weight: 300; /* Light */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-Regular.woff2") format("woff2");
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-Medium.woff2") format("woff2");
+  font-weight: 500; /* Medium */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-SemiBold.woff2") format("woff2");
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Einstellung";
+  src: url("/fonts/neue-einstellung/NeueEinstellung-Bold.woff2") format("woff2");
+  font-weight: 700; /* Bold */
+  font-style: normal;
+  font-display: swap;
 }

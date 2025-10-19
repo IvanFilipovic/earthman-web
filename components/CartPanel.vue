@@ -4,10 +4,7 @@
     <Dialog class="relative z-[60]" @close="emit('update:open', false)">
       <!-- Backdrop -->
       <TransitionChild
-        enter="transition-opacity ease-out duration-250"
-        enter-from="opacity-0"
-        enter-to="opacity-100"
-        leave="transition-opacity ease-in duration-250"
+        leave="transition-opacity ease-in duration-500"
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
@@ -15,25 +12,29 @@
       </TransitionChild>
 
       <!-- Panel -->
-      <div class="fixed inset-0 overflow-hidden">
+      <div 
+        data-aos="fade-left"
+        data-aos-duration="400"
+        data-aos-easing="ease-in-out"
+        class="fixed inset-0 overflow-hidden">
         <div class="absolute inset-y-0 right-0 flex max-w-full pl-10">
           <TransitionChild
             enter="transform transition ease-out duration-200"
             enter-from="translate-x-full"
             enter-to="translate-x-0"
-            leave="transform transition ease-in duration-150"
+            leave="transform transition ease-in duration-500"
             leave-from="translate-x-0"
             leave-to="translate-x-full"
           >
             <DialogPanel
-                class="w-screen md:max-w-2xl h-full flex flex-col shadow-xl"
+                class="w-full md:max-w-2xl h-full flex flex-col shadow-xl"
                 :class="dark ? 'bg-text_color text-background_color' : 'bg-background_color text-text_color'"
                 >
                 <!-- Header -->
-                <div class="px-6 py-5 border-b"
+                <div class="px-4 md:px-6 py-5 border-b"
                     :class="dark ? 'border-background_color' : 'border-text_color/30'">
                     <div class="flex items-baseline justify-between">
-                    <DialogTitle class="text-lg tracking-wider uppercase">Shopping Cart</DialogTitle>
+                    <DialogTitle class="text-md tracking-wider uppercase">Shopping Cart</DialogTitle>
                         <div class="flex items-center flex-nowrap gap-2 text-sm">
                             <span class="mx-2 whitespace-nowrap">
                                 {{ itemCount }} {{ itemCount === 1 ? 'item' : 'items' }}
@@ -44,7 +45,7 @@
                             <span class="mx-2 whitespace-nowrap">€{{ totals.toPay }}</span>
 
                             <button
-                                class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/15 dark:hover:bg-white/10 shrink-0"
+                                class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0"
                                 aria-label="Close cart"
                                 @click="emit('update:open', false)"
                             >
@@ -56,31 +57,32 @@
                 
 
               <!-- Body -->
-                <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+                <div class="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-6">
                     <!-- Items -->
                     <div v-if="itemCount > 0" class="space-y-6">
                     <div v-for="(it, idx) in items" :key="`${it.product_slug}-${idx}`"
-                        class="grid grid-cols-[88px,1fr,auto] gap-4">
+                        class="grid grid-cols-[88px,1fr,auto] gap-1">
                         <!-- thumb -->
                         <img :src="it.avatar_image" :alt="it.product"
                             class="w-22 h-22 object-cover border"/>
 
                         <!-- info -->
                         <div class="flex flex-col">
-                            <div class="text-base leading-tight tracking-wider px-3">{{ it.product }}</div>
+                            <div class="text-sm md:text-base leading-tight tracking-wider px-3">{{ it.product }}</div>
                             <div class="text-xs mt-1 tracking-wider px-3">
                                 Size: <span class="font-medium">{{ it.size ?? '—' }}</span>
                             </div>
-                            
+                            <div class="text-xs mt-1 tracking-wider px-3">
+                                Quantity: <span class="font-medium">{{ it.quantity ?? '—' }}</span>
+                            </div>
                         </div>
 
                         <!-- price + remove -->
                         <div class="text-right">
-                        <div class="text-base">
+                        <div class="text-sm md:text-base">
                             <span v-if="it.unit_price_discounted !== it.unit_price_original" class="space-x-1">
                             <span class="font-semibold">€{{ it.unit_price_discounted }}</span>
-                            <span class="line-through text-xs"
-                                    :class="dark ? 'text-white/60' : 'text-black/60'">€{{ it.unit_price_original }}</span>
+                            <span class="line-through text-xs">€{{ it.unit_price_original }}</span>
                             </span>
                             <span v-else>€{{ it.unit_price_original }}</span>
                         </div>
@@ -103,7 +105,7 @@
                     </div>
 
                     <!-- Trust/benefits -->
-                    <ul class="mt-2 space-y-2 text-sm">
+                    <ul class="mt-2 space-y-2 text-xs md:text-sm">
                     <li class="flex gap-2"><span>✓</span> Customer rating 4.5/5.0 (3,700+ reviews) via Trustpilot</li>
                     <li class="flex gap-2"><span>✓</span> Worldwide shipping</li>
                     <li class="flex gap-2"><span>✓</span> 30 days return policy (14 days for sale items)</li>
@@ -153,13 +155,15 @@
                 </div>
 
                 <!-- Footer buttons -->
-                <div class="px-6 py-5 border-t">
+                <div class="px-6 py-5 border-t border-text_color/30">
                     <div class="flex gap-3">
                     <NuxtLink
-                        class="flex-1 primary-btn py-3 text-center"
+                        class="flex-1 primary-btn sweep py-3 text-center"
                         to="/checkout"
                     >
-                        GO TO CHECKOUT
+                      <span class="btn-label">GO TO CHECKOUT</span>
+                      <span class="sweep-overlay bg-secondary_button_color" aria-hidden="true"></span>
+                        
                     </NuxtLink>
                     </div>
                 </div>

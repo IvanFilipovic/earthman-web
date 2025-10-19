@@ -1,5 +1,6 @@
 <template>
-  <div class="bg-inherit text-text_color max-w-2xl mx-auto py-[150px]">
+  <div class="bg-inherit text-text_color max-w-2xl mx-auto py-10
+   md:py-[150px]">
     <ul class="divide-y divide-text_color/30">
       <li v-for="(item, i) in items" :key="i" class="py-4">
         <Disclosure v-slot="{ open }" as="div">

@@ -2,31 +2,55 @@
 <template>
   <TransitionRoot :show="open">
     <Dialog class="relative z-50" @close="$emit('update:open', false)">
-      <div class="fixed inset-0 bg-text_color/40" aria-hidden="true"></div>
+      <div class="fixed inset-0 bg-text_color/30" aria-hidden="true"></div>
 
-      <div class="fixed inset-y-0 right-0 flex max-w-full">
+      <div 
+        data-aos="fade-left"
+        data-aos-duration="400"
+        data-aos-easing="ease-in-out"
+        class="fixed inset-y-0 right-0 flex max-w-full">
         <TransitionChild
-          enter="transform transition ease-out duration-200"
-          enter-from="translate-x-full"
-          enter-to="translate-x-0"
           leave="transform transition ease-in duration-150"
           leave-from="translate-x-0"
           leave-to="translate-x-full"
         >
           <DialogPanel class="w-screen max-w-md bg-background_color h-full shadow-xl flex flex-col">
             <!-- Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-              <h2 class="uppercase tracking-wider text-sm">Filters</h2>
-              <button class="text-xl" @click="$emit('update:open', false)">×</button>
+            <div class="flex items-center justify-between px-6 py-4 border-b border-text_color/30">
+              <h2 class="uppercase tracking-wider text-md">Filters</h2>
+              <button
+                  class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0"
+                  aria-label="Close cart"
+                  @click="emit('update:open', false)"
+              >
+                  <Icon name="lucide:x" class="w-4 h-4" />
+              </button>
             </div>
 
             <!-- Body -->
             <div class="flex-1 overflow-auto px-6 py-6 space-y-8">
+              <!-- Collections -->
+              <section class="pt-2">
+                <div class="flex items-center justify-between">
+                  <h3 class="uppercase text-xs tracking-widest">Collection</h3>
+                  <button class="text-xs underline" @click="resetCollection">Clear</button>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-2 justify-end">
+                  <button
+                    v-for="col in facets.collections"
+                    :key="`col-${col.slug}`"
+                    @click="toggle('collections', col.slug)"
+                    :class="chipClass(local.collections.includes(col.slug))"
+                  >
+                    {{ col.name }}
+                  </button>
+                </div>
+              </section>
               <!-- Category -->
               <section>
                 <div class="flex items-center justify-between">
                   <h3 class="uppercase text-xs tracking-widest">Category</h3>
-                  <button class="text-xs underline" @click="local.categories = []">Clear</button>
+                  <button class="text-xs underline" @click="resetCategories">Clear</button>
                 </div>
                 <div class="mt-3 flex flex-wrap gap-2 justify-end">
                   <button
@@ -43,7 +67,7 @@
               <section>
                 <div class="flex items-center justify-between">
                   <h3 class="uppercase text-xs tracking-widest">Size</h3>
-                  <button class="text-xs underline" @click="local.sizes = []">clear</button>
+                  <button class="text-xs underline" @click="resetSize">Clear</button>
                 </div>
                 <div class="mt-3 flex flex-wrap gap-2 justify-end">
                   <button
@@ -59,7 +83,7 @@
               <section>
                 <div class="flex items-center justify-between">
                   <h3 class="uppercase text-xs tracking-widest">Colour</h3>
-                  <button class="text-xs underline" @click="local.colors = []">clear</button>
+                  <button class="text-xs underline" @click="resetColor">Clear</button>
                 </div>
 
                 <div class="mt-3 flex flex-col gap-2">
@@ -92,9 +116,12 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-6 py-4 border-t flex items-center justify-between">
+            <div class="px-6 py-4 border-t border-text_color/30 flex items-center justify-between">
               <button class="text-sm underline" @click="reset">Clean filters</button>
-              <button class="border px-4 py-2 rounded" @click="apply">View results</button>
+              <button class="secondary-btn sweep-secondary px-4 py-2" @click="apply">
+                <span class="btn-label">View results</span>
+                <span class="sweep-overlay bg-secondary_button_color" aria-hidden="true"></span>
+              </button>
             </div>
           </DialogPanel>
         </TransitionChild>
@@ -109,13 +136,14 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 
 const props = defineProps({
   open: { type: Boolean, default: false },
-  facets: { type: Object, default: () => ({ categories: [], sizes: [], colors: [] }) },
-  modelValue: { type: Object, default: () => ({ categories: [], sizes: [], colors: [] }) }
+  facets: { type: Object, default: () => ({ collections: [], categories: [], sizes: [], colors: [] }) },
+  modelValue: { type: Object, default: () => ({ collections: [], categories: [], sizes: [], colors: [] }) }
 })
 const emit = defineEmits(['update:open','update:modelValue'])
 
 function cloneFilters(v = {}) {
   return {
+    collections: Array.isArray(v.collections) ? [...v.collections] : [],
     categories: Array.isArray(v.categories) ? [...v.categories] : [],
     sizes: Array.isArray(v.sizes) ? [...v.sizes] : [],
     colors: Array.isArray(v.colors) ? [...v.colors] : []
@@ -134,7 +162,23 @@ function apply () {
   emit('update:open', false)
 }
 function reset () {
-  Object.assign(local, { categories: [], sizes: [], colors: [] })
+  Object.assign(local, { collections: [], categories: [], sizes: [], colors: [] })
+  emit('update:modelValue', cloneFilters(local))
+  emit('update:open', false)
+}
+function resetCollection () {
+  Object.assign(local, { collections: [] })
+  emit('update:modelValue', cloneFilters(local))
+}
+function resetCategories () {
+  Object.assign(local, { categories: [] })
+  emit('update:modelValue', cloneFilters(local))
+}function resetSize () {
+  Object.assign(local, { sizes: [] })
+  emit('update:modelValue', cloneFilters(local))
+}function resetColor () {
+  Object.assign(local, { colors: [] })
+  emit('update:modelValue', cloneFilters(local))
 }
 function toggle (key, val) {
   const set = new Set(local[key]); set.has(val) ? set.delete(val) : set.add(val)

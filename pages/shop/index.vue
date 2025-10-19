@@ -1,31 +1,8 @@
 <template>
   <section>
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30">
-      <div class="w-full md:w-1/2">
-        <div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]">
-        </div>
-      </div>
-
-      <div class="w-full md:w-1/2 flex flex-col">
-        <AppNavigation :dark="false" />
-        <div class="flex gap-3 justify-end w-full">
-            <div class="flex items-center gap-3">
-                <span class="uppercase text-xs tracking-widest ml-4">View</span>
-                <button
-                    v-for="p in totalPages"
-                    :key="p"
-                    :class="p === page ? 'underline' : 'opacity-60'"
-                    class="text-sm uppercase tracking-widest"
-                    @click="page = p"
-                >{{ p }}</button>
-
-                <button class="text-md uppercase tracking-widest px-4" @click="filterOpen = true">Filters</button>
-            </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 pt-1 gap-6">
-      <div class="flex justify-end w-full">
+    <AppNavigation :dark="false" />
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
+      <div class="flex justify-between w-full">
         <div class="flex items-center">
           <button
           :class="genderBtnClass('female')"
@@ -36,9 +13,24 @@
           @click="setGender('male')"
           >MAN</button>
         </div>
+        <div class="flex gap-3 justify-end w-full">
+            <div class="flex items-center gap-3">
+                <span class="uppercase text-xs tracking-widest ml-4">Page</span>
+                <button
+                    v-for="p in totalPages"
+                    :key="p"
+                    :class="p === page ? 'underline' : 'opacity-60'"
+                    class="text-sm uppercase tracking-widest"
+                    @click="page = p"
+                >{{ p }}</button>
+
+                <button class="text-md uppercase tracking-widest" @click="filterOpen = true">Filters</button>
+            </div>
+        </div>
+        
       </div>
     </div>
-    <ShopListing class="mt-6" :products="products" />
+    <ShopListing class="mt-2 md:mt-6 px-4 md:px-8" :products="products" />
 
     <ClientOnly>
       <FilterPanel
@@ -46,6 +38,7 @@
         v-model="filters"
         :facets="facets"
         @update:open="filterOpen = $event"
+        
       />
     </ClientOnly>
   </section>
@@ -68,8 +61,10 @@ watch(
     if (gender.value !== normalized) {
       gender.value = normalized
     }
+    
   },
-  { immediate: true }
+  { immediate: true },
+  
 )
 
 // when clicking local buttons, also push to the URL
@@ -82,7 +77,7 @@ function setGender(value: 'male' | 'female') {
 
 /* Active/inactive styles */
 function genderBtnClass(target: 'male' | 'female') {
-  const base = 'pl-8 py-1 text-sm text-text_color'
+  const base = 'py-1 pr-8 text-sm text-text_color'
   return [base, gender.value === target ? 'font-bold' : 'bg-background_color'].join(' ')
 }
 
@@ -103,9 +98,10 @@ const page = ref(1)
 const pageSize = 12
 const totalPages = computed(() => Math.max(1, Math.ceil(count.value / pageSize)))
 const filterOpen = ref(false)
-const filters = ref({ categories: [] as number[], sizes: [] as string[], colors: [] as string[] })
+const filters = ref({ collections: [] as string[], categories: [] as number[], sizes: [] as string[], colors: [] as string[] })
 
 const facets = ref({
+  collections: [] as { name: string; slug: string }[],
   categories: [] as { id: number; name: string }[],
   sizes: [] as { name: string }[],
   colors: [] as { name: string; image: string }[]
@@ -113,12 +109,13 @@ const facets = ref({
 
 function buildQuery() {
   const p = new URLSearchParams()
+  p.set('page', String(page.value))
+  p.set('page_size', String(pageSize))
+  filters.value.collections.forEach(slug => p.append('collection', slug.toString()))
   filters.value.categories.forEach(id => p.append('category', id.toString()))
   filters.value.sizes.forEach(s => p.append('size', s))
   filters.value.colors.forEach(c => p.append('color', c))
   p.set('gender', gender.value)  // sends "male" or "female"
-  p.set('page', String(page.value))
-  p.set('page_size', String(pageSize))
   return p.toString().replace(/\+/g, '%20')
 }
 
@@ -160,14 +157,28 @@ async function fetchProducts() {
     currentImage: r.link_image
   }))
 }
+async function fetchCollections () {
+  try {
+    const res = await $fetch(`${config.public.apiBase}/public/collections/`)
+    facets.value.collections = Array.isArray(res)
+      ? res.map((c: any) => ({ name: c.name, slug: c.slug }))
+      : []
+  } catch {
+    facets.value.collections = []
+  }
+}
 
 /* --------------------------
    Watchers + Lifecycle
 -------------------------- */
-watch([filters, page, gender, route], fetchProducts)
+watch(filters, () => {
+  if (page.value !== 1) page.value = 1
+}, { deep: true })
+watch([filters , page, gender, route], fetchProducts)
+
 
 onMounted(async () => {
-  await Promise.all([fetchCategories(), fetchColors(), fetchSizes()])
+  await Promise.all([fetchCategories(), fetchColors(), fetchSizes(), fetchCollections()])
   await fetchProducts()
 })
 </script>

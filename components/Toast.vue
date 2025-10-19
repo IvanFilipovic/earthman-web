@@ -1,7 +1,7 @@
 <template>
   <!-- Fixed stack, top-right -->
   <div
-    class="pointer-events-none fixed right-6 bottom-6 z-[9999] space-y-2"
+    class="pointer-events-none fixed right-6 top-6 z-[9999] space-y-2"
     aria-live="polite"
     aria-atomic="true"
   >

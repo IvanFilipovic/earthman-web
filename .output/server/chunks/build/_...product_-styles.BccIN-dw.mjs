@@ -12,6 +12,7 @@ import 'vue-router';
 import 'node:url';
 import '@iconify/utils';
 import 'consola';
+import 'node:module';
 import 'ipx';
 
 const ____product_Styles_BccINDw = [____product__vue_vue_type_style_index_0_nonScoped_true_lang, ____product__vue_vue_type_style_index_0_nonScoped_true_lang];

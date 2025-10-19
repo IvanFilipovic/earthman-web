@@ -1,167 +1,280 @@
 <!-- pages/product/[collection]/[product].vue -->
 <template>
   <section>
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30">
-      <div class="w-full md:w-1/2">
-        <div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]">
-        </div>
-      </div>
+    <AppNavigation :dark="false" />
 
-      <div class="w-full md:w-1/2 flex flex-col">
-        <AppNavigation :dark="false" />
-        <div class="flex gap-3 justify-end w-full">
-            <div class="flex items-center gap-3">
-                <nav class="text-sm uppercase tracking-widest space-x-2 text-background_color px-4">
-                  <p>=</p>
-                </nav>
-            </div>
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
+      <div class="flex justify-start w-full">
+        <div class="flex items-center py-1 text-xs md:text-sm text-text_color uppercase tracking-widest">
+          <NuxtLink to="/shop" class="hover:underline pr-2">Shop</NuxtLink>
+          <span class="pr-2">/</span>
+          <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-2">
+            {{ product?.collection_slug }}
+          </NuxtLink>
+          <span class="pr-2">/</span>
+          <span class="pr-2">{{ productName }}</span>
         </div>
       </div>
     </div>
+    <div class="hidden md:block">
+      <div class="relative grid grid-cols-12 gap-8 pt-8 mt-2 md:mt-6 px-4 md:px-8 product-grid">
+        <!-- LEFT: Gallery -->
+        <div class="col-span-12 lg:col-span-8">
+          <div v-if="imagesToShow.length > 0" class="grid grid-cols-2 gap-y-7 pr-2 place-content-between">
+              <img
+                v-for="(g, i) in variantGroups[activeColorIndex].gallery"
+                :key="g.id ?? i"
+                :src="g.image"
+                class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"
+                :alt="g.alt_text || productName"
+                loading="lazy"
+              />
+          </div>
 
-    <!-- Breadcrumb -->
-    <nav class="text-xs uppercase tracking-widest mb-6 text-text_color space-x-2 pt-8 md:pl-8">
-      <NuxtLink to="/shop" class="hover:underline">Shop</NuxtLink>
-      <span>›</span>
-      <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline">
-        {{ product?.collection_slug }}
-      </NuxtLink>
-      <span>›</span>
-      <span class="text-text_color">{{ productName }}</span>
-    </nav>
-
-    <div class="relative grid grid-cols-12 gap-8 pt-8 md:px-8 product-grid">
-      <!-- LEFT: Gallery -->
-      <div class="col-span-12 lg:col-span-8">
-        <div v-if="imagesToShow.length > 0" class="grid grid-cols-2 gap-y-7 pr-2 place-content-between">
-            <img
-              v-for="(img, i) in imagesToShow"
-              :key="i"
-              :src="img.image"
-              class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"
-              :alt="productName"
-              loading="lazy"
-            />
+            <div v-else>
+              <div v-for="i in 2" :key="i" class="w-full aspect-[4/3] bg-background_color animate-pulse"></div>
+            </div>
         </div>
 
-          <div v-else>
-            <div v-for="i in 2" :key="i" class="w-full aspect-[4/3] bg-background_color animate-pulse"></div>
+        <!-- RIGHT: Sticky Add-to-cart -->
+        <aside class="col-span-12 lg:col-span-4 product-sticky">
+          <div class="bg-background_color border border-text_color/30 p-5 align-self:start">
+            <!-- Title / price -->
+            <div class="flex items-start justify-between">
+              <div>
+                <h1 class="text-sm font-light leading-tight text-text_color">{{ productCategory }}</h1>
+                <h1 class="text-xl font-medium leading-tight text-text_color">{{ productName }}</h1>
+                <p class="mt-1 text-sm text-text_color" v-if="activeColorName">Color: {{ activeColorName }}</p>
+              </div>
+              <div class="text-right">
+                <div v-if="product?.discount" class="space-x-2">
+                  <span class="text-lg font-semibold text-text_color">€{{ product?.discount_price }}</span>
+                  <span class="line-through text-text_color">€{{ product?.price }}</span>
+                </div>
+                <div v-else class="text-lg font-semibold text-text_color">€{{ product?.price }}</div>
+              </div>
+            </div>
+
+            <!-- Color swatches -->
+            <div class="mt-4" v-if="variantGroups.length">
+              <div class="text-xs uppercase tracking-widest mb-2">Color</div>
+              <div class="flex gap-3">
+                <button
+                  v-for="(vg, idx) in variantGroups"
+                  :key="idx"
+                  @click="setActiveColor(idx)"
+                  class="w-8 h-8 border relative"
+                  :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
+                  :title="vg.color?.name"
+                  :style="{ backgroundColor: swatchBg(vg.color?.image) }"
+                >
+                  <span class="sr-only">{{ vg.color?.name }}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sizes -->
+            <div class="mt-6" v-if="activeSizes.length">
+              <div class="flex items-center justify-between">
+                <div class="text-xs uppercase tracking-widest">Size</div>
+                <div class="text-xs text-text_color/70">
+                  <span v-if="inStock">In Stock</span>
+                  <span v-else>Unavailable</span>
+                </div>
+              </div>
+              <div class="mt-2 grid grid-cols-5 gap-2">
+                <button
+                  v-for="s in activeSizes"
+                  :key="s.slug"
+                  @click="selectSize(s)"
+                  class="border px-2 py-2 text-sm text-text_color"
+                  :class="[
+                    s.available ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed',
+                    selectedVariantSlug === s.slug ? 'border-text_color' : 'border-project_gray/50'
+                  ]"
+                  :disabled="!s.available"
+                >
+                  {{ s.size?.name }}
+                </button>
+              </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="mt-6 space-y-3">
+              <button
+                class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="!selectedVariantSlug"
+                @click="addToCart"
+              >
+                <span class="btn-label">ADD TO CART</span>
+                <span class="sweep-overlay" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <!-- Service bullets -->
+            <ul class="mt-5 space-y-2 text-sm text-text_color/80">
+              <li>✓ Free delivery over €250,-</li>
+              <li>✓ Easy returns within 14 days</li>
+            </ul>
           </div>
+        </aside>
       </div>
 
-      <!-- RIGHT: Sticky Add-to-cart -->
-      <aside class="col-span-12 lg:col-span-4 product-sticky">
-        <div class="bg-background_color border border-text_color/30 p-5 align-self:start">
-          <!-- Title / price -->
-          <div class="flex items-start justify-between">
-            <div>
-              <h1 class="text-sm font-light leading-tight text-text_color">{{ productCategory }}</h1>
-              <h1 class="text-xl font-medium leading-tight text-text_color">{{ productName }}</h1>
-              <p class="mt-1 text-sm text-text_color" v-if="activeColorName">Color: {{ activeColorName }}</p>
-            </div>
-            <div class="text-right">
-              <div v-if="product?.discount" class="space-x-2">
-                <span class="text-lg font-semibold text-text_color">€{{ product?.discount_price }}</span>
-                <span class="line-through text-text_color">€{{ product?.price }}</span>
-              </div>
-              <div v-else class="text-lg font-semibold text-text_color">€{{ product?.price }}</div>
-            </div>
-          </div>
+      <ProductAccordion
+        :items="[
+          {
+            title: 'Description',
+            content: product?.description || 'No additional description.'
+          },
+          {
+            title: 'Size & Fit',
+            content: 'Coming soon – sizing guidance for this product.'
+          },
+          {
+            title: 'Shipping & Returns',
+            content: `We offer UPS Standard, Express Saver, and Express shipping options. Final prices are calculated at checkout and exclude import duties which will be charged by UPS after clearing customs.
 
-          <!-- Color swatches -->
-          <div class="mt-4" v-if="variantGroups.length">
-            <div class="text-xs uppercase tracking-widest mb-2">Color</div>
-            <div class="flex gap-3">
-              <button
-                v-for="(vg, idx) in variantGroups"
-                :key="idx"
-                @click="setActiveColor(idx)"
-                class="w-8 h-8 border relative"
-                :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
-                :title="vg.color?.name"
-                :style="{ backgroundColor: swatchBg(vg.color?.image) }"
-              >
-                <span class="sr-only">{{ vg.color?.name }}</span>
-              </button>
-            </div>
-          </div>
+      We accept returns within 14 days. We kindly remind you that sale items can only be refunded as store credit.`,
+            link: { href: '#', label: 'More info' }
+          }
+        ]"
+      />
+    </div>
+    <div class="block md:hidden mt-2 pt-8" id="mobile-product-wrap">
+      <div ref="sliderRef" class="keen-slider">
+        <div
+          v-for="(img, i) in variantGroups[activeColorIndex]?.gallery || []"
+          :key="i"
+          class="keen-slider__slide"
+        >
+          <img :src="img.image" class="w-full h-auto object-cover border-t border-b border-text_color/30" :alt="img.alt_text || productName" />
+        </div>
+      </div>
+      <div class="pt-4 px-4
+      " v-if="variantGroups.length">
+        <div class="text-xs uppercase tracking-widest mb-2">Color</div>
+        <div class="flex gap-3">
+          <button
+            v-for="(vg, idx) in variantGroups"
+            :key="idx"
+            @click="setActiveColor(idx)"
+            class="w-8 h-8 border"
+            :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
+            :style="{ backgroundColor: swatchBg(vg.color?.image) }"
+          ></button>
+        </div>
+        <p class="mt-1 text-sm text-text_color" v-if="activeColorName">Color: {{ activeColorName }}</p>
 
-          <!-- Sizes -->
-          <div class="mt-6" v-if="activeSizes.length">
-            <div class="flex items-center justify-between">
-              <div class="text-xs uppercase tracking-widest">Size</div>
-              <div class="text-xs text-text_color/70">
-                <span v-if="inStock">In Stock</span>
-                <span v-else>Unavailable</span>
-              </div>
-            </div>
-            <div class="mt-2 grid grid-cols-5 gap-2">
-              <button
-                v-for="s in activeSizes"
-                :key="s.slug"
-                @click="selectSize(s)"
-                class="border px-2 py-2 text-sm text-text_color"
-                :class="[
-                  s.available ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed',
-                  selectedVariantSlug === s.slug ? 'border-text_color' : 'border-project_gray/50'
-                ]"
-                :disabled="!s.available"
-              >
-                {{ s.size?.name }}
-              </button>
-            </div>
+      </div>
+      <div class="px-4 mt-4">
+        <ProductAccordion
+          :items="[
+            { title: 'Description', content: product?.description || 'No additional description.' },
+            { title: 'Size & Fit', content: 'Coming soon – sizing guidance for this product.' },
+            {
+              title: 'Shipping & Return',
+              content: `We offer UPS Standard, Express Saver, and Express shipping options. 
+Final prices are calculated at checkout and exclude import duties.
+We accept returns within 14 days. Sale items can only be refunded as store credit.`,
+              link: { href: '#', label: 'More info' }
+            }
+          ]"
+        />
+      </div>
+      <div class="sticky bottom-0 left-0 w-full bg-background_color z-40">
+        <div class="flex flex-col items-start py-6 px-4 gap-4">
+          <div>
+            <h1 class="text-sm font-light leading-tight text-text_color">{{ productCategory }}</h1>
+            <h1 class="text-xl font-medium leading-tight text-text_color">{{ productName }}</h1>
           </div>
+          <div class="text-right">
+            <div v-if="product?.discount" class="space-x-2">
+              <span class="text-base font-semibold text-text_color">€{{ product?.discount_price }}</span>
+              <span class="line-through text-text_color">€{{ product?.price }}</span>
+            </div>
+            <div v-else class="text-base font-semibold text-text_color">€{{ product?.price }}</div>
+          </div>
+          <button
+            class="w-full py-2 text-center text-base font-medium tracking-wider bg-text_color text-background_color"
+            style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem)"  
+            @click="mobilePanelOpen = true"
+          >
+            ADD
+          </button>
+        </div>
 
-          <!-- CTA Buttons -->
-          <div class="mt-6 space-y-3">
-            <button
-              class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="!selectedVariantSlug"
-              @click="addToCart"
+        
+      </div>
+
+      <TransitionRoot :show="mobilePanelOpen">
+        <Dialog class="relative z-50" @close="mobilePanelOpen = false">
+          <!-- Overlay -->
+          <div class="fixed inset-0 bg-text_color/30" aria-hidden="true"></div>
+
+          <!-- Panel -->
+          <div class="fixed bottom-0 w-screen">
+            <TransitionChild
+              enter="transform transition ease-out duration-300"
+              enter-from="translate-y-full"
+              enter-to="translate-y-0"
+              leave="transform transition ease-in duration-200"
+              leave-from="translate-y-0"
+              leave-to="translate-y-full"
             >
-              <span class="btn-label">ADD TO CART</span>
-              <span class="sweep-overlay" aria-hidden="true"></span>
-            </button>
+              <DialogPanel
+                class="w-full bg-background_color p-6"
+              >
+                <div class="flex justify-between items-center mb-4">
+                  <h2 class="text-base uppercase tracking-wider font-medium">Select Size</h2>
+                </div>
+                <!-- Sizes -->
+                <div class="mt-4" v-if="activeSizes.length">
+                  <div class="text-xs uppercase tracking-widest mb-2">Size</div>
+                  <div class="flex flex-col justify-center gap-3 items-center">
+                    <button
+                      v-for="s in activeSizes"
+                      :key="s.slug"
+                      @click="selectSize(s)"
+                      class="border px-3 py-2 text-sm w-fit"
+                      :class="[
+                        s.available ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed',
+                        selectedVariantSlug === s.slug ? 'border-text_color' : 'border-project_gray/50'
+                      ]"
+                    >
+                      {{ s.size?.name }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Add to cart -->
+                <button
+                  class="mt-6 w-full py-3 text-base font-medium tracking-wider bg-text_color text-background_color disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!selectedVariantSlug"
+                  @click="addToCart"
+                >
+                  ADD TO CART
+                </button>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-
-          <!-- Service bullets -->
-          <ul class="mt-5 space-y-2 text-sm text-text_color/80">
-            <li>✓ Free delivery over €250,-</li>
-            <li>✓ Easy returns within 14 days</li>
-          </ul>
-        </div>
-      </aside>
+        </Dialog>
+      </TransitionRoot>
     </div>
-
-    <ProductAccordion
-      :items="[
-        {
-          title: 'Size & Fit',
-          content: 'Coming soon – sizing guidance for this product.'
-        },
-        {
-          title: 'Shipping & Returns',
-          content: `We offer UPS Standard, Express Saver, and Express shipping options. Final prices are calculated at checkout and exclude import duties which will be charged by UPS after clearing customs.
-
-    We accept returns within 14 days. We kindly remind you that sale items can only be refunded as store credit.`,
-          link: { href: '#', label: 'More info' }
-        },
-        {
-          title: 'Description',
-          content: product?.description || 'No additional description.'
-        }
-      ]"
-    />
-
   </section>
 </template>
 
 <script setup lang="ts">
 import { useToast } from '~/composables/useToast'
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { useKeenSlider } from 'keen-slider/vue.es'
+import "keen-slider/keen-slider.min.css";
+
+const mobilePanelOpen = ref(false)
+const [sliderRef] = useKeenSlider({ loop: true })
 /** Types (lightweight) */
 type SizeItem = { slug: string; size: { name: string }, available: boolean }
 type VariantGroup = { color: { name: string; image: string | null; alt_text: string }, avatar_image: string, sizes: SizeItem[] }
-type Variant = { slug: string; color: { name: string; image: string | null; alt_text: string }, size: { name: string }, available: boolean, images: string[] }
+type Variant = { slug: string; color: { name: string; image: string | null; alt_text: string }, size: { name: string }, available: boolean }
 type ProductApi = {
   id: number; category: string; name: string; slug: string; description: string;
   price: string; discount: boolean; discount_price: string | null;
@@ -196,11 +309,9 @@ const activeSizes = computed<SizeItem[]>(() => variantGroups.value[activeColorIn
 const inStock = computed(() => activeSizes.value.some(s => s?.available))
 const activeColorName = computed(() => variantGroups.value[activeColorIndex.value]?.color?.name ?? '')
 
-const imagesToShow = computed<string[]>(() => {
-  const primary = (product.value?.selected_variant?.images ?? []).filter(Boolean)
-  if (primary.length) return primary
-  return variantGroups.value.map(vg => vg?.avatar_image).filter(Boolean)
-})
+const imagesToShow = computed(() =>
+  variantGroups.value[activeColorIndex.value]?.gallery ?? []
+)
 
 watch(
   () => product.value,

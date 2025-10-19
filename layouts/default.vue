@@ -10,5 +10,6 @@
 <style>
 body {
   background-color: #fcfcfc;
+  font-family: "Neue Einstellung";
 }
 </style>

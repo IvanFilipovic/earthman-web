@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-wrap overflow-y-auto pt-8 md:pl-8">
+  <div class="grid grid-cols-2 md:grid-cols-4 overflow-y-auto pt-8 gap-x-4 md:gap-x-8 lg:gap-x-24">
     <div
       v-for="item in products"
       :key="item.slug"
-      class="w-1/2 md:w-1/4 cursor-pointer pb-10"
+      class="col-span-1 cursor-pointer pb-10"
     >
       <div class="bg-background_color overflow-hidden object-fill">
-        <div class="w-11/12 md:w-9/12">
+        <div class="w-full">
           <div
             class="relative bg-background_color"
             @mouseenter="hoveredSlug = item.slug"
@@ -16,26 +16,28 @@
               @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
               :src="item.currentImage || item.link_image"
               :alt="item.alt_text || item.name"
-              class="max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-project_black"
+              class="max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
               loading="lazy"
             />
 
             <button
               v-show="hoveredSlug === item.slug"
-              class="absolute top-4 right-2 
-                    bg-background_color text-text_color tracking-wider text-xs font-extralight 
+              class="absolute top-4 left-4
+                    bg-text_color text-background_color tracking-wider text-xs font-light 
                     w-auto px-2 mx-auto 
                     opacity-0 transition-opacity duration-200"
               :class="{ 'opacity-100': hoveredSlug === item.slug }"
               @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
             >
-              View
+              VIEW
             </button>
           </div>
 
           <!-- TEXT BLOCK -->
           <div class="py-3 text-left">
-            <h3 class="uppercase tracking-wider text-sm font-normal truncate">{{ item.name }}</h3>
+            <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
+
+            <h3 class="uppercase tracking-wider text-[13px] md:text-sm font-normal truncate py-1">{{ item.name }}</h3>
 
             <div class="mt-1 flex items-center gap-2">
               <div
@@ -46,6 +48,8 @@
                 @mouseleave="onLeaveColor(item)"
               >
                 <img
+                  @mouseenter="hoveredSlug = item.slug"
+                  @mouseleave="hoveredSlug = null"
                   :src="color.avatar_image"
                   :alt="color.color"
                   class="h-8 w-8 object-cover"

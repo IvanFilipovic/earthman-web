@@ -23,6 +23,8 @@ export default defineNuxtConfig({
         { name: 'twitter:site', content: '@exitthree' },
       ],
       link: [
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/neue-einstellung/NeueEinstellung-Regular.woff2', crossorigin: '' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/neue-einstellung/NeueEinstellung-Medium.woff2', crossorigin: '' },
         { rel: 'preconnect', href: 'https://www.google-analytics.com', crossorigin: '' },
         { rel: 'dns-prefetch', href: 'https://www.google-analytics.com' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon_e3.svg' },
@@ -39,7 +41,8 @@ export default defineNuxtConfig({
     'v-gsap-nuxt',
     '@nuxtjs/i18n',
     'nuxt-headlessui',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'nuxt-aos'
   ],
   tailwindcss: {
     cssPath: '~/assets/css/main.css',

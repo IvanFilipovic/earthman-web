@@ -14,6 +14,7 @@ import 'vue-router';
 import 'node:url';
 import '@iconify/utils';
 import 'consola';
+import 'node:module';
 import 'ipx';
 import 'pinia';
 import 'gsap';

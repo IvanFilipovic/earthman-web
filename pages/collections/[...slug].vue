@@ -2,27 +2,12 @@
 <template>
   <section>
     <!-- Header -->
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 gap-6 border-b border-text_color/30">
-      <div class="w-full md:w-1/2">
-        <div class="image bg-cover bg-center bg-transparent h-40 flex justify-center max-w-[100%]">
-        </div>
-      </div>
+    <AppNavigation :dark="false" />
 
-      <div class="w-full md:w-1/2 flex flex-col">
-        <AppNavigation :dark="false" />
-        <div class="flex gap-3 justify-end w-full">
-            <div class="flex items-center gap-3">
-                <nav class="text-md uppercase tracking-widest space-x-2 text-background_color px-4">
-                  <p>{{ collection.name }}</p>
-                </nav>
-            </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Gender Switch -->
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-8 pt-1 gap-6">
-      <div class="flex justify-end w-full">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
+      <div class="flex justify-start w-full">
         <div class="flex items-center">
           <button
             :class="genderBtnClass('female')"
@@ -39,6 +24,7 @@
     <!-- Product Listing -->
     <CollectionShopListing
       v-if="!pending && products.length"
+      class="mt-2 md:mt-6 px-4 md:px-8"
       :products="products"
       :collection="collection"
       @cta-click="onCtaClick"
@@ -81,7 +67,7 @@ function setGender(value) {
    UI helpers
 ────────────────────────────── */
 function genderBtnClass(target) {
-  const base = 'pl-8 py-1 text-sm text-text_color'
+  const base = 'pr-8 py-1 text-sm text-text_color'
   return [base, gender.value === target ? 'font-bold' : 'bg-background_color'].join(' ')
 }
 

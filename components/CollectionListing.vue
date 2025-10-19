@@ -2,7 +2,7 @@
   <Suspense>
     <!-- Renders only after useFetch resolves -->
     <template #default>
-      <div class="grid grid-cols-2 w-full h-auto lg:h-screen overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 w-full h-auto lg:h-screen overflow-hidden">
         <div
           v-for="collection in collections"
           :key="collection.id"
@@ -10,19 +10,25 @@
           :style="{ backgroundImage: `url(${collection.element_one_image})` }"
         >
           <div
-            class="overlay absolute top-0 left-0 right-0 text-text_color flex flex-col justify-end h-full hover:bg-background_color"
+            class="overlay absolute top-0 left-0 right-0 flex flex-col md:flex-row justify-end md:justify-end h-full"
           >
-            <div class="flex flex-col space-y-2 p-4 self-end">
+            <div
+              class="flex flex-col space-y-3 md:space-y-2 px-8 py-8 md:pb-8 md:px-8
+           items-center md:items-end justify-end md:w-[60%]
+           text-center md:text-right h-full"
+            >
               <h2
-                class="mb-2 text-2xl font-bold self-end bg-background_color/60 px-2"
+                class="text-base sm:text-lg md:text-2xl font-medium md:font-bold 
+                      text-text_color bg-background_color/60 px-4 py-1 uppercase tracking-wider w-[60%] md:w-full
+                      inline-flex items-center justify-center"
               >
                 {{ collection.name }}
               </h2>
+
               <NuxtLink
                 :to="`/collections/${encodeURIComponent(collection.slug)}`"
-                class="primary-btn sweep group inline-flex items-center justify-center px-4 py-2"
-              >
-                <span class="btn-label">View Collection</span>
+                class="primary-btn sweep group inline-flex items-center justify-center px-4 py-2 w-[60%] md:w-full">
+                <span class="btn-label">View project</span>
                 <span class="sweep-overlay" aria-hidden="true"></span>
               </NuxtLink>
             </div>
@@ -49,7 +55,7 @@ const config = useRuntimeConfig()
 </script>
 <style scoped>
 .overlay {
-  background-color: rgba(66, 66, 66, 0.2);
+  background-color: rgba(37, 37, 37, 0.3);
   transition: background-color 0.4s ease-in-out,
               color            0.4s ease-in-out;
 }

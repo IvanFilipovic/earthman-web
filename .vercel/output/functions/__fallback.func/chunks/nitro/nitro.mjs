@@ -9,6 +9,7 @@ import { createPathIndexLanguageParser, parseAcceptLanguage } from '@intlify/uti
 import { createRouterMatcher } from 'vue-router';
 import { getIcons } from '@iconify/utils';
 import { consola } from 'consola';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'ipx';
 
@@ -4443,7 +4444,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "6651a888-df29-4dfe-ad4a-d88361eaf44c",
+    "buildId": "6e52a522-d198-4009-bbf1-beedaaa19e3f",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4479,6 +4480,7 @@ const _inlineRuntimeConfig = {
   "public": {
     "apiBase": "https://earthmanweb.pythonanywhere.com",
     "vgsap": {},
+    "aos": {},
     "i18n": {
       "baseUrl": "",
       "defaultLocale": "",
@@ -5129,7 +5131,7 @@ const setupVueI18nOptions = async (defaultLocale) => {
   return options;
 };
 
-const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Automation and custom software that make your business faster, simpler, and smarter."},{"property":"og:type","content":"website"},{"property":"og:site_name","content":"Earthman"},{"name":"twitter:card","content":"summary_large_image"},{"name":"twitter:site","content":"@exitthree"}],"link":[{"rel":"preconnect","href":"https://www.google-analytics.com","crossorigin":""},{"rel":"dns-prefetch","href":"https://www.google-analytics.com"},{"rel":"icon","type":"image/svg+xml","href":"/favicon_e3.svg"},{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],"style":[],"script":[],"noscript":[],"title":"Earthman • webshop"};
+const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Automation and custom software that make your business faster, simpler, and smarter."},{"property":"og:type","content":"website"},{"property":"og:site_name","content":"Earthman"},{"name":"twitter:card","content":"summary_large_image"},{"name":"twitter:site","content":"@exitthree"}],"link":[{"rel":"preload","as":"font","type":"font/woff2","href":"/fonts/neue-einstellung/NeueEinstellung-Regular.woff2","crossorigin":""},{"rel":"preload","as":"font","type":"font/woff2","href":"/fonts/neue-einstellung/NeueEinstellung-Medium.woff2","crossorigin":""},{"rel":"preconnect","href":"https://www.google-analytics.com","crossorigin":""},{"rel":"dns-prefetch","href":"https://www.google-analytics.com"},{"rel":"icon","type":"image/svg+xml","href":"/favicon_e3.svg"},{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],"style":[],"script":[],"noscript":[],"title":"Earthman • webshop"};
 
 const appRootTag = "div";
 
@@ -5610,8 +5612,10 @@ function publicAssetsURL(...path) {
   return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
+const require = createRequire(globalThis._importMeta_.url);
+
 const collections = {
-  'lucide': () => import('../_/icons.mjs').then(m => m.default),
+  'lucide': () => require('@iconify-json/lucide/icons.json'),
 };
 
 const DEFAULT_ENDPOINT = "https://api.iconify.design";

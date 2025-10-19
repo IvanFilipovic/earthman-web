@@ -8,6 +8,7 @@
 /// <reference types="nuxt-headlessui" />
 /// <reference types="@pinia/nuxt" />
 /// <reference types="@nuxt/devtools" />
+/// <reference types="nuxt-aos" />
 /// <reference types="@nuxt/telemetry" />
 /// <reference path="types/builder-env.d.ts" />
 /// <reference types="nuxt" />

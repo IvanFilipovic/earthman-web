@@ -11,7 +11,7 @@
     />
 
     <!-- Overlay -->
-    <div class="relative z-10 max-w-3xl mx-auto h-full flex flex-col justify-center px-6 text-white">
+    <div class="relative z-10 max-w-3xl mx-auto h-full flex flex-col justify-center px-6 text-background_color">
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium leading-tight mb-4">
         Sign up to keep up to date with <span class="font-bold">YOUR BRAND</span>!
       </h2>
@@ -22,27 +22,30 @@
       <form
         @submit.prevent="onSubmit"
         class="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col sm:flex-row gap-4"
-      >
-        <label for="email" class="sr-only">Email Address</label>
-        <input
-          id="email"
-          v-model="email"
-          type="email"
-          required
-          placeholder="Email Address"
-          class="flex-1 px-4 py-3 bg-white bg-opacity-20 placeholder-white placeholder-opacity-75 border border-white border-opacity-50 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-white"
-        />
-        <button
-          type="submit"
-          class="px-6 py-3 bg-white text-gray-900 font-semibold rounded-md hover:opacity-90 transition-opacity"
         >
-          Subscribe
-        </button>
+          <label for="email" class="sr-only">Email Address</label>
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            required
+            placeholder="Email Address"
+            class="flex-1 px-4 py-2 bg-background_color bg-opacity-20 placeholder-background_color placeholder-opacity-75 border border-background_color border-opacity-50 focus:outline-none focus:ring-2 focus:ring-background_color focus:ring-opacity-50 text-background_color"
+          />
+          <div class="">
+            <button
+              class="secondary-btn sweep-secondary px-4 py-2"
+              @click="loadMore"
+            >
+              <span class="btn-label">subscribe</span>
+              <span class="sweep-overlay bg-secondary_button_color" aria-hidden="true"></span>
+            </button>
+          </div>
       </form>
     </div>
 
     <!-- Dark overlay for contrast -->
-    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+    <div class="absolute inset-0 bg-text_color/30 bg-opacity-30"></div>
   </section>
 </template>
 

@@ -19,12 +19,15 @@ interface _GlobalComponents {
     'AppNavigation': typeof import("../../components/AppNavigation.vue")['default']
     'BackgroundVideo': typeof import("../../components/BackgroundVideo.vue")['default']
     'CartPanel': typeof import("../../components/CartPanel.vue")['default']
+    'Carusel': typeof import("../../components/Carusel.vue")['default']
     'CollectionHome': typeof import("../../components/CollectionHome.vue")['default']
     'CollectionListing': typeof import("../../components/CollectionListing.vue")['default']
     'CollectionShopListing': typeof import("../../components/CollectionShopListing.vue")['default']
     'Filter': typeof import("../../components/Filter.vue")['default']
     'FilterPanel': typeof import("../../components/FilterPanel.vue")['default']
     'HomePageListing': typeof import("../../components/HomePageListing.vue")['default']
+    'InstagramGrid': typeof import("../../components/InstagramGrid.vue")['default']
+    'MobileMenu': typeof import("../../components/MobileMenu.vue")['default']
     'Newsletter': typeof import("../../components/Newsletter.vue")['default']
     'ProductAccordion': typeof import("../../components/ProductAccordion.vue")['default']
     'ShopListing': typeof import("../../components/ShopListing.vue")['default']
@@ -110,12 +113,15 @@ interface _GlobalComponents {
     'LazyAppNavigation': LazyComponent<typeof import("../../components/AppNavigation.vue")['default']>
     'LazyBackgroundVideo': LazyComponent<typeof import("../../components/BackgroundVideo.vue")['default']>
     'LazyCartPanel': LazyComponent<typeof import("../../components/CartPanel.vue")['default']>
+    'LazyCarusel': LazyComponent<typeof import("../../components/Carusel.vue")['default']>
     'LazyCollectionHome': LazyComponent<typeof import("../../components/CollectionHome.vue")['default']>
     'LazyCollectionListing': LazyComponent<typeof import("../../components/CollectionListing.vue")['default']>
     'LazyCollectionShopListing': LazyComponent<typeof import("../../components/CollectionShopListing.vue")['default']>
     'LazyFilter': LazyComponent<typeof import("../../components/Filter.vue")['default']>
     'LazyFilterPanel': LazyComponent<typeof import("../../components/FilterPanel.vue")['default']>
     'LazyHomePageListing': LazyComponent<typeof import("../../components/HomePageListing.vue")['default']>
+    'LazyInstagramGrid': LazyComponent<typeof import("../../components/InstagramGrid.vue")['default']>
+    'LazyMobileMenu': LazyComponent<typeof import("../../components/MobileMenu.vue")['default']>
     'LazyNewsletter': LazyComponent<typeof import("../../components/Newsletter.vue")['default']>
     'LazyProductAccordion': LazyComponent<typeof import("../../components/ProductAccordion.vue")['default']>
     'LazyShopListing': LazyComponent<typeof import("../../components/ShopListing.vue")['default']>

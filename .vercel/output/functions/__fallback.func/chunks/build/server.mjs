@@ -16,6 +16,7 @@ import 'node:path';
 import 'node:crypto';
 import '@iconify/utils';
 import 'consola';
+import 'node:module';
 import 'node:url';
 import 'ipx';
 import 'vue-bundle-renderer/runtime';
@@ -7608,7 +7609,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-B5nJs3bB.mjs')
+        component: () => import('./index-BSabaD2R.mjs')
       }
     ]
   },
@@ -7620,19 +7621,19 @@ const _routes = [
       {
         name: "about",
         path: "",
-        component: () => import('./index-CuRONl8-.mjs')
+        component: () => import('./index-2QOUZkha.mjs')
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-DhV6DM7s.mjs')
+    component: () => import('./index-CBxom8lS.mjs')
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import('./checkout-B9gGTRS3.mjs')
+    component: () => import('./checkout-CpBm9pl1.mjs')
   },
   {
     name: __nuxt_page_meta?.name,
@@ -7642,19 +7643,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-C6gzVtHG.mjs')
+        component: () => import('./index--lyU2Z6e.mjs')
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import('./_...slug_-DevmD-dK.mjs')
+        component: () => import('./_...slug_-C7njS9b8.mjs')
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-Bzwsvqtm.mjs')
+    component: () => import('./_...product_-BwJkuA5H.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -7996,7 +7997,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = Symbol.for("nuxt:client-only");
-const __nuxt_component_0$2 = defineComponent({
+const __nuxt_component_1 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -8345,7 +8346,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     };
   }
 });
-const LazyIcon = defineAsyncComponent(() => import('./index-DTKfBZ1X.mjs').then((n) => n.i).then((r) => r["default"] || r.default || r));
+const LazyIcon = defineAsyncComponent(() => import('./index-qGNUStbk.mjs').then((n) => n.i).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["Icon", LazyIcon]
 ];
@@ -13602,7 +13603,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import('./default-C0OZ1N6p.mjs').then((m) => m.default || m))
+  default: defineAsyncComponent(() => import('./default-Bwcj8blc.mjs').then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -13824,7 +13825,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$1;
-  const _component_ClientOnly = __nuxt_component_0$2;
+  const _component_ClientOnly = __nuxt_component_1;
   const _component_NuxtPage = __nuxt_component_0;
   _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
@@ -13872,7 +13873,7 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-CONkWLzZ.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-HUVmQXmf.mjs'));
     const _Error = defineAsyncComponent(() => import('./error-500-DUMWIG05.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
@@ -13954,5 +13955,5 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { _export_sfc as _, __nuxt_component_0 as a, useRouter as b, useRoute as c, __nuxt_component_0$2 as d, entry$1 as default, useRuntimeConfig as e, useRequestEvent as f, encodeParam as g, hasProtocol as h, encodePath as i, joinURL as j, useNuxtApp as k, fetchDefaults as l, useRequestFetch as m, navigateTo as n, parseQuery as o, parseURL as p, withTrailingSlash as q, resolveRouteObject as r, withoutTrailingSlash as s, nuxtLinkDefaults as t, useHead as u, asyncDataDefaults as v, withLeadingSlash as w, createError as x, useAppConfig as y };
+export { _export_sfc as _, __nuxt_component_0 as a, useRouter as b, useRoute as c, __nuxt_component_1 as d, entry$1 as default, useRuntimeConfig as e, useRequestEvent as f, encodeParam as g, hasProtocol as h, encodePath as i, joinURL as j, useNuxtApp as k, parseQuery as l, withTrailingSlash as m, navigateTo as n, withoutTrailingSlash as o, parseURL as p, nuxtLinkDefaults as q, resolveRouteObject as r, asyncDataDefaults as s, createError as t, useHead as u, useAppConfig as v, withLeadingSlash as w, fetchDefaults as x, useRequestFetch as y };
 //# sourceMappingURL=server.mjs.map

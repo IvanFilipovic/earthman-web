@@ -5,7 +5,7 @@
       v-for="(group, pageIndex) in groups"
       :key="pageIndex"
       :ref="el => (groupRefs[pageIndex] = el)"
-      class="relative grid grid-cols-1 h-screen w-full gap-1 mb-[4px]"
+      class="relative grid grid-cols-1 min-h-screen w-full gap-1 mb-[4px]"
       :class="group.length > 1 ? 'md:grid-cols-2' : ''"
     >
       <!-- Tile(s) -->
@@ -15,14 +15,16 @@
         class="relative h-full w-full bg-cover bg-center"
         :style="{ backgroundImage: `url(${item.element_one_image})` }"
       >
-        <div class="absolute inset-0 bg-black bg-opacity-25"></div>
-        <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center text-white px-4">
-          <h2 class="text-3xl font-semibold mb-4 bg-text_color/60">{{ item.name }}</h2>
+      <div class="absolute inset-0 bg-black bg-opacity-25"></div>
+        <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center text-background_color px-4">
+          <h2 class="text-base sm:text-lg md:text-2xl font-medium md:font-bold mb-4 bg-text_color/70 uppercase tracking-wider py-1
+          ">{{ item.name }}</h2>
           <NuxtLink
             :to="`/collections/${encodeURIComponent(item.slug)}`"
-            class="primary-btn sweep group inline-flex items-center justify-center px-8 py-3"
+            class="primary-btn sweep group inline-flex items-center justify-center px-8 
+             py-3"
           >
-            <span class="btn-label">View collection</span>
+            <span class="btn-label">View project</span>
             <span class="sweep-overlay" aria-hidden="true"></span>
           </NuxtLink>
         </div>

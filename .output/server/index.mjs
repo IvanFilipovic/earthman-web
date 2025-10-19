@@ -11,5 +11,6 @@ import 'vue-router';
 import 'node:url';
 import '@iconify/utils';
 import 'consola';
+import 'node:module';
 import 'ipx';
 //# sourceMappingURL=index.mjs.map
