@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   runtimeConfig: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     // Private keys (only available on the server)
     apiSecret: '',
     apiBase: process.env.INTERNAL_API_BASE || 'https://earthmanweb.pythonanywhere.com/',

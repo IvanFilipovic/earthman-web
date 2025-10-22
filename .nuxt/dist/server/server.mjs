@@ -678,7 +678,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-CCvcmnZz.js")
+        component: () => import("./_nuxt/index-CHgrU-gl.js")
       }
     ]
   },
@@ -697,12 +697,12 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-DlN0Ou4d.js")
+    component: () => import("./_nuxt/index-CrmX3C6v.js")
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-CPXw4acB.js")
+    component: () => import("./_nuxt/checkout-CzbvVHlK.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -712,19 +712,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-C24Vgc_B.js")
+        component: () => import("./_nuxt/index-RiFvPdMe.js")
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-B4mS6zkw.js")
+        component: () => import("./_nuxt/_...slug_-BdGCs5OS.js")
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-CO2LuMdf.js")
+    component: () => import("./_nuxt/_...product_-B017QmFQ.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -8902,11 +8902,11 @@ export {
   encodeParam as k,
   encodePath as l,
   useNuxtApp as m,
-  navigateTo as n,
-  fetchDefaults as o,
+  fetchDefaults as n,
+  useAsyncData as o,
   parseURL as p,
-  useAsyncData as q,
-  useRequestFetch as r,
+  useRequestFetch as q,
+  navigateTo as r,
   useHead as u,
   withLeadingSlash as w
 };

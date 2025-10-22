@@ -7697,7 +7697,7 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-CCvcmnZz.mjs')
+        component: () => import('./index-CHgrU-gl.mjs')
       }
     ]
   },
@@ -7716,12 +7716,12 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-DlN0Ou4d.mjs')
+    component: () => import('./index-CrmX3C6v.mjs')
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import('./checkout-CPXw4acB.mjs')
+    component: () => import('./checkout-CzbvVHlK.mjs')
   },
   {
     name: __nuxt_page_meta?.name,
@@ -7731,19 +7731,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-C24Vgc_B.mjs')
+        component: () => import('./index-RiFvPdMe.mjs')
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import('./_...slug_-B4mS6zkw.mjs')
+        component: () => import('./_...slug_-BdGCs5OS.mjs')
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-CO2LuMdf.mjs')
+    component: () => import('./_...product_-B017QmFQ.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -15093,5 +15093,5 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { _export_sfc as _, __nuxt_component_0$3 as a, __nuxt_component_0$1 as b, __nuxt_component_0 as c, useRouter as d, entry$1 as default, useRoute as e, __nuxt_component_1 as f, useRuntimeConfig as g, useRequestEvent as h, hasProtocol as i, joinURL as j, encodeParam as k, encodePath as l, useNuxtApp as m, navigateTo as n, fetchDefaults as o, parseURL as p, useAsyncData as q, useRequestFetch as r, useHead as u, withLeadingSlash as w };
+export { _export_sfc as _, __nuxt_component_0$3 as a, __nuxt_component_0$1 as b, __nuxt_component_0 as c, useRouter as d, entry$1 as default, useRoute as e, __nuxt_component_1 as f, useRuntimeConfig as g, useRequestEvent as h, hasProtocol as i, joinURL as j, encodeParam as k, encodePath as l, useNuxtApp as m, fetchDefaults as n, useAsyncData as o, parseURL as p, useRequestFetch as q, navigateTo as r, useHead as u, withLeadingSlash as w };
 //# sourceMappingURL=server.mjs.map

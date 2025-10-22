@@ -14,7 +14,7 @@
           :style="skeletonStyle"
         >
           <!-- keep a consistent image ratio -->
-          <div class="w-full h-[255.73] md:h-[407.35px] lg:h-[568.723px] aspect-[3/4]" :style="skeletonStyle"></div>
+          <div class="w-full h-[275.73] md:h-[407.35px] lg:h-[568.723px] aspect-[3/4]" :style="skeletonStyle"></div>
         </div>
       </div>
 

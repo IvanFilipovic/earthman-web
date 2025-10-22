@@ -4493,7 +4493,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "394d0f92-ea2c-4f28-bce4-ddffbfa2b726",
+    "buildId": "07170c94-1c18-47d3-9d0d-efe09d19d77e",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4584,6 +4584,10 @@ const _inlineRuntimeConfig = {
       },
       "domainLocales": {}
     }
+  },
+  "pageTransition": {
+    "name": "page",
+    "mode": "out-in"
   },
   "apiSecret": "",
   "apiBase": "https://earthmanweb.pythonanywhere.com/",

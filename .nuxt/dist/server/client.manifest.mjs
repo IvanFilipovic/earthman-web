@@ -196,7 +196,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BH5VTXtt.js",
+    "file": "C7_9FciE.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -338,7 +338,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DHSVAJzS.js",
+    "file": "B1oBXElY.js",
     "name": "index",
     "src": "pages/collections/index.vue",
     "isDynamicEntry": true,
@@ -349,12 +349,10 @@ export default {
       "_Dc_dsoGv.js",
       "_B4iePnAF.js"
     ],
-    "css": [
-      "index.DrchvCW2.css"
-    ]
+    "css": []
   },
-  "index.DrchvCW2.css": {
-    "file": "index.DrchvCW2.css",
+  "index.DNKvpPMx.css": {
+    "file": "index.DNKvpPMx.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -364,7 +362,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CBlclSbC.js",
+    "file": "UA5O7pCy.js",
     "name": "index",
     "src": "pages/index.vue",
     "isDynamicEntry": true,
@@ -374,16 +372,13 @@ export default {
       "_BIAdIAEB.js",
       "_B4iePnAF.js"
     ],
-    "css": [
-      "index.De08gyTk.css",
-      "keen-slider.BWf4Yhr3.css"
-    ],
+    "css": [],
     "assets": [
       "black_logo1.CQVFfuO7.png"
     ]
   },
-  "index.De08gyTk.css": {
-    "file": "index.De08gyTk.css",
+  "index.ljq4U3A5.css": {
+    "file": "index.ljq4U3A5.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -434,7 +429,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CxLfB_j7.js",
+    "file": "BtRbL0CV.js",
     "name": "index",
     "src": "pages/shop/index.vue",
     "isDynamicEntry": true,

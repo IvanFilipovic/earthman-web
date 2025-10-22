@@ -287,6 +287,12 @@ declare module 'nuxt/schema' {
       cdnURL: string,
    },
 
+   pageTransition: {
+      name: string,
+
+      mode: string,
+   },
+
    apiSecret: string,
 
    apiBase: string,

@@ -5,7 +5,7 @@
       v-for="(group, pageIndex) in groups"
       :key="pageIndex"
       :ref="el => (groupRefs[pageIndex] = el)"
-      class="relative grid grid-cols-1 min-h-screen w-full gap-1 mb-[4px]"
+      class="relative grid grid-cols-1 min-h-screen w-full gap-1 mb-1"
       :class="group.length > 1 ? 'md:grid-cols-2' : ''"
     >
       <!-- Tile(s) -->
