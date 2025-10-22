@@ -40,7 +40,7 @@
 
 /* Label sits above the sweeping overlay */
 .secondary-btn .btn-label { 
-  @apply relative z-10; 
+  @apply relative z-10 text-sm md:text-base; 
 }
 
 /* Sweep overlay: slides in from the left */

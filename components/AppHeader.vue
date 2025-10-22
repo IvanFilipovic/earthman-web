@@ -189,30 +189,30 @@ props.dark ? 'text-background_color' : 'text-text_color'
 const backgroundColor = computed(() =>
 props.dark ? 'bg-background_color text-text_color' : 'bg-text_color text-background_color'
 )
-interface CartResponse {
-  items: unknown[]
-}
+interface CartResponse { items: unknown[] }
+
+let inflight: AbortController | null = null
 
 async function fetchCart() {
+  // cancel any previous request
+  if (inflight) inflight.abort()
+  inflight = new AbortController()
+
   try {
-    const res = await $fetch<CartResponse>(`${config.public.apiBase}/public/cart/`, {
-      credentials: 'include'
-    })
-    itemCount.value = Array.isArray(res.items) ? res.items.length : 0
+    const res = await $fetch<CartResponse>('/api/private/get/cart', { signal: inflight.signal })
+    itemCount.value = Array.isArray(res?.items) ? res.items.length : 0
   } catch (err) {
     console.warn('Cart fetch failed', err)
+  } finally {
+    inflight = null
   }
 }
-const onCartUpdated = () => { fetchCart() }
+
+const onCartUpdated = () => fetchCart()
 
 onMounted(() => {
   fetchCart()
-  // attach listeners only on client
   window.addEventListener('cart:updated', onCartUpdated)
-  // (optional) refresh when tab regains focus
-  window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') fetchCart()
-  })
 })
 
 onBeforeUnmount(() => {

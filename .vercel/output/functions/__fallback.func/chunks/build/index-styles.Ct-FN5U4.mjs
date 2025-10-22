@@ -11,7 +11,6 @@ import '@intlify/utils';
 import 'vue-router';
 import '@iconify/utils';
 import 'consola';
-import 'node:module';
 import 'node:url';
 import 'ipx';
 

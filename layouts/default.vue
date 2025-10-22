@@ -9,7 +9,7 @@
 </template>
 <style>
 body {
-  background-color: #fcfcfc;
+  background-color: #e2e2e2;
   font-family: "Neue Einstellung";
 }
 </style>

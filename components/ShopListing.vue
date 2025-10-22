@@ -16,10 +16,13 @@
               @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
               :src="item.currentImage || item.link_image"
               :alt="item.alt_text || item.name"
-              class="max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
+              class="hidden md:block max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
               loading="lazy"
             />
-
+            <MobileColorSlider
+              :colors="limitedColors(item.colors)"
+              @go="(variantSlug) => goToProduct(item.slug, variantSlug)"
+            />
             <button
               v-show="hoveredSlug === item.slug"
               class="absolute top-4 left-4
@@ -52,7 +55,7 @@
                   @mouseleave="hoveredSlug = null"
                   :src="color.avatar_image"
                   :alt="color.color"
-                  class="h-8 w-8 object-cover"
+                  class="w-7 h-7 md:h-8 md:w-8 object-cover"
                   loading="lazy"
                   @click="goToProduct(item.slug, color.variant_slug)"
                 />

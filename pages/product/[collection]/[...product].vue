@@ -6,6 +6,8 @@
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
       <div class="flex justify-start w-full">
         <div class="flex items-center py-1 text-xs md:text-sm text-text_color uppercase tracking-widest">
+          <NuxtLink to="/" class="hover:underline pr-2">HOME</NuxtLink>
+          <span class="pr-2">/</span>
           <NuxtLink to="/shop" class="hover:underline pr-2">Shop</NuxtLink>
           <span class="pr-2">/</span>
           <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-2">
@@ -19,8 +21,8 @@
     <div class="hidden md:block">
       <div class="relative grid grid-cols-12 gap-8 pt-8 mt-2 md:mt-6 px-4 md:px-8 product-grid">
         <!-- LEFT: Gallery -->
-        <div class="col-span-12 lg:col-span-8">
-          <div v-if="imagesToShow.length > 0" class="grid grid-cols-2 gap-y-7 pr-2 place-content-between">
+        <div class="md:col-span-8">
+          <div v-if="imagesToShow.length > 0" class="grid grid-cols-2 gap-y-7 place-content-between">
               <img
                 v-for="(g, i) in variantGroups[activeColorIndex].gallery"
                 :key="g.id ?? i"
@@ -37,7 +39,7 @@
         </div>
 
         <!-- RIGHT: Sticky Add-to-cart -->
-        <aside class="col-span-12 lg:col-span-4 product-sticky">
+        <aside class="md:col-span-4 product-sticky">
           <div class="bg-background_color border border-text_color/30 p-5 align-self:start">
             <!-- Title / price -->
             <div class="flex items-start justify-between">
@@ -148,7 +150,26 @@
           class="keen-slider__slide"
         >
           <img :src="img.image" class="w-full h-auto object-cover border-t border-b border-text_color/30" :alt="img.alt_text || productName" />
+          
         </div>
+        
+      </div>
+      <!-- Dots -->
+      <div v-if="slider" class="flex items-center justify-center gap-2 py-3">
+        <button
+          v-for="idx in dots"
+          :key="idx"
+          type="button"
+          class="flex items-center text-text_color"
+          :aria-label="`Go to slide ${idx + 1}`"
+          @click="slider.moveToIdx(idx)"
+        >
+          <!-- Active uses lucide:minus, inactive uses lucide:dot -->
+          <Icon
+            :name="currentSlide === idx ? 'lucide:minus' : 'lucide:dot'"
+            class="w-8 h-8 my-auto"
+          />
+        </button>
       </div>
       <div class="pt-4 px-4
       " v-if="variantGroups.length">
@@ -185,21 +206,20 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
         <div class="flex flex-col items-start py-6 px-4 gap-4">
           <div>
             <h1 class="text-sm font-light leading-tight text-text_color">{{ productCategory }}</h1>
-            <h1 class="text-xl font-medium leading-tight text-text_color">{{ productName }}</h1>
+            <h1 class="text-lg font-medium leading-tight text-text_color">{{ productName }}</h1>
           </div>
           <div class="text-right">
-            <div v-if="product?.discount" class="space-x-2">
+            <div v-if="product?.discount" class="space-x-1">
               <span class="text-base font-semibold text-text_color">€{{ product?.discount_price }}</span>
-              <span class="line-through text-text_color">€{{ product?.price }}</span>
+              <span class="line-through text-text_color text-sm">€{{ product?.price }}</span>
             </div>
             <div v-else class="text-base font-semibold text-text_color">€{{ product?.price }}</div>
           </div>
           <button
-            class="w-full py-2 text-center text-base font-medium tracking-wider bg-text_color text-background_color"
-            style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem)"  
+            class="w-full py-2 my-auto items-center text-center text-base font-medium tracking-wider bg-text_color text-background_color"
             @click="mobilePanelOpen = true"
           >
-            ADD
+            <span class="my-auto">ADD</span>
           </button>
         </div>
 
@@ -270,7 +290,17 @@ import { useKeenSlider } from 'keen-slider/vue.es'
 import "keen-slider/keen-slider.min.css";
 
 const mobilePanelOpen = ref(false)
-const [sliderRef] = useKeenSlider({ loop: true })
+const currentSlide = ref(0)
+const [sliderRef, slider] = useKeenSlider({
+  loop: true,
+  initial: 0,
+  slideChanged(s) {
+    currentSlide.value = s.track.details.rel
+  },
+})
+const dots = computed(() =>
+  slider.value ? [...Array(slider.value.track.details.slides.length).keys()] : []
+)
 /** Types (lightweight) */
 type SizeItem = { slug: string; size: { name: string }, available: boolean }
 type VariantGroup = { color: { name: string; image: string | null; alt_text: string }, avatar_image: string, sizes: SizeItem[] }
@@ -337,6 +367,17 @@ watch(
   },
   { immediate: true }
 )
+watch(
+  () => variantGroups.value[activeColorIndex.value]?.gallery?.length ?? 0,
+  async () => {
+    await nextTick()
+    if (slider.value) {
+      slider.value.update()
+      slider.value.moveToIdx(0)
+      currentSlide.value = 0
+    }
+  }
+)
 
 const router = useRouter()
 
@@ -388,28 +429,28 @@ async function addToCart() {
     return
   }
   try {
-    await $fetch(`${config.public.apiBase}/public/cart/item/`, {
+    await $fetch('/api/private/put/cart', {
       method: 'PUT',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: {
         product_variant_slug: selectedVariantSlug.value,
-        quantity: 1
-      }
+        quantity: 1, // set the TOTAL or keep your logic as-is
+      },
     })
+
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('cart:updated', {
         detail: { source: 'product', variant: selectedVariantSlug.value }
       }))
     }
-
     success('Added to cart')
   } catch (e: any) {
-    const msg = e?.data?.detail || 'Could not add to cart'
+    const msg = e?.data?.detail || e?.statusMessage || 'Could not add to cart'
     error(msg)
     console.error('Add to cart failed', e)
   }
 }
+
 
 /** Helpers */
 function swatchBg(hex?: string | null) {
@@ -418,7 +459,7 @@ function swatchBg(hex?: string | null) {
 }
 
 </script>
-<style non-scoped>
+<style scoped>
 /* If you have a fixed header, set this to its height */
 :root {
   --header-height: 0px;
@@ -428,12 +469,12 @@ function swatchBg(hex?: string | null) {
 /* Prevent grid stretch; sticky hates stretched grid items */
 .product-grid {
   /* Ensure the grid itself doesn't clip children */
+  align-items: start;
   overflow: visible;
 }
 .image {
 background-image: url("public/logo/black_logo1.png");
 }
-
 /* Only stick on large screens */
 @media (min-width: 1024px) {
   .product-sticky {

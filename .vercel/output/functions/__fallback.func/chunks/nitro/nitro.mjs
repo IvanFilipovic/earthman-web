@@ -9,7 +9,6 @@ import { createPathIndexLanguageParser, parseAcceptLanguage } from '@intlify/uti
 import { createRouterMatcher } from 'vue-router';
 import { getIcons } from '@iconify/utils';
 import { consola } from 'consola';
-import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'ipx';
 
@@ -1044,6 +1043,7 @@ function getRequestURL(event, opts = {}) {
 }
 
 const RawBodySymbol = Symbol.for("h3RawBody");
+const ParsedBodySymbol = Symbol.for("h3ParsedBody");
 const PayloadMethods$1 = ["PATCH", "POST", "PUT", "DELETE"];
 function readRawBody(event, encoding = "utf8") {
   assertMethod(event, PayloadMethods$1);
@@ -1111,6 +1111,26 @@ function readRawBody(event, encoding = "utf8") {
   const result = encoding ? promise.then((buff) => buff.toString(encoding)) : promise;
   return result;
 }
+async function readBody(event, options = {}) {
+  const request = event.node.req;
+  if (hasProp(request, ParsedBodySymbol)) {
+    return request[ParsedBodySymbol];
+  }
+  const contentType = request.headers["content-type"] || "";
+  const body = await readRawBody(event);
+  let parsed;
+  if (contentType === "application/json") {
+    parsed = _parseJSON(body, options.strict ?? true);
+  } else if (contentType.startsWith("application/x-www-form-urlencoded")) {
+    parsed = _parseURLEncodedBody(body);
+  } else if (contentType.startsWith("text/")) {
+    parsed = body;
+  } else {
+    parsed = _parseJSON(body, options.strict ?? false);
+  }
+  request[ParsedBodySymbol] = parsed;
+  return parsed;
+}
 function getRequestWebStream(event) {
   if (!PayloadMethods$1.includes(event.method)) {
     return;
@@ -1144,6 +1164,35 @@ function getRequestWebStream(event) {
       });
     }
   });
+}
+function _parseJSON(body = "", strict) {
+  if (!body) {
+    return void 0;
+  }
+  try {
+    return destr(body, { strict });
+  } catch {
+    throw createError$1({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      message: "Invalid JSON body"
+    });
+  }
+}
+function _parseURLEncodedBody(body) {
+  const form = new URLSearchParams(body);
+  const parsedForm = /* @__PURE__ */ Object.create(null);
+  for (const [key, value] of form.entries()) {
+    if (hasProp(parsedForm, key)) {
+      if (!Array.isArray(parsedForm[key])) {
+        parsedForm[key] = [parsedForm[key]];
+      }
+      parsedForm[key].push(value);
+    } else {
+      parsedForm[key] = value;
+    }
+  }
+  return parsedForm;
 }
 
 function handleCacheHeaders(event, opts) {
@@ -4444,7 +4493,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "6e52a522-d198-4009-bbf1-beedaaa19e3f",
+    "buildId": "394d0f92-ea2c-4f28-bce4-ddffbfa2b726",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4478,9 +4527,32 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiBase": "https://earthmanweb.pythonanywhere.com",
+    "cartSessionCookie": "cart_session_id",
+    "apiBase": "https://earthmanweb.pythonanywhere.com/",
     "vgsap": {},
     "aos": {},
+    "gtag": {
+      "enabled": true,
+      "initMode": "manual",
+      "id": "G-8ZJRJ8ZDQ1",
+      "initCommands": [
+        [
+          "consent",
+          "default",
+          {
+            "analytics_storage": "denied",
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied",
+            "wait_for_update": 500
+          }
+        ]
+      ],
+      "config": {},
+      "tags": [],
+      "loadingStrategy": "defer",
+      "url": "https://www.googletagmanager.com/gtag/js"
+    },
     "i18n": {
       "baseUrl": "",
       "defaultLocale": "",
@@ -4514,6 +4586,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "apiSecret": "",
+  "apiBase": "https://earthmanweb.pythonanywhere.com/",
   "icon": {
     "serverKnownCssClasses": []
   },
@@ -5612,10 +5685,8 @@ function publicAssetsURL(...path) {
   return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
-const require = createRequire(globalThis._importMeta_.url);
-
 const collections = {
-  'lucide': () => require('@iconify-json/lucide/icons.json'),
+  'lucide': () => import('../_/icons.mjs').then(m => m.default),
 };
 
 const DEFAULT_ENDPOINT = "https://api.iconify.design";
@@ -5803,9 +5874,15 @@ const _NUlhEJ = lazyEventHandler(() => {
   return useBase(opts.baseURL, ipxHandler);
 });
 
+const _lazy_scZpHq = () => import('../routes/api/private/delete/cart.delete.mjs');
+const _lazy_9hvoiE = () => import('../routes/api/private/get/cart.get.mjs');
+const _lazy_qNz1y0 = () => import('../routes/api/private/put/cart.put.mjs');
 const _lazy_0QEeZm = () => import('../routes/renderer.mjs').then(function (n) { return n.r; });
 
 const handlers = [
+  { route: '/api/private/delete/cart', handler: _lazy_scZpHq, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/private/get/cart', handler: _lazy_9hvoiE, lazy: true, middleware: false, method: "get" },
+  { route: '/api/private/put/cart', handler: _lazy_qNz1y0, lazy: true, middleware: false, method: "put" },
   { route: '/__nuxt_error', handler: _lazy_0QEeZm, lazy: true, middleware: false, method: undefined },
   { route: '/api/_nuxt_icon/:collection', handler: _fCSiD_, lazy: false, middleware: false, method: undefined },
   { route: '/_i18n/:locale/messages.json', handler: _1yTGrJ, lazy: false, middleware: false, method: undefined },
@@ -5968,5 +6045,5 @@ const listener = function(req, res) {
   return handler(req, res);
 };
 
-export { $fetch$1 as $, toRouteMatcher as A, createRouter$1 as B, defu as C, getRequestURL as D, getRequestHeader as E, parse as F, destr as G, isEqual as H, setCookie as I, getCookie as J, deleteCookie as K, hash$1 as L, listener as M, appRootTag as a, buildAssetsURL as b, appRootAttrs as c, getResponseStatus as d, appId as e, defineRenderHandler as f, getResponseStatusText as g, appTeleportTag as h, appTeleportAttrs as i, getQuery as j, createError$1 as k, appHead as l, getRouteRules as m, hasProtocol as n, joinURL as o, publicAssetsURL as p, useNitroApp as q, relative as r, klona as s, defuFn as t, useRuntimeConfig as u, sanitizeStatusCode as v, getContext as w, baseURL as x, createHooks as y, executeAsync as z };
+export { $fetch$1 as $, baseURL as A, createHooks as B, executeAsync as C, destr as D, toRouteMatcher as E, createRouter$1 as F, defu as G, getRequestURL as H, parse as I, getRequestHeader as J, isEqual as K, setCookie as L, deleteCookie as M, hash$1 as N, listener as O, appRootTag as a, buildAssetsURL as b, createError$1 as c, defineEventHandler as d, appRootAttrs as e, getResponseStatusText as f, getCookie as g, getResponseStatus as h, appId as i, defineRenderHandler as j, appTeleportTag as k, appTeleportAttrs as l, getQuery as m, appHead as n, getRouteRules as o, publicAssetsURL as p, hasProtocol as q, readBody as r, relative as s, joinURL as t, useRuntimeConfig as u, useNitroApp as v, klona as w, defuFn as x, sanitizeStatusCode as y, getContext as z };
 //# sourceMappingURL=nitro.mjs.map

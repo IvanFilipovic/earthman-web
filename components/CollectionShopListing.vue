@@ -16,8 +16,13 @@
                 @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
                 :src="item.currentImage || item.link_image"
                 :alt="item.alt_text || item.name"
-                class="w-full h-full object-cover border border-text_color/30"
+                class="hidden md:block w-full h-full object-cover border border-text_color/30"
                 loading="lazy"
+              />
+
+              <MobileColorSlider
+                :colors="limitedColors(item.colors)"
+                @go="(variantSlug) => goToProduct(item.slug, variantSlug)"
               />
               <button
                 v-show="hoveredSlug === item.slug"
@@ -48,7 +53,7 @@
                   <img
                     :src="color.avatar_image"
                     :alt="color.color"
-                    class="h-8 w-8 object-cover border border-project_black/40"
+                    class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/40"
                     loading="lazy"
                     @click="goToProduct(item.slug, color.variant_slug)"
                   />
@@ -96,8 +101,12 @@
                 @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
                 :src="item.currentImage || item.link_image"
                 :alt="item.alt_text || item.name"
-                class="w-full h-full object-cover border border-text_color/30"
+                class="hidden md:block w-full h-full object-cover border border-text_color/30"
                 loading="lazy"
+              />
+              <MobileColorSlider
+                :colors="limitedColors(item.colors)"
+                @go="(variantSlug) => goToProduct(item.slug, variantSlug)"
               />
               <button
                 v-show="hoveredSlug === item.slug"
@@ -130,7 +139,7 @@
                     @mouseleave="hoveredSlug = null"
                     :src="color.avatar_image"
                     :alt="color.color"
-                    class="h-8 w-8 object-cover border border-project_black/40"
+                    class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/40"
                     loading="lazy"
                     @click="goToProduct(item.slug, color.variant_slug)"
                   />

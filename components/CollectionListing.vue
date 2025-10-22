@@ -18,7 +18,7 @@
            text-center md:text-right h-full"
             >
               <h2
-                class="text-base sm:text-lg md:text-2xl font-medium md:font-bold 
+                class="text-base sm:text-lg md:text-xl font-medium md:font-semibold 
                       text-text_color bg-background_color/60 px-4 py-1 uppercase tracking-wider w-[60%] md:w-full
                       inline-flex items-center justify-center"
               >

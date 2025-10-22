@@ -64,7 +64,7 @@
                                 leave-to="opacity-0"
                                 >
                                 <MenuItems
-                                    class="absolute mt-3 w-40 origin-top-left shadow-sm ring-1 ring-text_color/5 focus:outline-none z-50"
+                                    class="absolute mt-3 w-40 origin-top-left shadow-sm ring-1 ring-text_color/5 focus:outline-none z-50 right-2"
                                     :class="props.dark ? 'bg-background_color text-text_color' : 'bg-text_color text-background_color'"
                                     static
                                 >

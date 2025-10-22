@@ -30,7 +30,8 @@
         
       </div>
     </div>
-    <ShopListing class="mt-2 md:mt-6 px-4 md:px-8" :products="products" />
+    <ShopListingskeleton v-if="loading" class="mt-2 md:mt-6 px-4 md:px-8" :count="8" />
+    <ShopListing v-else class="mt-2 md:mt-6 px-4 md:px-8" :products="products" />
 
     <ClientOnly>
       <FilterPanel
@@ -49,7 +50,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import AppNavigation from '~/components/AppNavigation.vue'
 
 const config = useRuntimeConfig()
-
+const loading = ref(true)
 const router = useRouter()
 const route = useRoute()
 const gender = ref(route.query.gender === 'male' ? 'male' : 'female')
@@ -149,13 +150,23 @@ async function fetchColors () {
   }
 }
 async function fetchProducts() {
-  const res = await $fetch(`${config.public.apiBase}/public/products-all/?${buildQuery()}`) as { count: number; results: any[] }
-  count.value = res.count
-  products.value = res.results.map(r => ({
-    ...r,
-    defaultImage: r.link_image,
-    currentImage: r.link_image
-  }))
+  try {
+    loading.value = true
+    const res = await $fetch(`${config.public.apiBase}/public/products-all/?${buildQuery()}`) as { count: number; results: any[] }
+    count.value = res.count
+    products.value = res.results.map(r => ({
+      ...r,
+      defaultImage: r.link_image,
+      currentImage: r.link_image
+    }))
+  } catch {
+    console.warn('Failed to fetch products')
+    loading.value = false
+  }
+  finally {
+    loading.value = false
+  }
+  
 }
 async function fetchCollections () {
   try {

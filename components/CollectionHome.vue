@@ -22,7 +22,7 @@
           <NuxtLink
             :to="`/collections/${encodeURIComponent(item.slug)}`"
             class="primary-btn sweep group inline-flex items-center justify-center px-8 
-             py-3"
+             py-2"
           >
             <span class="btn-label">View project</span>
             <span class="sweep-overlay" aria-hidden="true"></span>

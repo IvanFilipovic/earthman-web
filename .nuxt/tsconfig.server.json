@@ -181,6 +181,7 @@
     "../node_modules/nuxt-headlessui/node_modules",
     "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/nuxt-aos/node_modules",
+    "../node_modules/nuxt-gtag/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist"

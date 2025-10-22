@@ -179,9 +179,11 @@
 import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 
+let inflight: AbortController | null = null
 const config = useRuntimeConfig()
 const props = defineProps({
   open: { type: Boolean, default: false },
+  // ADD RAW AS A PROP
   dark: { type: Boolean, default: false }
 })
 const emit = defineEmits<{
@@ -202,27 +204,36 @@ const totals = computed(() => ({
   toPay: raw.value?.cart_total_to_pay ?? '0.00'
 }))
 
+
 async function fetchCart () {
+  // cancel any previous request (avoids race conditions when opening/closing fast)
+  if (inflight) inflight.abort()
+  inflight = new AbortController()
+
   try {
-    raw.value = await $fetch(`${config.public.apiBase}/public/cart/`, { credentials: 'include' })
+    raw.value = await $fetch('/api/private/get/cart', { signal: inflight.signal })
   } catch (e) {
+    // fall back to an empty cart shape
     raw.value = { items: [], cart_total_original_price: '0.00', cart_total_to_pay: '0.00' }
     console.warn('Cart fetch failed', e)
+  } finally {
+    inflight = null
   }
 }
 
-watch(() => props.open, (val) => { if (val) fetchCart() })
+watch(
+  () => props.open,
+  (val) => { if (val) fetchCart() },
+  { immediate: true }
+)
 
 const onCartUpdated = () => fetchCart()
 onMounted(() => {
-  if (props.open) fetchCart()
-  window.addEventListener('cart:updated', onCartUpdated)
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && props.open) fetchCart()
-  })
+  window.addEventListener('cart:deleted', onCartUpdated)
 })
+
 onBeforeUnmount(() => {
-  window.removeEventListener('cart:updated', onCartUpdated)
+  window.removeEventListener('cart:deleted', onCartUpdated)
 })
 
 /* ---------------------------
@@ -234,7 +245,6 @@ function itemSlug(it: any): string | undefined {
 }
 
 function deepClone<T>(v: T): T {
-  // works on plain data from your API; avoids cloning proxies
   return v ? JSON.parse(JSON.stringify(v)) : v
 }
 
@@ -243,7 +253,6 @@ async function removeItem(it: any) {
   if (!slug || removingSlug.value) return
   removingSlug.value = slug
 
-  // ✅ snapshot WITHOUT cloning a proxy
   const prev = deepClone(toRaw(raw.value))
 
   // optimistic UI
@@ -255,23 +264,21 @@ async function removeItem(it: any) {
   }
 
   try {
-    await $fetch(`${config.public.apiBase}/public/cart/item/delete/`, {
+    await $fetch('/api/private/delete/cart', {
       method: 'DELETE',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: { product_variant_slug: slug }
+      body: { product_variant_slug: slug },
     })
 
     // sync totals with server response
     await fetchCart()
 
-    // keep badges in sync (primitive detail only)
-    window.dispatchEvent(new CustomEvent('cart:updated', {
+    // notify others
+    window.dispatchEvent(new CustomEvent('cart:deleted', {
       detail: { source: 'cart-panel', removed: slug }
     }))
   } catch (e) {
-    // rollback if API fails
-    raw.value = prev
+    raw.value = prev // rollback
     console.error('Remove item failed', e)
   } finally {
     removingSlug.value = null
