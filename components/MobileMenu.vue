@@ -44,73 +44,12 @@
                     </div>
                     
                     <div class="flex flex-col items-end overflow-y-auto py-5 space-y-6">
-                        <!-- SHOP dropdown -->
-                        <ClientOnly>
-                            <Menu as="div" class="text-sm my-auto font-light" v-slot="{ open }">
-                            <MenuButton
-                                :class="[linkColorClass, navWeight('/shop'), 'text-sm px-4 inline-flex items-center']"
-                            >
-                                SHOP
-                                <Icon name="lucide:chevron-down" class="w-4 h-4 my-auto ml-1" :class="linkColorClass" />
-                            </MenuButton>
-
-                            <TransitionRoot :show="open">
-                                <TransitionChild
-                                enter="transition-opacity ease-out duration-200"
-                                enter-from="opacity-0"
-                                enter-to="opacity-100"
-                                leave="transition-opacity ease-in duration-150"
-                                leave-from="opacity-100"
-                                leave-to="opacity-0"
-                                >
-                                <MenuItems
-                                    class="absolute mt-3 w-40 origin-top-left shadow-sm ring-1 ring-text_color/5 focus:outline-none z-50 right-2"
-                                    :class="props.dark ? 'bg-background_color text-text_color' : 'bg-text_color text-background_color'"
-                                    static
-                                >
-                                    <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                        <NuxtLink
-                                        :to="{ path: '/shop', query: { gender: 'female' } }"
-                                        class="block px-4 py-2 text-sm"
-                                        :class="[
-                                            isShopGender('female') ? 'font-bold' : '',
-                                            active ? (props.dark ? 'bg-text_color/10' : 'bg-background_color/5') : ''
-                                        ]"
-                                        >
-                                        WOMAN
-                                        </NuxtLink>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                        <NuxtLink
-                                        :to="{ path: '/shop', query: { gender: 'male' } }"
-                                        class="block px-4 py-2 text-sm"
-                                        :class="[
-                                            isShopGender('male') ? 'font-bold' : '',
-                                            active ? (props.dark ? 'bg-text_color/10' : 'bg-background_color/5') : ''
-                                        ]"
-                                        >
-                                        MAN
-                                        </NuxtLink>
-                                    </MenuItem>
-                                    </div>
-                                </MenuItems>
-                                </TransitionChild>
-                            </TransitionRoot>
-                            </Menu>
-
-                            <template #fallback>
-                            <NuxtLink
-                                to="/shop"
-                                :class="[linkColorClass, 'text-sm font-light px-4 inline-flex items-center gap-1']"
-                            >
-                                SHOP
-                                <Icon name="lucide:chevron-down" class="w-4 h-4" :class="linkColorClass" />
-                            </NuxtLink>
-                            </template>
-                        </ClientOnly>
-
-                        <!-- Static links -->
+                        <NuxtLink
+                            to="/shop"
+                            :class="[linkColorClass, navWeight('/shop'), 'text-sm my-auto px-4']"
+                        >
+                            SHOP
+                        </NuxtLink>
                         <NuxtLink
                             to="/collections"
                             :class="[linkColorClass, navWeight('/collections'), 'text-sm my-auto px-4']"

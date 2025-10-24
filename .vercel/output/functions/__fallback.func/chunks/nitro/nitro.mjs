@@ -4493,7 +4493,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "07170c94-1c18-47d3-9d0d-efe09d19d77e",
+    "buildId": "63fba850-8d14-4444-8c95-0231730a7b9a",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4528,7 +4528,7 @@ const _inlineRuntimeConfig = {
   },
   "public": {
     "cartSessionCookie": "cart_session_id",
-    "apiBase": "https://earthmanweb.pythonanywhere.com/",
+    "apiBase": "https://earthmanweb.pythonanywhere.com",
     "vgsap": {},
     "aos": {},
     "gtag": {
@@ -4590,7 +4590,7 @@ const _inlineRuntimeConfig = {
     "mode": "out-in"
   },
   "apiSecret": "",
-  "apiBase": "https://earthmanweb.pythonanywhere.com/",
+  "apiBase": "https://earthmanweb.pythonanywhere.com",
   "icon": {
     "serverKnownCssClasses": []
   },

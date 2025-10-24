@@ -74,7 +74,7 @@ function createHead(options = {}) {
 
 const APP_ROOT_OPEN_TAG = `<${appRootTag}${propsToString(appRootAttrs)}>`;
 const APP_ROOT_CLOSE_TAG = `</${appRootTag}>`;
-const getServerEntry = () => import('../build/server.mjs').then((r) => r.default || r);
+const getServerEntry = () => import('../build/server.mjs').then(function (n) { return n.s; }).then((r) => r.default || r);
 const getClientManifest = () => import('../build/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
 const getSSRRenderer = lazyCachedFunction(async () => {
   const manifest = await getClientManifest();
@@ -237,7 +237,7 @@ async function renderInlineStyles(usedModules) {
 
 const renderSSRHeadOptions = {"omitLineBreaks":false};
 
-const entryFileName = "C7_9FciE.js";
+const entryFileName = "CPMFbm7I.js";
 
 globalThis.__buildAssetsURL = buildAssetsURL;
 globalThis.__publicAssetsURL = publicAssetsURL;

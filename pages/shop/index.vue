@@ -3,16 +3,6 @@
     <AppNavigation :dark="false" />
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
       <div class="flex justify-between w-full">
-        <div class="flex items-center">
-          <button
-          :class="genderBtnClass('female')"
-          @click="setGender('female')"
-          >WOMAN</button>
-          <button
-          :class="genderBtnClass('male')"
-          @click="setGender('male')"
-          >MAN</button>
-        </div>
         <div class="flex gap-3 justify-end w-full">
             <div class="flex items-center gap-3">
                 <span class="uppercase text-xs tracking-widest ml-4">Page</span>
@@ -51,36 +41,8 @@ import AppNavigation from '~/components/AppNavigation.vue'
 
 const config = useRuntimeConfig()
 const loading = ref(true)
-const router = useRouter()
 const route = useRoute()
-const gender = ref(route.query.gender === 'male' ? 'male' : 'female')
 
-watch(
-  () => route.query.gender,
-  (g) => {
-    const normalized = g === 'male' ? 'male' : 'female'
-    if (gender.value !== normalized) {
-      gender.value = normalized
-    }
-    
-  },
-  { immediate: true },
-  
-)
-
-// when clicking local buttons, also push to the URL
-function setGender(value: 'male' | 'female') {
-  if (gender.value !== value) {
-    gender.value = value
-    router.replace({ query: { ...route.query, gender: value } })
-  }
-}
-
-/* Active/inactive styles */
-function genderBtnClass(target: 'male' | 'female') {
-  const base = 'py-1 pr-8 text-sm text-text_color'
-  return [base, gender.value === target ? 'font-bold' : 'bg-background_color'].join(' ')
-}
 
 /* --------------------------
    Page + Filters + Data
@@ -99,7 +61,7 @@ const page = ref(1)
 const pageSize = 12
 const totalPages = computed(() => Math.max(1, Math.ceil(count.value / pageSize)))
 const filterOpen = ref(false)
-const filters = ref({ collections: [] as string[], categories: [] as number[], sizes: [] as string[], colors: [] as string[] })
+const filters = ref({ gender: [] as string[], collections: [] as string[], categories: [] as number[], sizes: [] as string[], colors: [] as string[] })
 
 const facets = ref({
   collections: [] as { name: string; slug: string }[],
@@ -116,7 +78,8 @@ function buildQuery() {
   filters.value.categories.forEach(id => p.append('category', id.toString()))
   filters.value.sizes.forEach(s => p.append('size', s))
   filters.value.colors.forEach(c => p.append('color', c))
-  p.set('gender', gender.value)  // sends "male" or "female"
+  const setGender = filters.value.gender[0]
+  if (setGender) p.set('gender', setGender)   
   return p.toString().replace(/\+/g, '%20')
 }
 
@@ -185,7 +148,7 @@ async function fetchCollections () {
 watch(filters, () => {
   if (page.value !== 1) page.value = 1
 }, { deep: true })
-watch([filters , page, gender, route], fetchProducts)
+watch([filters , page, route], fetchProducts)
 
 
 onMounted(async () => {

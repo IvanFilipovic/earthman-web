@@ -149,6 +149,9 @@
       "#aos/*": [
         "../node_modules/nuxt-aos/dist/runtime/*"
       ],
+      "#gsap": [
+        "./gsapComposables"
+      ],
       "#vue-router": [
         "../node_modules/vue-router"
       ],
@@ -159,7 +162,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/07170c94-1c18-47d3-9d0d-efe09d19d77e.json"
+        "./manifest/meta/63fba850-8d14-4444-8c95-0231730a7b9a.json"
       ],
       "#components": [
         "./components"

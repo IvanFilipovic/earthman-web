@@ -146,6 +146,9 @@
       "#aos/*": [
         "../node_modules/nuxt-aos/dist/runtime/*"
       ],
+      "#gsap": [
+        "./gsapComposables"
+      ],
       "#unhead/composables": [
         "../node_modules/nuxt/dist/head/runtime/composables/v3"
       ],
@@ -182,6 +185,7 @@
     "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/nuxt-aos/node_modules",
     "../node_modules/nuxt-gtag/node_modules",
+    "../node_modules/@hypernym/nuxt-gsap/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist"

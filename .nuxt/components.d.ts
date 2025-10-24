@@ -35,6 +35,7 @@ export const ProductAccordion: typeof import("../components/ProductAccordion.vue
 export const ShopListing: typeof import("../components/ShopListing.vue")['default']
 export const ShopListingskeleton: typeof import("../components/ShopListingskeleton.vue")['default']
 export const Toast: typeof import("../components/Toast.vue")['default']
+export const Test: typeof import("../components/test.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
 export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
@@ -131,6 +132,7 @@ export const LazyProductAccordion: LazyComponent<typeof import("../components/Pr
 export const LazyShopListing: LazyComponent<typeof import("../components/ShopListing.vue")['default']>
 export const LazyShopListingskeleton: LazyComponent<typeof import("../components/ShopListingskeleton.vue")['default']>
 export const LazyToast: LazyComponent<typeof import("../components/Toast.vue")['default']>
+export const LazyTest: LazyComponent<typeof import("../components/test.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
 export const LazyNuxtLayout: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
 export const LazyNuxtErrorBoundary: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>

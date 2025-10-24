@@ -29,7 +29,29 @@
 
             <!-- Body -->
             <div class="flex-1 overflow-auto px-6 py-6 space-y-8">
-              <!-- Collections -->
+
+              <!-- Gender -->
+              <section class="pt-2">
+                <div class="flex items-center justify-between">
+                  <h3 class="uppercase text-xs tracking-widest">Gender</h3>
+                  <button class="text-xs underline" @click="resetGender">Clear</button>
+                </div>
+
+                <!-- Single-select chips. 
+                     local.gender holds a single backend value: 'female' | 'male' | 'kids' | '' (ALL) -->
+                <div class="mt-3 flex flex-wrap gap-2 justify-end">
+                  <button
+                    v-for="g in genderOptions"
+                    :key="g.value || 'all'"
+                    @click="selectGender(g.value)"
+                    :class="chipClass(isGenderActive(g.value))"
+                  >
+                    {{ g.label }}
+                  </button>
+                </div>
+              </section>
+
+              <!-- Collection -->
               <section class="pt-2">
                 <div class="flex items-center justify-between">
                   <h3 class="uppercase text-xs tracking-widest">Collection</h3>
@@ -46,6 +68,7 @@
                   </button>
                 </div>
               </section>
+
               <!-- Category -->
               <section>
                 <div class="flex items-center justify-between">
@@ -58,8 +81,7 @@
                     :key="cat.id"
                     @click="toggle('categories', cat.id)"
                     :class="chipClass(local.categories.includes(cat.id))"
-                  >{{ cat.name }}
-                </button>
+                  >{{ cat.name }}</button>
                 </div>
               </section>
 
@@ -85,22 +107,18 @@
                   <h3 class="uppercase text-xs tracking-widest">Colour</h3>
                   <button class="text-xs underline" @click="resetColor">Clear</button>
                 </div>
-
                 <div class="mt-3 flex flex-col gap-2">
                   <div
                     v-for="c in facets.colors"
                     :key="c.name"
                     class="relative"
                   >
-                    <!-- Hidden checkbox to keep v-model working -->
                     <input
                       type="checkbox"
                       :value="c.name"
                       v-model="local.colors"
                       class="absolute inset-0 opacity-0 cursor-pointer"
                     />
-
-                    <!-- Swatch block -->
                     <div class="flex flex-row my-auto justify-end">
                       <p class="my-auto text-sm text-text_color px-8">{{ c.name }}</p>
                       <div
@@ -137,12 +155,13 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 const props = defineProps({
   open: { type: Boolean, default: false },
   facets: { type: Object, default: () => ({ collections: [], categories: [], sizes: [], colors: [] }) },
-  modelValue: { type: Object, default: () => ({ collections: [], categories: [], sizes: [], colors: [] }) }
+  modelValue: { type: Object, default: () => ({ gender: [], collections: [], categories: [], sizes: [], colors: [] }) }
 })
 const emit = defineEmits(['update:open','update:modelValue'])
 
 function cloneFilters(v = {}) {
   return {
+    gender: Array.isArray(v.gender) ? [...v.gender] : [],
     collections: Array.isArray(v.collections) ? [...v.collections] : [],
     categories: Array.isArray(v.categories) ? [...v.categories] : [],
     sizes: Array.isArray(v.sizes) ? [...v.sizes] : [],
@@ -156,13 +175,32 @@ watch(() => props.modelValue, (v) => {
   Object.assign(local, cloneFilters(v))
 }, { deep: true })
 
+const genderOptions = [
+  { label: 'WOMAN', value: 'female' },
+  { label: 'MAN',   value: 'male' },
+  { label: 'KIDS',  value: 'kids' },
+  { label: 'ALL',   value: '' }
+]
+function selectGender(val) {
+  local.gender = val ? [val] : []
+  emit('update:modelValue', cloneFilters(local))
+}
+function isGenderActive(val) {
+  if (!val) return local.gender.length === 0
+  return local.gender[0] === val
+}
+function resetGender () {
+  local.gender = []
+  emit('update:modelValue', cloneFilters(local))
+}
+
+/** ---- Apply / Reset ---- **/
 function apply () {
-  // emit a plain object (no proxies)
   emit('update:modelValue', cloneFilters(local))
   emit('update:open', false)
 }
 function reset () {
-  Object.assign(local, { collections: [], categories: [], sizes: [], colors: [] })
+  Object.assign(local, { gender: [], collections: [], categories: [], sizes: [], colors: [] })
   emit('update:modelValue', cloneFilters(local))
   emit('update:open', false)
 }
@@ -173,10 +211,12 @@ function resetCollection () {
 function resetCategories () {
   Object.assign(local, { categories: [] })
   emit('update:modelValue', cloneFilters(local))
-}function resetSize () {
+}
+function resetSize () {
   Object.assign(local, { sizes: [] })
   emit('update:modelValue', cloneFilters(local))
-}function resetColor () {
+}
+function resetColor () {
   Object.assign(local, { colors: [] })
   emit('update:modelValue', cloneFilters(local))
 }
@@ -185,6 +225,7 @@ function toggle (key, val) {
   local[key] = [...set]
 }
 function chipClass (active) {
-  return ['px-3 py-1 text-sm text-text-color', active ? 'font-bold' : 'bg-backgroun_color']
+  // (left your classes intact; tweak if you want a stronger active state)
+  return ['px-3 py-1 text-sm text-text_color', active ? 'font-bold' : 'bg-background_color'].join(' ')
 }
 </script>

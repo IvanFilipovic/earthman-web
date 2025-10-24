@@ -25,7 +25,7 @@
                     </div>
                 </BackgroundVideo>
             </div>
-            <div class="flex flex-col w-full lg:w-1/2 min-h-screen">
+            <div class="flex flex-col w-full lg:w-1/2">
                 <CollectionListing  />
             </div>
         </div>

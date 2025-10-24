@@ -1,4 +1,4 @@
-import { _ as _export_sfc, b as __nuxt_component_0$1 } from './server.mjs';
+import { _ as _export_sfc, a as __nuxt_component_0$1 } from './server.mjs';
 import { useSSRContext } from 'vue';
 import { ssrRenderComponent } from 'vue/server-renderer';
 import '../nitro/nitro.mjs';

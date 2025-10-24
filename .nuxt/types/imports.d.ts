@@ -113,6 +113,7 @@ declare global {
   const useError: typeof import('../../node_modules/nuxt/dist/app/composables/error').useError
   const useFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch').useFetch
   const useGSAP: typeof import('../../node_modules/v-gsap-nuxt/dist/runtime/plugin').useGSAP
+  const useGsap: typeof import('../gsapComposables').useGsap
   const useGtag: typeof import('../../node_modules/nuxt-gtag/dist/runtime/composables/useGtag').useGtag
   const useHead: typeof import('../../node_modules/nuxt/dist/app/composables/head').useHead
   const useHeadSafe: typeof import('../../node_modules/nuxt/dist/app/composables/head').useHeadSafe
@@ -318,6 +319,7 @@ declare module 'vue' {
     readonly useError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']>
     readonly useFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useFetch']>
     readonly useGSAP: UnwrapRef<typeof import('../../node_modules/v-gsap-nuxt/dist/runtime/plugin')['useGSAP']>
+    readonly useGsap: UnwrapRef<typeof import('../gsapComposables')['useGsap']>
     readonly useGtag: UnwrapRef<typeof import('../../node_modules/nuxt-gtag/dist/runtime/composables/useGtag')['useGtag']>
     readonly useHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHeadSafe']>

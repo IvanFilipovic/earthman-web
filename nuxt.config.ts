@@ -6,11 +6,11 @@ export default defineNuxtConfig({
     pageTransition: { name: 'page', mode: 'out-in' },
     // Private keys (only available on the server)
     apiSecret: '',
-    apiBase: process.env.INTERNAL_API_BASE || 'https://earthmanweb.pythonanywhere.com/',
+    apiBase: process.env.INTERNAL_API_BASE || 'https://earthmanweb.pythonanywhere.com',
     // Public keys (exposed to client-side)
     public: {
       cartSessionCookie: process.env.NUXT_PUBLIC_CART_SESSION_COOKIE || 'cart_session_id',
-      apiBase: 'https://earthmanweb.pythonanywhere.com/', // 👈 your backend endpoint
+      apiBase: 'https://earthmanweb.pythonanywhere.com', // 👈 your backend endpoint
     },
   },
   app: {
@@ -46,6 +46,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-aos',
     'nuxt-gtag',
+    '@hypernym/nuxt-gsap'
   ],
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
@@ -62,5 +63,9 @@ export default defineNuxtConfig({
         wait_for_update: 500
       }]
     ]
-  }
+  },
+  gsap: {
+    composables: true,
+    provide: false,
+  },
 })

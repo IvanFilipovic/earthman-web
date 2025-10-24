@@ -21,7 +21,7 @@
 
       <form
         @submit.prevent="onSubmit"
-        class="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col sm:flex-row gap-4"
+        class="w-full flex flex-col sm:flex-row gap-4"
         >
           <label for="email" class="sr-only">Email Address</label>
           <input
@@ -34,7 +34,7 @@
           />
           <div class="">
             <button
-              class="secondary-btn sweep-secondary px-4 py-2"
+              class="secondary-btn sweep-secondary px-4 py-2 w-full text-center"
               @click="loadMore"
             >
               <span class="btn-label">subscribe</span>

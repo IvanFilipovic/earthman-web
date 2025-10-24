@@ -9,22 +9,6 @@ import { ssrRenderAttrs, ssrRenderComponent, ssrRenderClass, ssrRenderSuspense, 
 import { getIconCSS } from '@iconify/utils/lib/css/icon';
 import { TransitionRoot, Switch } from '@headlessui/vue';
 import { u as useHead$1, h as headSymbol } from '../routes/renderer.mjs';
-import 'node:http';
-import 'node:https';
-import 'node:events';
-import 'node:buffer';
-import 'node:fs';
-import 'node:path';
-import 'node:crypto';
-import '@iconify/utils';
-import 'consola';
-import 'node:url';
-import 'ipx';
-import 'vue-bundle-renderer/runtime';
-import 'unhead/server';
-import 'devalue';
-import 'unhead/utils';
-import 'unhead/plugins';
 
 /*!
  * matrix 3.13.0
@@ -7697,9 +7681,14 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-CHgrU-gl.mjs')
+        component: () => import('./index-Bwar7PO4.mjs')
       }
     ]
+  },
+  {
+    name: "test",
+    path: "/test",
+    component: () => import('./test-DXgxYVZd.mjs')
   },
   {
     name: __nuxt_page_meta$1?.name,
@@ -7709,19 +7698,19 @@ const _routes = [
       {
         name: "about",
         path: "",
-        component: () => import('./index-BABigWok.mjs')
+        component: () => import('./index-CoeCLjU7.mjs')
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-CrmX3C6v.mjs')
+    component: () => import('./index-BLUt8TfP.mjs')
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import('./checkout-CzbvVHlK.mjs')
+    component: () => import('./checkout-DkwtQLOP.mjs')
   },
   {
     name: __nuxt_page_meta?.name,
@@ -7731,19 +7720,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-RiFvPdMe.mjs')
+        component: () => import('./index-DeMXLguJ.mjs')
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import('./_...slug_-BdGCs5OS.mjs')
+        component: () => import('./_...slug_-DWV_UOTZ.mjs')
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-B017QmFQ.mjs')
+    component: () => import('./_...product_-Bw5BAAis.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -8085,7 +8074,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = Symbol.for("nuxt:client-only");
-const __nuxt_component_1 = defineComponent({
+const __nuxt_component_2 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -14193,7 +14182,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import('./default-C-hHjkkn.mjs').then((m) => m.default || m))
+  default: defineAsyncComponent(() => import('./default-o5v0GltO.mjs').then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -14961,7 +14950,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$2;
-  const _component_ClientOnly = __nuxt_component_1;
+  const _component_ClientOnly = __nuxt_component_2;
   const _component_NuxtPage = __nuxt_component_0$1;
   const _component_CookieControl = _sfc_main$3;
   _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
@@ -15093,5 +15082,31 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { _export_sfc as _, __nuxt_component_0$3 as a, __nuxt_component_0$1 as b, __nuxt_component_0 as c, useRouter as d, entry$1 as default, useRoute as e, __nuxt_component_1 as f, useRuntimeConfig as g, useRequestEvent as h, hasProtocol as i, joinURL as j, encodeParam as k, encodePath as l, useNuxtApp as m, fetchDefaults as n, useAsyncData as o, parseURL as p, useRequestFetch as q, navigateTo as r, useHead as u, withLeadingSlash as w };
+const server = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  _: _export_sfc,
+  a: __nuxt_component_0$3,
+  b: __nuxt_component_0$1,
+  c: __nuxt_component_0,
+  d: useRoute,
+  default: entry$1,
+  e: __nuxt_component_2,
+  f: useRuntimeConfig,
+  g: useRouter,
+  h: useRequestEvent,
+  i: hasProtocol,
+  j: joinURL,
+  k: encodeParam,
+  l: encodePath,
+  m: useNuxtApp,
+  n: fetchDefaults,
+  o: useAsyncData,
+  p: parseURL,
+  q: useRequestFetch,
+  r: navigateTo,
+  u: useHead,
+  w: withLeadingSlash
+}, Symbol.toStringTag, { value: 'Module' }));
+
+export { ScrollTrigger as S, _export_sfc as _, __nuxt_component_0$1 as a, __nuxt_component_2 as b, useRuntimeConfig as c, __nuxt_component_0 as d, __nuxt_component_0$3 as e, ScrollToPlugin as f, useRouter as g, useHead as h, useNuxtApp as i, hasProtocol as j, joinURL as k, encodeParam as l, encodePath as m, navigateTo as n, fetchDefaults as o, parseURL as p, useAsyncData as q, useRequestFetch as r, server as s, useRoute as u, withLeadingSlash as w };
 //# sourceMappingURL=server.mjs.map

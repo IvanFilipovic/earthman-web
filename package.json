@@ -30,6 +30,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@hypernym/nuxt-gsap": "^2.4.3",
     "@iconify-json/lucide": "^1.2.65",
     "nuxt-keen-slider": "^1.1.1"
   }

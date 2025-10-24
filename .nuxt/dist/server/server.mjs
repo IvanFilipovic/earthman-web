@@ -678,9 +678,14 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-CHgrU-gl.js")
+        component: () => import("./_nuxt/index-Bwar7PO4.js")
       }
     ]
+  },
+  {
+    name: "test",
+    path: "/test",
+    component: () => import("./_nuxt/test-DXgxYVZd.js")
   },
   {
     name: __nuxt_page_meta$1?.name,
@@ -690,19 +695,19 @@ const _routes = [
       {
         name: "about",
         path: "",
-        component: () => import("./_nuxt/index-BABigWok.js")
+        component: () => import("./_nuxt/index-CoeCLjU7.js")
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-CrmX3C6v.js")
+    component: () => import("./_nuxt/index-BLUt8TfP.js")
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-CzbvVHlK.js")
+    component: () => import("./_nuxt/checkout-DkwtQLOP.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -712,19 +717,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-RiFvPdMe.js")
+        component: () => import("./_nuxt/index-DeMXLguJ.js")
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-BdGCs5OS.js")
+        component: () => import("./_nuxt/_...slug_-DWV_UOTZ.js")
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-B017QmFQ.js")
+    component: () => import("./_nuxt/_...product_-Bw5BAAis.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1066,7 +1071,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = Symbol.for("nuxt:client-only");
-const __nuxt_component_1 = defineComponent({
+const __nuxt_component_2 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -7987,7 +7992,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-C-hHjkkn.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-o5v0GltO.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -8755,7 +8760,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$2;
-  const _component_ClientOnly = __nuxt_component_1;
+  const _component_ClientOnly = __nuxt_component_2;
   const _component_NuxtPage = __nuxt_component_0$1;
   const _component_CookieControl = _sfc_main$3;
   _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
@@ -8891,11 +8896,11 @@ export {
   __nuxt_component_0$3 as a,
   __nuxt_component_0$1 as b,
   __nuxt_component_0 as c,
-  useRouter as d,
+  useRoute as d,
   entry$1 as default,
-  useRoute as e,
-  __nuxt_component_1 as f,
-  useRuntimeConfig as g,
+  __nuxt_component_2 as e,
+  useRuntimeConfig as f,
+  useRouter as g,
   useRequestEvent as h,
   hasProtocol as i,
   joinURL as j,

@@ -39,3 +39,4 @@ export { provideUseId as provideHeadlessUseId } from '../node_modules/@headlessu
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
 export { useGtag } from '../node_modules/nuxt-gtag/dist/runtime/composables/useGtag';
 export { useTrackEvent } from '../node_modules/nuxt-gtag/dist/runtime/composables/useTrackEvent';
+export { useGsap } from './gsapComposables';

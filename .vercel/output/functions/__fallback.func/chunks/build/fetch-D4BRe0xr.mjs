@@ -1,7 +1,7 @@
 import { computed, toValue, reactive, watch } from 'vue';
 import { N as hash } from '../nitro/nitro.mjs';
 import { isPlainObject } from '@vue/shared';
-import { n as fetchDefaults, o as useAsyncData, q as useRequestFetch } from './server.mjs';
+import { o as fetchDefaults, q as useAsyncData, r as useRequestFetch } from './server.mjs';
 
 function useFetch(request, arg1, arg2) {
   const [opts = {}, autoKey] = typeof arg1 === "string" ? [{}, arg1] : [arg1, arg2];

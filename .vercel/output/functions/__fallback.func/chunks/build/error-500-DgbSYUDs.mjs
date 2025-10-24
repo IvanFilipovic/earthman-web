@@ -1,6 +1,6 @@
 import { mergeProps, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrInterpolate } from 'vue/server-renderer';
-import { _ as _export_sfc, u as useHead } from './server.mjs';
+import { _ as _export_sfc, h as useHead } from './server.mjs';
 import '../nitro/nitro.mjs';
 import 'node:http';
 import 'node:https';
