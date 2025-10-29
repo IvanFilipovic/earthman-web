@@ -1,36 +1,34 @@
 <template>
   <div class="py-28">
     <div ref="sliderEl" class="keen-slider my-auto">
-      <!-- We iterate over computedSlides which adds CTA at start & end -->
       <div
         v-for="(s, i) in computedSlides"
         :key="s.key || i"
         class="keen-slider__slide px-2 my-auto"
         :class="s.type === 'cta' ? 'slide-cta' : 'slide-product'"
       >
-        <!-- CTA slides -->
         <div v-if="s.type === 'cta'" class="w-full h-full">
           <button
+            type="button"
             class="group w-full h-full flex items-center justify-center bg-background_color p-6 text-center"
             @click="onCtaClick(s.cta)"
           >
-            <div class="space-y-2">
+            <div class="space-y-4">
               <h3 class="text-xl md:text-2xl font-bold">{{ s.cta.title }}</h3>
               <p class="text-sm opacity-80">{{ s.cta.subtitle }}</p>
-              <div
-                  to="/shop"
-                  class="primary-btn sweep mx-auto px-4 py-2 md:w-full text-center"
-                  >
-                  <span class="btn-label">{{ s.cta.button }}</span>
-                  <span class="sweep-overlay" aria-hidden="true"></span>
+              <div class="btn btn--primary mx-auto">
+                <span class="btn__text">{{ s.cta.button }}</span>
+                <span class="btn__fill"></span>
               </div>
             </div>
           </button>
         </div>
 
-        <!-- Product slides -->
         <div v-else class="w-full">
-          <NuxtLink :to="`/product/${(s.item.slug)}/${encodeURIComponent(s.item.colors[0].variant_slug)}`" class="w-full overflow-hidden bg-background_color">
+          <NuxtLink 
+            :to="`/product/${s.item.slug}/${encodeURIComponent(s.item.colors[0].variant_slug)}`" 
+            class="w-full overflow-hidden bg-background_color"
+          >
             <img
               :src="firstColor(s.item)?.avatar_image || s.item.link_image"
               :alt="s.item.alt_text || s.item.name"
@@ -40,12 +38,8 @@
             />
           </NuxtLink>
           <div class="mt-3 text-text_color truncate text-center">
-            <p class="text-xs font-light mb-1">
-              {{ s.item.category }}
-            </p>
-            <p class="text-sm">
-              {{ s.item.name }}
-            </p>
+            <p class="text-xs font-light mb-1">{{ s.item.category }}</p>
+            <p class="text-sm">{{ s.item.name }}</p>
           </div>
         </div>
       </div>
@@ -54,18 +48,16 @@
 </template>
 
 <script setup lang="ts">
-import "keen-slider/keen-slider.min.css";
-import KeenSlider, { type KeenSliderInstance } from "keen-slider";
-import { onMounted, onBeforeUnmount, ref, computed } from "vue";
-const router = useRouter()
+import 'keen-slider/keen-slider.min.css'
+import KeenSlider, { type KeenSliderInstance } from 'keen-slider'
 
-// ---- types for your API ----
-type ColorEntry = {
+interface ColorEntry {
   color: string
   avatar_image: string
   variant_slug: string
 }
-type ProductItem = {
+
+interface ProductItem {
   id: number
   name: string
   collection: string
@@ -81,110 +73,138 @@ type ProductItem = {
   colors: ColorEntry[]
 }
 
-const sliderEl = ref<HTMLElement | null>(null)
-let slider: KeenSliderInstance | null = null
-const config = useRuntimeConfig()
-const items = ref<ProductItem[]>([])
-
-function firstColor(p: ProductItem) {
-  return (p.colors && p.colors.length > 0) ? p.colors[0] : null
+interface ProductsResponse {
+  count: number
+  results: ProductItem[]
 }
 
-async function load() {
+interface CtaSlide {
+  type: 'cta'
+  key: string
+  cta: {
+    title: string
+    subtitle: string
+    button: string
+  }
+}
+
+interface ProductSlide {
+  type: 'product'
+  key: string
+  item: ProductItem
+}
+
+type Slide = CtaSlide | ProductSlide
+
+const config = useRuntimeConfig()
+const router = useRouter()
+
+const sliderEl = ref<HTMLElement | null>(null)
+const items = ref<ProductItem[]>([])
+
+let slider: KeenSliderInstance | null = null
+
+function firstColor(product: ProductItem): ColorEntry | null {
+  return product.colors && product.colors.length > 0 ? product.colors[0] : null
+}
+
+async function loadProducts(): Promise<void> {
   try {
-    const res = await $fetch<{ count: number; results: ProductItem[] }>(`${config.public.apiBase}/public/products-all/?page=1&page_size=12&hot=true`, { credentials: 'include' })
-    items.value = Array.isArray(res?.results) ? res.results : []
-  } catch (e) {
-    console.warn("Hot products fetch failed", e)
+    const response = await $fetch<ProductsResponse>(
+      `${config.public.apiBase}/public/products-all/?page=1&page_size=12&hot=true`,
+      { credentials: 'include' }
+    )
+    items.value = Array.isArray(response?.results) ? response.results : []
+  } catch (error) {
+    console.error('Failed to fetch hot products:', error)
     items.value = []
   }
 }
 
-/** Build the array with CTA bookends */
-const computedSlides = computed(() => {
-  const startCTA = {
-    type: 'cta' as const,
+const computedSlides = computed<Slide[]>(() => {
+  const startCTA: CtaSlide = {
+    type: 'cta',
     key: 'cta-start',
     cta: {
       title: 'See all of our stories',
-      subtitle: 'Fresh drops you’ll love',
-      button: 'See stories'
+      subtitle: 'Fresh drops you love',
+      button: 'See Stories'
     }
   }
-  const endCTA = {
-    type: 'cta' as const,
+  
+  const endCTA: CtaSlide = {
+    type: 'cta',
     key: 'cta-end',
     cta: {
       title: 'See Everything',
-      subtitle: 'Browse trough all stories',
+      subtitle: 'Browse through all stories',
       button: 'View All'
     }
   }
-  const productSlides = items.value.map((item) => ({
-    type: 'product' as const,
+  
+  const productSlides: ProductSlide[] = items.value.map((item) => ({
+    type: 'product',
     key: `prod-${item.id}`,
     item
   }))
+  
   return [startCTA, ...productSlides, endCTA]
 })
 
-function onCtaClick(cta: { title: string; button: string }) {
-  // Customize routes for each CTA label if you want
-  if (cta.button.toLowerCase().includes('collections')) {
-    router.push({ path: '/collections', query: { sort: 'collections' } })
+function onCtaClick(cta: { title: string; button: string }): void {
+  if (cta.button.toLowerCase().includes('stories')) {
+    router.push('/collections')
   } else {
     router.push('/shop')
   }
 }
 
-onMounted(async () => {
-  await load()
+function initializeSlider(): void {
+  if (!sliderEl.value) return
 
-  if (sliderEl.value) {
-    slider = new KeenSlider(sliderEl.value, {
-      loop: false,
-      mode: "snap",
-      rtl: false,
-      slides: {
-        perView: "auto",     // key: let widths come from CSS
-        spacing: 2,
-      },
-      created(s) {
-        // re-measure when images load to avoid layout hiccups
-        const imgs = sliderEl.value?.querySelectorAll("img") || []
-        imgs.forEach(img => {
-          if (!img.complete) {
-            img.addEventListener("load", () => s.update(), { once: true })
-          }
-        })
-      },
-    })
-  }
+  slider = new KeenSlider(sliderEl.value, {
+    loop: false,
+    mode: 'snap',
+    rtl: false,
+    slides: {
+      perView: 'auto',
+      spacing: 2,
+    },
+    created(instance) {
+      const images = sliderEl.value?.querySelectorAll('img') || []
+      images.forEach(img => {
+        if (!img.complete) {
+          img.addEventListener('load', () => instance.update(), { once: true })
+        }
+      })
+    },
+  })
+}
+
+onMounted(async () => {
+  await loadProducts()
+  nextTick(() => {
+    initializeSlider()
+  })
 })
 
 onBeforeUnmount(() => {
-  if (slider) {
-    slider.destroy()
-    slider = null
-  }
+  slider?.destroy()
+  slider = null
 })
 </script>
 
 <style scoped>
-/* Let Keen handle the mechanics; we control widths with min/max-width
-   so perView:'auto' can size each slide differently. */
-
-/* Default (mobile) widths */
 .slide-product {
   min-width: 170px;
   max-width: 170px;
 }
+
 .slide-cta {
   min-width: 260px;
   max-width: 260px;
 }
 
-/* sm ≥ 640px */
 @media (min-width: 640px) {
   .slide-product {
     min-width: 210px;
@@ -196,7 +216,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* lg ≥ 1024px */
 @media (min-width: 1024px) {
   .slide-product {
     min-width: 300px;
@@ -208,7 +227,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Helpful: make each slide a block so padding works cleanly */
 .keen-slider__slide {
   display: block;
 }

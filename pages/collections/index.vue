@@ -1,52 +1,399 @@
 <template>
-  <section class="relative">
-    <!-- Nav in normal flow (scrolls away) -->
-    <div ref="navWrap" class="relative">
-      <AppNavigation :dark="false" />
+  <div>
+    <div ref="navWrap" class="fixed top-0 left-0 w-full z-50">
+      <AppNavigation :dark="isDark" />
     </div>
 
-    <!-- Content that slides over the nav while the nav is visible -->
-    <div
-      class="relative z-20 will-change-transform"
-      :style="{ transform: `translateY(${-parallaxY}px)` }"
-    >
-      <CollectionHome />
+    <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-background_color">
+      <p class="text-text_color text-xl">Loading collections...</p>
     </div>
-  </section>
+
+    <div v-else id="smooth-wrapper">
+      <div id="smooth-content" class="stage">
+        <section
+          v-for="(collection, i) in collections"
+          :key="collection.id || i"
+          class="slide"
+          :class="`slide--${(i % 2) + 1}`"
+        >
+          <div class="slide__bg" :style="{ backgroundImage: `url(${collection.element_one_image})` }">
+            <div class="slide__overlay"></div>
+          </div>
+
+          <div class="slide__content">
+            <div class="slide__content-inner">
+              <h2 class="slide__title">
+                <span class="slide__title-line">
+                  <span class="line__inner">{{ collection.name }}</span>
+                </span>
+              </h2>
+
+              <div class="slide__cta">
+                <NuxtLink
+                  :to="`/collections/${encodeURIComponent(collection.slug)}`"
+                  class="btn btn--secondary"
+                >
+                  <span class="btn__text">View Story</span>
+                  <span class="btn__fill"></span>
+                </NuxtLink>
+              </div>
+            </div>
+
+            <button
+              v-if="i < collections.length - 1"
+              type="button"
+              class="slide__scroll-btn"
+              @click="scrollToNext(i + 1)"
+            >
+              <span class="slide__scroll-line"></span>
+              <Icon name="lucide:chevron-down" class="slide__scroll-icon" />
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+
+let ScrollSmoother: any = null
+try {
+  ScrollSmoother = (await import('gsap/ScrollSmoother')).ScrollSmoother
+} catch {}
+
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+if (ScrollSmoother) gsap.registerPlugin(ScrollSmoother as any)
+
+interface Collection {
+  id: number
+  name: string
+  slug: string
+  element_one: string
+  element_one_image: string
+}
+
+const config = useRuntimeConfig()
 const navWrap = ref<HTMLElement | null>(null)
-const navHeight = ref(0)
-const parallaxY = ref(0)
+const isDark = ref(false)
+const loading = ref(true)
+const collections = ref<Collection[]>([])
 
-// Tweak this for stronger/weaker effect (0.5–0.9 feels nice)
-const PARALLAX_FACTOR = 0.6
+let smoother: any = null
+let ctx: gsap.Context | null = null
 
-function measureNav() {
-  navHeight.value = navWrap.value?.offsetHeight || 0
+function scrollToNext(index: number): void {
+  const target = document.querySelector(`.slide:nth-child(${index + 1})`)
+  if (target) {
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: { y: target, offsetY: 0 },
+      ease: 'power2.inOut'
+    })
+  }
 }
 
-function onScroll() {
-  // Move the content up while the nav is still “coverable”
-  // Stop at nav height so after the nav scrolls away we don’t keep shifting.
-  const y = Math.min(window.scrollY, navHeight.value)
-  parallaxY.value = y * PARALLAX_FACTOR
+async function fetchCollections(): Promise<void> {
+  try {
+    loading.value = true
+    const data = await $fetch<Collection[]>(`${config.public.apiBase}/public/collections/`)
+    collections.value = data || []
+  } catch (error) {
+    console.error('Failed to fetch collections:', error)
+    collections.value = []
+  } finally {
+    loading.value = false
+  }
 }
 
-onMounted(() => {
-  measureNav()
-  window.addEventListener('resize', measureNav)
-  window.addEventListener('scroll', onScroll, { passive: true })
-  onScroll()
+function initializeGSAP(): void {
+  ctx = gsap.context(() => {
+    if (ScrollSmoother) {
+      smoother = ScrollSmoother.create({
+        smooth: 1.5,
+        effects: true,
+        normalizeScroll: true,
+        smoothTouch: 0.2,
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content'
+      })
+    }
+
+    document.querySelectorAll<HTMLElement>('.slide').forEach((slide, index) => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: slide,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: () => {
+            isDark.value = index % 2 === 0
+          },
+          onEnterBack: () => {
+            isDark.value = index % 2 === 0
+          }
+        }
+      })
+
+      tl.from(slide.querySelector('.line__inner'), {
+        y: 120,
+        duration: 1.4,
+        ease: 'power4.out'
+      })
+        .from(
+          slide.querySelector('.btn'),
+          {
+            y: 80,
+            opacity: 0,
+            duration: 1.2,
+            ease: 'power4.out'
+          },
+          0.2
+        )
+        .from(
+          slide.querySelector('.slide__scroll-btn'),
+          {
+            y: 40,
+            opacity: 0,
+            duration: 1,
+            ease: 'power4.out'
+          },
+          0.3
+        )
+    })
+
+    document.querySelectorAll<HTMLElement>('.slide').forEach((slide) => {
+      const bg = slide.querySelector('.slide__bg') as HTMLElement
+
+      gsap.fromTo(
+        bg,
+        { y: '-20vh', scale: 1.2 },
+        {
+          y: '20vh',
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: slide,
+            scrub: true,
+            start: 'top bottom',
+            end: 'bottom top'
+          }
+        }
+      )
+    })
+
+    gsap.set('.stage', { autoAlpha: 1 })
+  })
+}
+
+onMounted(async () => {
+  await fetchCollections()
+  
+  nextTick(() => {
+    initializeGSAP()
+  })
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', measureNav)
-  window.removeEventListener('scroll', onScroll as any)
+  ctx?.revert()
+  ctx = null
+  smoother?.kill?.()
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 })
 </script>
 
 <style scoped>
-.will-change-transform { will-change: transform; }
+/* Button Base Styles */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.4s ease;
+  cursor: pointer;
+}
+
+.btn__text {
+  position: relative;
+  z-index: 2;
+}
+
+.btn__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  z-index: 1;
+  transition: width 0.4s ease;
+}
+
+/* Responsive button sizing */
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Page styles */
+.stage {
+  position: relative;
+  visibility: hidden;
+  min-height: 100vh;
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.slide__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.slide__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 2;
+}
+
+.slide--1 .slide__overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(37, 37, 37, 0.4) 0%,
+    rgba(37, 37, 37, 0.7) 100%
+  );
+}
+
+.slide--2 .slide__overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+.slide__content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1400px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.slide__content-inner {
+  text-align: center;
+  color: theme('colors.background_color');
+}
+
+.slide__title {
+  margin: 0 0 3rem;
+  overflow: hidden;
+}
+
+.slide__title-line {
+  display: block;
+  overflow: hidden;
+}
+
+.line__inner {
+  display: block;
+  font-size: clamp(2rem, 8vw, 8rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.slide__cta {
+  display: flex;
+  justify-content: center;
+}
+
+.slide__scroll-btn {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: theme('colors.background_color');
+  cursor: pointer;
+  padding: 0;
+  z-index: 20;
+}
+
+.slide__scroll-line {
+  display: block;
+  width: 1px;
+  height: 60px;
+  background: theme('colors.background_color');
+  opacity: 0.6;
+}
+
+.slide__scroll-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 768px) {
+  .slide__content {
+    padding: 1rem;
+  }
+
+  .line__inner {
+    font-size: clamp(1.5rem, 10vw, 3rem);
+  }
+
+  .slide__scroll-btn {
+    bottom: 2rem;
+  }
+
+  .slide__scroll-line {
+    height: 40px;
+  }
+}
 </style>

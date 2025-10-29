@@ -13,22 +13,48 @@
             @mouseleave="hoveredSlug = null"
           >
             <img
-              @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-              :src="item.currentImage || item.link_image"
+              :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
               :alt="item.alt_text || item.name"
               class="hidden md:block max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
               loading="lazy"
+              @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
             />
-            <MobileColorSlider
-              :colors="limitedColors(item.colors)"
-              @go="(variantSlug) => goToProduct(item.slug, variantSlug)"
-            />
+
+            <div v-if="item.colors && item.colors.length > 0" class="block md:hidden">
+              <div 
+                :ref="(el) => setSliderRef(el, item.slug)" 
+                class="keen-slider"
+              >
+                <div
+                  v-for="(color, i) in item.colors"
+                  :key="i"
+                  class="keen-slider__slide"
+                >
+                  <img
+                    :src="color.avatar_image"
+                    :alt="color.color"
+                    class="w-full h-auto object-cover border border-text_color/30"
+                    loading="lazy"
+                    @click="goToProduct(item.slug, color.variant_slug)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div v-else class="block md:hidden">
+              <img
+                :src="item.link_image"
+                :alt="item.alt_text || item.name"
+                class="w-full h-auto object-cover border border-text_color/30"
+                loading="lazy"
+                @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+              />
+            </div>
+
             <button
               v-show="hoveredSlug === item.slug"
-              class="absolute top-4 left-4
-                    bg-text_color text-background_color tracking-wider text-xs font-light 
-                    w-auto px-2 mx-auto 
-                    opacity-0 transition-opacity duration-200"
+              type="button"
+              class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light w-auto px-2 mx-auto opacity-0 transition-opacity duration-200"
               :class="{ 'opacity-100': hoveredSlug === item.slug }"
               @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
             >
@@ -36,41 +62,36 @@
             </button>
           </div>
 
-          <!-- TEXT BLOCK -->
           <div class="py-3 text-left">
             <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
-
             <h3 class="uppercase tracking-wider text-[13px] md:text-sm font-normal truncate py-1">{{ item.name }}</h3>
 
-            <div class="mt-1 flex items-center gap-2">
+            <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
               <div
-                v-for="color in limitedColors(item.colors)"
-                :key="color.variant_slug"
+                v-for="(color, colorIdx) in item.colors"
+                :key="colorIdx"
                 class="relative group"
-                @mouseenter="onEnterColor(item, color)"
+                @mouseenter="onEnterColor(item, color, colorIdx)"
                 @mouseleave="onLeaveColor(item)"
               >
                 <img
-                  @mouseenter="hoveredSlug = item.slug"
-                  @mouseleave="hoveredSlug = null"
                   :src="color.avatar_image"
                   :alt="color.color"
-                  class="w-7 h-7 md:h-8 md:w-8 object-cover"
+                  class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/40 cursor-pointer"
                   loading="lazy"
                   @click="goToProduct(item.slug, color.variant_slug)"
                 />
 
-                <!-- overlay icon; doesn't block mouse so leave works -->
-                <div class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color" :class="isColorHovered(item, color) ? 'opacity-100' : 'opacity-0'" >
+                <div
+                  class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
+                  :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                >
                   <Icon
                     name="lucide:square-arrow-out-up-right"
                     class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
-                    
                   />
                 </div>
-                
               </div>
-              <span v-if="extraColorsCount(item.colors) > 0" class="text-[10px] md:text-xs">+{{ extraColorsCount(item.colors) }}</span>
             </div>
 
             <p class="mt-1 text-xs font-light">€{{ parseFloat(item.price).toFixed(2) }}</p>
@@ -81,37 +102,133 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue"
-import { useRouter } from "vue-router"
+<script setup lang="ts">
+import KeenSlider from 'keen-slider'
+import 'keen-slider/keen-slider.min.css'
 
-defineProps({ products: { type: Array, default: () => [] } })
+interface ProductColor {
+  color: string
+  avatar_image: string
+  variant_slug: string
+}
 
-const hoveredSlug = ref(null)
+interface Product {
+  slug: string
+  name: string
+  category: string
+  price: string
+  link_image: string
+  alt_text?: string
+  hot?: boolean
+  colors?: ProductColor[]
+  currentImage?: string
+  defaultImage?: string
+}
+
+interface Props {
+  products: Product[]
+}
+
+const props = defineProps<Props>()
 const router = useRouter()
-const hoveredColorBySlug = ref({})
 
-function isColorHovered(item, color) {
-  return hoveredColorBySlug.value[item.slug] === color.variant_slug
+const hoveredSlug = ref<string | null>(null)
+const hoveredColorIndex = ref<Record<string, number | null>>({})
+const sliderElements = ref<Record<string, HTMLElement>>({})
+const sliderInstances = ref<Record<string, any>>({})
+const sliderCurrents = ref<Record<string, number>>({})
+
+function setSliderRef(el: any, slug: string): void {
+  if (el) {
+    sliderElements.value[slug] = el
+  }
 }
 
-function onEnterColor(item, color) {
+onMounted(() => {
+  nextTick(() => {
+    initializeSliders()
+  })
+})
+
+watch(() => props.products, () => {
+  nextTick(() => {
+    destroyAllSliders()
+    initializeSliders()
+  })
+}, { deep: true })
+
+onBeforeUnmount(() => {
+  destroyAllSliders()
+})
+
+function destroyAllSliders(): void {
+  Object.values(sliderInstances.value).forEach(slider => {
+    if (slider && typeof slider.destroy === 'function') {
+      slider.destroy()
+    }
+  })
+  sliderInstances.value = {}
+}
+
+function initializeSliders(): void {
+  props.products.forEach(product => {
+    if (!product.colors || product.colors.length === 0) return
+    
+    const element = sliderElements.value[product.slug]
+    if (!element) return
+
+    if (sliderInstances.value[product.slug]) {
+      sliderInstances.value[product.slug].destroy()
+    }
+
+    const slider = new KeenSlider(element, {
+      loop: true,
+      initial: 0,
+      slideChanged(s) {
+        sliderCurrents.value[product.slug] = s.track.details.rel
+      },
+    })
+
+    sliderInstances.value[product.slug] = slider
+    sliderCurrents.value[product.slug] = 0
+  })
+}
+
+function getMobileSliderCurrent(slug: string): number {
+  return sliderCurrents.value[slug] || 0
+}
+
+function moveToSlide(slug: string, index: number): void {
+  const slider = sliderInstances.value[slug]
+  if (slider && typeof slider.moveToIdx === 'function') {
+    slider.moveToIdx(index)
+  }
+}
+
+function isColorHovered(item: Product, colorIdx: number): boolean {
+  return hoveredColorIndex.value[item.slug] === colorIdx
+}
+
+function onEnterColor(item: Product, color: ProductColor, colorIdx: number): void {
+  hoveredSlug.value = item.slug
   item.currentImage = color.avatar_image
-  hoveredColorBySlug.value[item.slug] = color.variant_slug
+  hoveredColorIndex.value[item.slug] = colorIdx
 }
 
-function onLeaveColor(item) {
-  item.currentImage = item.defaultImage || item.link_image
-  hoveredColorBySlug.value[item.slug] = null
+function onLeaveColor(item: Product): void {
+  item.currentImage = item.colors?.[0]?.avatar_image || item.link_image
+  hoveredColorIndex.value[item.slug] = null
+  hoveredSlug.value = null
 }
-function extraColorsCount(colors = []) {
-  return Math.max(0, colors.length - 2)
-}
-function limitedColors(colors = []) {
-  return colors.slice(0, 2)
-}
-function goToProduct(slug, variant_slug) {
-  if (!slug || !variant_slug) return
-  router.push(`/product/${slug}/${variant_slug}`)
+
+function goToProduct(slug: string, variantSlug?: string): void {
+  if (!slug || !variantSlug) return
+  router.push(`/product/${slug}/${variantSlug}`)
 }
 </script>
+
+<style scoped>
+.keen-slider {
+  width: 100%;
+}
+</style>

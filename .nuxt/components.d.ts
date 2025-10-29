@@ -32,10 +32,12 @@ export const MobileColorSlider: typeof import("../components/MobileColorSlider.v
 export const MobileMenu: typeof import("../components/MobileMenu.vue")['default']
 export const Newsletter: typeof import("../components/Newsletter.vue")['default']
 export const ProductAccordion: typeof import("../components/ProductAccordion.vue")['default']
+export const ProductGallerySlider: typeof import("../components/ProductGallerySlider.vue")['default']
 export const ShopListing: typeof import("../components/ShopListing.vue")['default']
 export const ShopListingskeleton: typeof import("../components/ShopListingskeleton.vue")['default']
 export const Toast: typeof import("../components/Toast.vue")['default']
 export const Test: typeof import("../components/test.vue")['default']
+export const TestCollectionListing: typeof import("../components/testCollectionListing.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
 export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
@@ -129,10 +131,12 @@ export const LazyMobileColorSlider: LazyComponent<typeof import("../components/M
 export const LazyMobileMenu: LazyComponent<typeof import("../components/MobileMenu.vue")['default']>
 export const LazyNewsletter: LazyComponent<typeof import("../components/Newsletter.vue")['default']>
 export const LazyProductAccordion: LazyComponent<typeof import("../components/ProductAccordion.vue")['default']>
+export const LazyProductGallerySlider: LazyComponent<typeof import("../components/ProductGallerySlider.vue")['default']>
 export const LazyShopListing: LazyComponent<typeof import("../components/ShopListing.vue")['default']>
 export const LazyShopListingskeleton: LazyComponent<typeof import("../components/ShopListingskeleton.vue")['default']>
 export const LazyToast: LazyComponent<typeof import("../components/Toast.vue")['default']>
 export const LazyTest: LazyComponent<typeof import("../components/test.vue")['default']>
+export const LazyTestCollectionListing: LazyComponent<typeof import("../components/testCollectionListing.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
 export const LazyNuxtLayout: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
 export const LazyNuxtErrorBoundary: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>

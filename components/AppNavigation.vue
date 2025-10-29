@@ -3,7 +3,12 @@
     <div class="hidden md:flex flex-col lg:flex-row w-full">
       <div class="flex flex-col w-full lg:w-1/2 h-full bg-background_color">          
         <div class="absolute inset-x-0 top-0 w-1/2">
-            <AppHeader :dark="true" :navigation="false" />
+            <NuxtLink
+            to="/"
+            class="bg-transparent flex justify-center py-6"
+          >
+            <img src="/logo/earth-man920.png" alt="Logo" class="max-w-[100%]" />
+          </NuxtLink>
         </div>
       </div>
       <div class="hidden md:flex w-full items-start justify-end lg:w-1/2 px-4 md:px-8 md:py-14 lg:py-24 gap-6 h-full">
@@ -60,7 +65,7 @@
               </section>
       </div>
     </div>
-    <section class="flex md:hidden flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 py-6 gap-6 border-b border-text_color/30">
+    <section class="flex md:hidden flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 py-6 gap-6">
       <div class="flex md:hidden items-center justify-between w-full px-2">
       <!-- Logo -->
       <div class="w-[60%]">

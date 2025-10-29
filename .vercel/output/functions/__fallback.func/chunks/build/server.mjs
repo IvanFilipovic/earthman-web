@@ -7041,7 +7041,6 @@ if (!("global" in globalThis)) {
 const appLayoutTransition = false;
 const nuxtLinkDefaults = { "componentName": "NuxtLink" };
 const asyncDataDefaults = { "value": null, "errorValue": null, "deep": true };
-const fetchDefaults = {};
 const appId = "nuxt-app";
 function getNuxtAppCtx(id = appId) {
   return getContext(id, {
@@ -7681,14 +7680,9 @@ const _routes = [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-Bwar7PO4.mjs')
+        component: () => import('./index-B91g3x3U.mjs')
       }
     ]
-  },
-  {
-    name: "test",
-    path: "/test",
-    component: () => import('./test-DXgxYVZd.mjs')
   },
   {
     name: __nuxt_page_meta$1?.name,
@@ -7698,19 +7692,19 @@ const _routes = [
       {
         name: "about",
         path: "",
-        component: () => import('./index-CoeCLjU7.mjs')
+        component: () => import('./index-Bl4NlQpZ.mjs')
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-BLUt8TfP.mjs')
+    component: () => import('./index-C-do1UUk.mjs')
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import('./checkout-DkwtQLOP.mjs')
+    component: () => import('./checkout-CyV9Vb0b.mjs')
   },
   {
     name: __nuxt_page_meta?.name,
@@ -7720,19 +7714,19 @@ const _routes = [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-DeMXLguJ.mjs')
+        component: () => import('./index-DTKEckSY.mjs')
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import('./_...slug_-DWV_UOTZ.mjs')
+        component: () => import('./_...slug_-DmaEeTuV.mjs')
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-Bw5BAAis.mjs')
+    component: () => import('./_...product_-DddCkwm7.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -8074,7 +8068,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = Symbol.for("nuxt:client-only");
-const __nuxt_component_2 = defineComponent({
+const __nuxt_component_3 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -8355,9 +8349,6 @@ function useState(...args) {
 function useRequestEvent(nuxtApp) {
   nuxtApp ||= useNuxtApp();
   return nuxtApp.ssrContext?.event;
-}
-function useRequestFetch() {
-  return useRequestEvent()?.$fetch || globalThis.$fetch;
 }
 function prerenderRoutes(path) {
   {
@@ -14182,7 +14173,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import('./default-o5v0GltO.mjs').then((m) => m.default || m))
+  default: defineAsyncComponent(() => import('./default-B6BroYR9.mjs').then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -14705,10 +14696,10 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
               _push2(`<!---->`);
             }
             if (opend.value) {
-              _push2(`<div${_scopeId}><div role="dialog" aria-modal="true" class="fixed bottom-0 md:bottom-4 md:left-4 z-50 md:p-4"${_scopeId}><div class="w-full max-w-3xl border border-text_color/10 bg-background_color text-text_color shadow-2xl"${_scopeId}><div class="flex items-center justify-between p-6"${_scopeId}><h2 class="text-xl font-semibold"${_scopeId}>Information</h2><button class="hover:bg-text_color/10 rounded p-1" aria-label="Close"${_scopeId}>`);
+              _push2(`<div${_scopeId}><div role="dialog" aria-modal="true" class="fixed bottom-0 md:bottom-4 md:left-4 z-50 md:p-4"${_scopeId}><div class="w-full max-w-3xl border border-text_color/10 bg-background_color text-text_color shadow-2xl"${_scopeId}><div class="flex items-center justify-between p-6"${_scopeId}><h2 class="text-xl font-semibold"${_scopeId}>Information</h2><button class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0" aria-label="Close"${_scopeId}>`);
               _push2(ssrRenderComponent(_component_Icon, {
                 name: "lucide:x",
-                class: "w-5 h-5 my-auto"
+                class: "w-5 h-5"
               }, null, _parent2, _scopeId));
               _push2(`</button></div><div class="px-6 pb-4 space-y-4 text-sm leading-relaxed"${_scopeId}><p${_scopeId}> We and selected third parties use cookies or similar technologies for technical purposes and, with your consent, also for functionality, experience, measurement and marketing (personalized ads) as specified in the `);
               _push2(ssrRenderComponent(_component_NuxtLink, {
@@ -14804,13 +14795,13 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
                     createVNode("div", { class: "flex items-center justify-between p-6" }, [
                       createVNode("h2", { class: "text-xl font-semibold" }, "Information"),
                       createVNode("button", {
-                        class: "hover:bg-text_color/10 rounded p-1",
+                        class: "ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0",
                         "aria-label": "Close",
                         onClick: rejectAll
                       }, [
                         createVNode(_component_Icon, {
                           name: "lucide:x",
-                          class: "w-5 h-5 my-auto"
+                          class: "w-5 h-5"
                         })
                       ])
                     ]),
@@ -14950,7 +14941,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$2;
-  const _component_ClientOnly = __nuxt_component_2;
+  const _component_ClientOnly = __nuxt_component_3;
   const _component_NuxtPage = __nuxt_component_0$1;
   const _component_CookieControl = _sfc_main$3;
   _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
@@ -15087,26 +15078,24 @@ const server = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   _: _export_sfc,
   a: __nuxt_component_0$3,
   b: __nuxt_component_0$1,
-  c: __nuxt_component_0,
-  d: useRoute,
+  c: useRouter,
+  d: __nuxt_component_0,
   default: entry$1,
-  e: __nuxt_component_2,
-  f: useRuntimeConfig,
-  g: useRouter,
+  e: useRoute,
+  f: __nuxt_component_3,
+  g: useRuntimeConfig,
   h: useRequestEvent,
   i: hasProtocol,
   j: joinURL,
   k: encodeParam,
   l: encodePath,
   m: useNuxtApp,
-  n: fetchDefaults,
+  n: navigateTo,
   o: useAsyncData,
   p: parseURL,
-  q: useRequestFetch,
-  r: navigateTo,
   u: useHead,
   w: withLeadingSlash
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { ScrollTrigger as S, _export_sfc as _, __nuxt_component_0$1 as a, __nuxt_component_2 as b, useRuntimeConfig as c, __nuxt_component_0 as d, __nuxt_component_0$3 as e, ScrollToPlugin as f, useRouter as g, useHead as h, useNuxtApp as i, hasProtocol as j, joinURL as k, encodeParam as l, encodePath as m, navigateTo as n, fetchDefaults as o, parseURL as p, useAsyncData as q, useRequestFetch as r, server as s, useRoute as u, withLeadingSlash as w };
+export { ScrollTrigger as S, _export_sfc as _, __nuxt_component_0$1 as a, useRouter as b, __nuxt_component_3 as c, useRuntimeConfig as d, __nuxt_component_0 as e, __nuxt_component_0$3 as f, ScrollToPlugin as g, useHead as h, useNuxtApp as i, hasProtocol as j, joinURL as k, encodeParam as l, encodePath as m, navigateTo as n, useAsyncData as o, parseURL as p, server as s, useRoute as u, withLeadingSlash as w };
 //# sourceMappingURL=server.mjs.map

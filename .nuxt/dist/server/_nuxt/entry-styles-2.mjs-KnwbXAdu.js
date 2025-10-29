@@ -1,0 +1,5 @@
+const buttons = ".btn{align-items:center;cursor:pointer;display:inline-flex;font-size:.875rem;font-weight:500;justify-content:center;letter-spacing:.1em;overflow:hidden;padding:.875rem 2.5rem;text-decoration:none;text-transform:uppercase;transition:color .4s ease;z-index:1}.btn,.btn__text{position:relative}.btn__text{z-index:2}.btn__fill{height:100%;left:0;position:absolute;top:0;transition:width .4s ease;width:0;z-index:1}.btn--primary{background:#252525;border:none;color:#e2e2e2}.btn--primary .btn__fill{background:#0040ff}.btn--primary:hover .btn__fill{width:100%}.btn--secondary{background:#e2e2e2;border:1px solid #252525;color:#252525}.btn--secondary .btn__fill{background:#00c90d}.btn--secondary:hover .btn__fill{width:100%}@media (max-width:768px){.btn{font-size:.75rem;padding:.75rem 1.5rem}}";
+export {
+  buttons as default
+};
+//# sourceMappingURL=entry-styles-2.mjs-KnwbXAdu.js.map

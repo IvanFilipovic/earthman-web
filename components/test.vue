@@ -1,5 +1,4 @@
 <template>
-  <!-- smooth-wrapper/content are required if you use ScrollSmoother -->
   <div id="smooth-wrapper">
     <div id="smooth-content" class="stage">
       <!-- Slides generated from collections -->
@@ -27,15 +26,6 @@
               </NuxtLink>
             </div>
           </div>
-
-          <!-- next slide “arrow” -->
-          <a
-            v-if="i < collections.length - 1"
-            :href="`#slide-${i+2}`"
-            class="slide__scroll-link "
-          >
-            <div class="slide__scroll-line "> Next</div>
-          </a>
         </div>
 
         <!-- Right column: big image (parallax wrapper) -->
@@ -106,34 +96,6 @@ onMounted(() => {
       })
     }
 
-    // Header micro-anim
-    gsap
-      .timeline({ delay: 0.3 })
-      .from('.logo', { y: -40, opacity: 0, duration: 1, ease: 'power4' })
-      .from(
-        '.nav-btn__svg rect',
-        { scale: 0, transformOrigin: 'center right', duration: 0.4, stagger: 0.08, ease: 'power4' },
-        0.2
-      )
-
-    // Intro in/out
-    if (SplitText) {
-      // just a nice touch if SplitText is available
-      const introSplit = new (SplitText as any)('.intro__title', { type: 'lines', linesClass: 'intro-line' })
-      gsap.from(introSplit.lines, { y: 300, duration: 1.8, ease: 'power4', delay: 0.4, stagger: 0.05 })
-    }
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: '.intro',
-          scrub: 1,
-          start: 'top bottom',
-          end: 'bottom top'
-        }
-      })
-      .to('.intro__title', { x: 300, ease: 'none' }, 0)
-      .to('.intro__txt', { y: 100, ease: 'none' }, 0)
-
     // Link behaviors (scrollTo)
     document.querySelectorAll<HTMLAnchorElement>('.slide__scroll-link').forEach((a) => {
       const line = a.querySelector('.slide__scroll-line') as HTMLElement
@@ -162,13 +124,8 @@ onMounted(() => {
           0
         )
         .from(
-          slide.querySelectorAll('.col__content-txt'),
-          { x: 100, y: 40, opacity: 0, duration: 1.4, ease: 'power4' },
-          0.2
-        )
-        .from(
           slide.querySelectorAll('.slide-link'),
-          { x: -80, y: 80, opacity: 0, duration: 1.4, ease: 'power4' },
+          {  y: 160, duration: 1.8, ease: 'power4'  },
           0.2
         )
         .from(
@@ -196,23 +153,10 @@ onMounted(() => {
         }
       )
     })
-
-    // Top button
-    const top = document.querySelector('.footer__link-top')
-    if (top) {
-      top.addEventListener('click', (e) => {
-        e.preventDefault()
-        gsap.to(window, { duration: 1.3, scrollTo: { y: '#slide-0' }, ease: 'power2.inOut' })
-        gsap.to('.footer__link-top-line', { scaleY: 1, duration: 0.4, ease: 'power4' })
-      })
-    }
-
     // Reveal
     gsap.set('.stage', { autoAlpha: 1 })
   })
-  // keep ScrollTrigger happy on resize
   resizeHandler = (ev?: Event) => {
-    // Accept optional event param to match EventListener signature and forward to GSAP
     ScrollTrigger.refresh()
   }
   window.addEventListener('resize', resizeHandler)
@@ -242,37 +186,41 @@ html,body{ min-height:100vh; }
 
 /* Left content */
 .col__content{ position:relative; display:flex; flex-direction:column; justify-content:flex-end; height:100%; padding:6vw 6vw 10vw; }
-.col__content--1{ background:#e2e2e2; }
-.col__content--2{ background:#252525; }
-.col__content--3{ background:#e2e2e2; }
-.col__content--4{ background:#252525; }
-.col__content--5{ background:#e2e2e2; }
-.col__content--6{ background:#252525; }
-.col__content-title{ margin:0 0 2vw; font-size:11vw; letter-spacing:-0.9vw; line-height:1; }
+.col__content--1{ background:#e2e2e2; color: #252525; }
+.col__content--2{ background:#252525; color: #e2e2e2; }
+.col__content--3{ background:#e2e2e2; color: #252525; }
+.col__content--4{ background:#252525; color: #e2e2e2; }
+.col__content--5{ background:#e2e2e2; color: #252525; }
+.col__content--6{ background:#252525; color: #e2e2e2; }
+.col__content--1.slide-link{ background:#252525; color: #252525; z-index: 5; }
+.col__content--2.slide-link{ background:#e2e2e2; color: #e2e2e2; }
+.col__content--3.slide-link{ background:#252525; color: #252525; }
+.col__content--4.slide-link{ background:#e2e2e2; color: #e2e2e2; }
+.col__content--5.slide-link{ background:#252525; color: #252525; }
+.col__content--6.slide-link{ background:#e2e2e2; color: #e2e2e2; }
+.col__content-title{ margin:0 0 2vw; font-size:16px; letter-spacing:-0.9vw; line-height:1; }
 .col__content-wrap{ display:flex; justify-content:flex-end; }
-.col__content-txt{ max-width:22vw; order:2; margin-left:32px; }
 
-.slide-link{ position:relative; order:1; display:flex; justify-content:flex-end; width:75px; height:53px; z-index: 10; }
-.slide-link__circ{ width:53px; height:53px; border-radius:50%; border:1px solid var(--dark); ; z-index: 10; }
-.slide-link__line{ position:absolute; top:25px; left:0; width:64px; height:3px; background:var(--dark); ; z-index: 10; }
-
-.line__inner{ display:block; letter-spacing: 1px; }
-
+.line__inner{ display:block; letter-spacing: 1px; font-size:128px;}
+@media only screen and (max-width: 600px) {
+  .col__content-wrap{ display:flex; justify-content: center; }
+  .line__inner{ display:block; letter-spacing: 1px; font-size:32px; text-align: center;}
+}
 /* Right image */
 .col__image-wrap{ position:absolute; left:0; width:100%; height:160vh; }
 .img{ object-fit:cover; width:100%; height:100%; }
 
 /* Next link */
-.slide__scroll-link{ position:absolute; right:-113px; bottom:3.5vw; display:block; width:140px; height:140px; background:var(--dark); overflow:hidden; }
-.slide__scroll-line{ position:absolute; left:26px; bottom:0; width:1px; height:100%; background:#fff; }
+.slide__scroll-link{ position:absolute; right:-113px; bottom:3.5vw; display:block; width:140px; height:75px; background: #252525; overflow:hidden; padding-left: 2px; }
+.slide__scroll-line{ position:absolute; left:26px; bottom:0; width:1px; height:100%; color:#e2e2e2; margin-left: 2px; }
 
 
 /* Helpers for scroll line color */
 .slide--1 .slide__scroll-line{ background:#e2e2e2; }
-.slide--2 .slide__scroll-line{ background:#252525; }
+.slide--2 .slide__scroll-line{ background:#e2e2e2; }
 .slide--3 .slide__scroll-line{ background:#e2e2e2; }
-.slide--4 .slide__scroll-line{ background:#252525; }
+.slide--4 .slide__scroll-line{ background:#e2e2e2; }
 .slide--5 .slide__scroll-line{ background:#e2e2e2; }
-.slide--6 .slide__scroll-line{ background:#D7CEC5; }
+.slide--6 .slide__scroll-line{ background:#e2e2e2; }
 
 </style>

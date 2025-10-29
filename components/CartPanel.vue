@@ -112,7 +112,7 @@
                     </ul>
 
                     <!-- Subtotal / totals -->
-                    <div class="py-4 border-t">
+                    <div class="py-4 border-t border-text_color/30">
 
                     <!-- Subtotal -->
                     <div class="flex items-baseline justify-between">
@@ -157,13 +157,9 @@
                 <!-- Footer buttons -->
                 <div class="px-6 py-5 border-t border-text_color/30">
                     <div class="flex gap-3">
-                    <NuxtLink
-                        class="flex-1 primary-btn sweep py-3 text-center"
-                        to="/checkout"
-                    >
-                      <span class="btn-label">GO TO CHECKOUT</span>
-                      <span class="sweep-overlay bg-secondary_button_color" aria-hidden="true"></span>
-                        
+                    <NuxtLink to="/checkout" class="btn btn--primary w-full">
+                      <span class="btn__text">checkout</span>
+                      <span class="btn__fill"></span>
                     </NuxtLink>
                     </div>
                 </div>

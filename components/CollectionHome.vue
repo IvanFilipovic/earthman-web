@@ -1,4 +1,5 @@
 <template>
+  <!--CollectionHome.vue-->
   <div class="bg-text_color">
     <!-- Pages: either one or two items, full viewport height -->
     <div

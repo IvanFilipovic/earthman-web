@@ -1,0 +1,510 @@
+<template>
+  <section class="pt-8 mt-2 md:mt-6 px-4 md:px-8">
+    <div class="collection-content">
+      <div v-for="(section, idx) in sections" :key="idx">
+        <div v-if="section.layout === 'hero'" class="pb-8 md:pb-12">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 min-h-screen">
+            <article
+              v-for="item in section.items"
+              :key="item.slug"
+              class="group cursor-pointer relative min-h-[50vh] md:min-h-full overflow-hidden w-full"
+            >
+              <img
+                :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                :alt="item.alt_text || item.name"
+                class="absolute inset-0 max-w-full h-full object-contain mx-auto transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                @mouseenter="hoveredSlug = item.slug"
+                @mouseleave="hoveredSlug = null"
+              />
+              <div class="absolute inset-0"></div>
+              
+              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-background_color bg-text_color w-[50%]">
+                <div class="hero-content">
+                  <p class="text-xs tracking-widest uppercase mb-1 opacity-80">
+                    {{ item.category }}
+                  </p>
+                  <h2 class="hero-title text-2xl md:text-3xl lg:text-4xl font-bold mb-3 uppercase tracking-tight">
+                    {{ item.name }}
+                  </h2>
+                  
+                  <div class="flex items-center gap-2 mb-4">
+                    <div 
+                      v-for="(color, colorIdx) in item.colors?.slice(0, 4)"
+                      :key="colorIdx"
+                      class="relative"
+                      @mouseenter="onEnterColor(item, color, colorIdx)"
+                      @mouseleave="onLeaveColor(item)"
+                    >
+                      <img
+                        :src="color.avatar_image"
+                        :alt="color.color"
+                        class="w-8 h-8 md:w-10 md:h-10 object-cover border-2 border-background_color cursor-pointer transition-transform hover:scale-110"
+                        @click="goToProduct(item.slug, color.variant_slug)"
+                      />
+                    </div>
+                  </div>
+
+                  <NuxtLink
+                    :to="`/product/${item.slug}/${item.colors?.[0]?.variant_slug}`"
+                    class="btn btn--secondary inline-flex text-sm"
+                  >
+                    <span class="btn__text">Discover</span>
+                    <span class="btn__fill"></span>
+                  </NuxtLink>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div v-else-if="section.layout === 'triple'" class="pb-8 md:pb-12">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <article
+              v-for="item in section.items"
+              :key="item.slug"
+              class="group cursor-pointer"
+            >
+              <div class="relative overflow-hidden">
+                <img
+                  :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                  :alt="item.alt_text || item.name"
+                  class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  @mouseenter="hoveredSlug = item.slug"
+                  @mouseleave="hoveredSlug = null"
+                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                />
+
+                <MobileColorSlider
+                  v-if="item.colors && item.colors.length > 0"
+                  :colors="item.colors"
+                  @go="(variantSlug: string) => goToProduct(item.slug, variantSlug)"
+                />
+                <div v-else class="block md:hidden">
+                  <img
+                    :src="item.link_image"
+                    :alt="item.alt_text || item.name"
+                    class="w-full h-auto object-cover border border-text_color/30"
+                    loading="lazy"
+                    @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                  />
+                </div>
+
+                <button
+                  v-show="hoveredSlug === item.slug"
+                  type="button"
+                  class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light px-2 transition-opacity duration-200"
+                  :class="{ 'opacity-100': hoveredSlug === item.slug, 'opacity-0': hoveredSlug !== item.slug }"
+                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                >
+                  VIEW
+                </button>
+              </div>
+
+              <div class="pt-3 md:pt-4 text-left">
+                <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
+                <h3 class="uppercase tracking-wider text-sm font-normal truncate py-1">{{ item.name }}</h3>
+                
+                <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
+                  <div
+                    v-for="(color, colorIdx) in item.colors"
+                    :key="colorIdx"
+                    class="relative"
+                    @mouseenter="onEnterColor(item, color, colorIdx)"
+                    @mouseleave="onLeaveColor(item)"
+                  >
+                    <img
+                      :src="color.avatar_image"
+                      :alt="color.color"
+                      class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_text_color/40 cursor-pointer"
+                      loading="lazy"
+                      @click="goToProduct(item.slug, color.variant_slug)"
+                    />
+                    <div
+                      class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
+                      :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                    >
+                      <Icon
+                        name="lucide:square-arrow-out-up-right"
+                        class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div v-else class="pb-8 md:pb-12">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 md:gap-x-8 lg:gap-x-24 gap-y-8" :class="section.layout === 'reversed' ? 'md:flex md:flex-row-reverse' : ''">
+            <article
+              v-for="item in section.items"
+              :key="item.slug"
+              class="group cursor-pointer col-span-2 md:col-span-1"
+            >
+              <div class="relative overflow-hidden">
+                <img
+                  :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                  :alt="item.alt_text || item.name"
+                  class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  @mouseenter="hoveredSlug = item.slug"
+                  @mouseleave="hoveredSlug = null"
+                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                />
+
+                <MobileColorSlider
+                  v-if="item.colors && item.colors.length > 0"
+                  :colors="item.colors"
+                  @go="(variantSlug: string) => goToProduct(item.slug, variantSlug)"
+                />
+                <div v-else class="block md:hidden">
+                  <img
+                    :src="item.link_image"
+                    :alt="item.alt_text || item.name"
+                    class="w-full h-auto object-cover border border-text_color/30"
+                    loading="lazy"
+                    @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                  />
+                </div>
+
+                <button
+                  v-show="hoveredSlug === item.slug"
+                  type="button"
+                  class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light px-2 transition-opacity duration-200"
+                  :class="{ 'opacity-100': hoveredSlug === item.slug, 'opacity-0': hoveredSlug !== item.slug }"
+                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+                >
+                  VIEW
+                </button>
+              </div>
+
+              <div class="pt-3 md:pt-4 text-left">
+                <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
+                <h3 class="uppercase tracking-wider text-sm font-normal truncate py-1">{{ item.name }}</h3>
+                
+                <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
+                  <div
+                    v-for="(color, colorIdx) in item.colors"
+                    :key="colorIdx"
+                    class="relative"
+                    @mouseenter="onEnterColor(item, color, colorIdx)"
+                    @mouseleave="onLeaveColor(item)"
+                  >
+                    <img
+                      :src="color.avatar_image"
+                      :alt="color.color"
+                      class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_text_color/40 cursor-pointer"
+                      loading="lazy"
+                      @click="goToProduct(item.slug, color.variant_slug)"
+                    />
+                    <div
+                      class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
+                      :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                    >
+                      <Icon
+                        name="lucide:square-arrow-out-up-right"
+                        class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <div class="col-span-2 md:col-span-2 flex flex-col justify-center">
+              <h4 class="section-heading uppercase tracking-wider text-xs md:text-sm mb-3 px-4">
+                {{ section.heading }}
+              </h4>
+              <div class="flex flex-col ">
+                <span
+                  v-for="(line, i) in splitText(section.text)"
+                  :key="i"
+                  class="section-text-line -mx-4 px-4 md:-mx-0 py-1 md:py-2 my-1 md:my-3 text-sm md:text-base leading-relaxed tracking-wide bg-text_color text-background_color"
+                >
+                  {{ line }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="idx < sections.length - 1 && shouldShowSeparator(idx)" class="flex justify-center py-4 md:py-6">
+          <div class="w-64 h-px bg-text_color/30"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+interface ProductColor {
+  color: string
+  avatar_image: string
+  variant_slug: string
+}
+
+interface Product {
+  slug: string
+  name: string
+  category: string
+  price: string
+  link_image: string
+  alt_text?: string
+  hot?: boolean
+  colors?: ProductColor[]
+  currentImage?: string
+  defaultImage?: string
+}
+
+interface Collection {
+  name?: string
+  element_one?: string
+  element_two?: string
+  element_three?: string
+  element_four?: string
+  element_five?: string
+}
+
+interface GridSection {
+  layout: 'standard' | 'reversed' | 'hero' | 'triple'
+  items: Product[]
+  text: string
+  heading: string
+}
+
+interface Props {
+  products: Product[]
+  collection: Collection
+}
+
+const props = defineProps<Props>()
+const router = useRouter()
+
+const hoveredSlug = ref<string | null>(null)
+const hoveredColorIndex = ref<Record<string, number | null>>({})
+
+let ctx: gsap.Context | null = null
+
+const textElements = computed(() => {
+  const c = props.collection || {}
+  return [
+    c.element_one,
+    c.element_two,
+    c.element_three,
+    c.element_four,
+    c.element_five,
+  ].filter(Boolean)
+})
+
+const sections = computed<GridSection[]>(() => {
+  const allProducts = [...props.products]
+  const result: GridSection[] = []
+  let i = 0
+  
+  // Product 1 (standard + text 1)
+  if (allProducts.length >= 1) {
+    result.push({
+      layout: 'standard',
+      items: [allProducts[0]],
+      text: textElements.value[0] || '',
+      heading: props.collection?.name || 'Collection'
+    })
+    i = 1
+  }
+  
+  // Product 2 (reversed + text 2)
+  if (allProducts.length >= 2) {
+    result.push({
+      layout: 'reversed',
+      items: [allProducts[1]],
+      text: textElements.value[1] || '',
+      heading: props.collection?.name || 'Collection'
+    })
+    i = 2
+  }
+  
+  // Product 3 (standard + text 3)
+  if (allProducts.length >= 3) {
+    result.push({
+      layout: 'standard',
+      items: [allProducts[2]],
+      text: textElements.value[2] || '',
+      heading: props.collection?.name || 'Collection'
+    })
+    i = 3
+  }
+  
+  // Products 4+5 (hero, no text)
+  if (allProducts.length >= 5) {
+    result.push({
+      layout: 'hero',
+      items: [allProducts[3], allProducts[4]],
+      text: '',
+      heading: ''
+    })
+    i = 5
+  }
+  
+  // Product 6 (reversed + text 4)
+  if (allProducts.length >= 6) {
+    result.push({
+      layout: 'reversed',
+      items: [allProducts[5]],
+      text: textElements.value[3] || '',
+      heading: props.collection?.name || 'Collection'
+    })
+    i = 6
+  }
+  
+  // Product 7 (standard + text 5)
+  if (allProducts.length >= 7) {
+    result.push({
+      layout: 'standard',
+      items: [allProducts[6]],
+      text: textElements.value[4] || '',
+      heading: props.collection?.name || 'Collection'
+    })
+    i = 7
+  }
+  
+  // After first 7 products: hero every 3rd section, triple for others
+  let sectionsAfterText = 0
+  while (i < allProducts.length) {
+    const remaining = allProducts.length - i
+    
+    // Every 3rd section is hero (2 products)
+    if (sectionsAfterText > 0 && sectionsAfterText % 3 === 0 && remaining >= 2) {
+      result.push({
+        layout: 'hero',
+        items: [allProducts[i], allProducts[i + 1]],
+        text: '',
+        heading: ''
+      })
+      i += 2
+      sectionsAfterText++
+    } else {
+      // Triple layout (3 products per row)
+      const take = Math.min(3, remaining)
+      result.push({
+        layout: 'triple',
+        items: allProducts.slice(i, i + take),
+        text: '',
+        heading: ''
+      })
+      i += take
+      sectionsAfterText++
+    }
+  }
+  
+  return result
+})
+
+function isColorHovered(item: Product, colorIdx: number): boolean {
+  return hoveredColorIndex.value[item.slug] === colorIdx
+}
+
+function onEnterColor(item: Product, color: ProductColor, colorIdx: number): void {
+  hoveredSlug.value = item.slug
+  item.currentImage = color.avatar_image
+  hoveredColorIndex.value[item.slug] = colorIdx
+}
+
+function onLeaveColor(item: Product): void {
+  item.currentImage = item.colors?.[0]?.avatar_image || item.link_image
+  hoveredColorIndex.value[item.slug] = null
+  hoveredSlug.value = null
+}
+
+function goToProduct(slug: string, variantSlug?: string): void {
+  if (!slug || !variantSlug) return
+  router.push(`/product/${slug}/${variantSlug}`)
+}
+
+function splitText(text: string = ''): string[] {
+  return text
+    .split(/(?<=[.!?])\s+|\n+/)
+    .filter(Boolean)
+}
+
+function shouldShowSeparator(idx: number): boolean {
+  return sections.value[idx].layout !== 'hero'
+}
+
+function initializeGSAP(): void {
+  ctx = gsap.context(() => {
+    document.querySelectorAll('.hero-title').forEach((title) => {
+      gsap.from(title, {
+        scrollTrigger: {
+          trigger: title,
+          start: 'top 80%'
+        },
+        y: 80,
+        opacity: 0,
+        duration: 1.4,
+        ease: 'power4.out'
+      })
+    })
+
+    document.querySelectorAll('.hero-content').forEach((content) => {
+      gsap.from(content.querySelectorAll('p, .btn'), {
+        scrollTrigger: {
+          trigger: content,
+          start: 'top 80%'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power4.out',
+        stagger: 0.1
+      })
+    })
+
+    document.querySelectorAll('.section-heading').forEach((heading) => {
+      gsap.from(heading, {
+        scrollTrigger: {
+          trigger: heading,
+          start: 'top 80%'
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power4.out'
+      })
+    })
+
+    document.querySelectorAll('.section-text-line').forEach((line, index) => {
+      gsap.from(line, {
+        scrollTrigger: {
+          trigger: line,
+          start: 'top 85%'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        ease: 'power4.out',
+        delay: index * 0.1
+      })
+    })
+  })
+}
+
+onMounted(() => {
+  nextTick(() => {
+    initializeGSAP()
+  })
+})
+
+onBeforeUnmount(() => {
+  ctx?.revert()
+  ctx = null
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+})
+</script>

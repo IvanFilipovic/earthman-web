@@ -1,121 +1,178 @@
-<!-- pages/collection/[slug].vue -->
 <template>
+  <!--[slug.vue]-->
   <section>
-    <!-- Header -->
-    <AppNavigation :dark="false" />
-
-
-    <!-- Gender Switch -->
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
-      <div class="flex justify-start w-full">
-        <div class="flex items-center">
-          <button
-            :class="genderBtnClass('female')"
-            @click="setGender('female')"
-          >WOMAN</button>
-          <button
-            :class="genderBtnClass('male')"
-            @click="setGender('male')"
-          >MAN</button>
+    <div>
+      <AppNavigation :dark="false" />
+      
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
+        <div class="flex justify-start w-full">
+          <div class="flex items-center">
+            <button 
+              type="button"
+              :class="typeBtnClass('all')"
+              @click="setType('all')"
+            >
+              ALL
+            </button>
+            <button 
+              type="button"
+              :class="typeBtnClass('woman')"
+              @click="setType('woman')"
+            >
+              WOMAN
+            </button>
+            <button 
+              type="button"
+              :class="typeBtnClass('man')"
+              @click="setType('man')"
+            >
+              MAN
+            </button>
+            <button 
+              type="button"
+              :class="typeBtnClass('kids')"
+              @click="setType('kids')"
+            >
+              KIDS
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Product Listing -->
-    <CollectionShopListing
-      v-if="!pending && products.length"
-      class="mt-2 md:mt-6 px-4 md:px-8"
-      :products="products"
-      :collection="collection"
-      @cta-click="onCtaClick"
-    />
+      <TestCollectionListing
+        v-if="!pending && products.length"
+        :products="products"
+        :collection="collection"
+        @cta-click="onCtaClick"
+      />
+    </div>
   </section>
 </template>
 
-<script setup>
-import { ref, computed, watch } from 'vue'
-import { useRoute, useRouter } from '#imports'
+<script setup lang="ts">
+import TestCollectionListing from '~/components/testCollectionListing.vue'
 
-/* ──────────────────────────────
-   Route + gender state
-────────────────────────────── */
+interface ProductColor {
+  color: string
+  avatar_image: string
+  variant_slug: string
+}
+
+interface Collection {
+  name?: string
+  element_one?: string
+  element_two?: string
+  element_three?: string
+  element_four?: string
+}
+
+interface Product {
+  slug: string
+  name: string
+  category: string
+  price: string
+  link_image: string
+  alt_text?: string
+  hot?: boolean
+  colors?: ProductColor[]
+}
+
+interface ProductsResponse {
+  results: Product[]
+  next: string | null
+}
+
+type GenderType = 'all' | 'woman' | 'man' | 'kids'
+type ApiGender = 'all' | 'male' | 'female' | 'kids'
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-const slug = computed(() => String(route.params.slug))
-const gender = ref(route.query.gender === 'male' ? 'male' : 'female')
 
-// sync local gender ↔ route query
+const VALID_TYPES: GenderType[] = ['all', 'woman', 'man', 'kids']
+const PAGE_SIZE = 10
+
+const slug = computed(() => String(route.params.slug))
+
+const type = ref<GenderType>(
+  (route.query.type && VALID_TYPES.includes(String(route.query.type) as GenderType))
+    ? String(route.query.type) as GenderType
+    : 'all'
+)
+
+const gender = computed<ApiGender>(() => {
+  if (type.value === 'man') return 'male'
+  if (type.value === 'woman') return 'female'
+  if (type.value === 'kids') return 'kids'
+  return 'all'
+})
+
 watch(
-  () => route.query.gender,
-  (g) => {
-    const normalized = g === 'male' ? 'male' : 'female'
-    if (gender.value !== normalized) gender.value = normalized
+  () => route.query.type,
+  (t) => {
+    const normalized = (t && VALID_TYPES.includes(String(t) as GenderType))
+      ? String(t) as GenderType
+      : 'all'
+    if (type.value !== normalized) {
+      type.value = normalized
+    }
   },
   { immediate: true }
 )
 
-// update URL when gender changes locally
-function setGender(value) {
-  if (gender.value !== value) {
-    gender.value = value
-    router.replace({ query: { ...route.query, gender: value } })
-  }
+function setType(value: GenderType): void {
+  type.value = value
+  const newQuery = { ...route.query }
+  if ('gender' in newQuery) delete newQuery.gender
+  newQuery.type = value
+  router.replace({ query: newQuery })
 }
 
-/* ──────────────────────────────
-   UI helpers
-────────────────────────────── */
-function genderBtnClass(target) {
+function typeBtnClass(btnType: GenderType): string {
   const base = 'pr-8 py-1 text-sm text-text_color'
-  return [base, gender.value === target ? 'font-bold' : 'bg-background_color'].join(' ')
+  const active = type.value === btnType ? 'font-bold' : 'bg-background_color'
+  return `${base} ${active}`
 }
 
-/* ──────────────────────────────
-   API calls
-────────────────────────────── */
-
-// fetch collection data (not dependent on gender)
-const { data: collectionData, pending: cPending } = await useAsyncData(
-  () => `collection:${slug.value}`,
-  () => $fetch(`${config.public.apiBase}/public/collections/${slug.value}/`)
+const { data: collectionData, pending: cPending } = await useAsyncData<Collection>(
+  `collection:${slug.value}`,
+  async () => {
+    return await $fetch<Collection>(`${config.public.apiBase}/public/collections/${slug.value}/`)
+  }
 )
 
-// fetch ALL products, refetches when slug or gender changes
-const pageSize = 48
-const { data: productsData, pending: pPending, refresh } = await useAsyncData(
-  // 👇 include gender in the key so Nuxt refetches when it changes
-  () => `products-all:${slug.value}:${gender.value}`,
+const { data: productsData, pending: pPending } = await useAsyncData<Product[]>(
+  `products-all:${slug.value}:${gender.value}`,
   async () => {
-    let url = `${config.public.apiBase}/public/products-all/?page=1&page_size=${pageSize}&collection=${slug.value}&gender=${gender.value}`
-    const all = []
+    const baseUrl = `${config.public.apiBase}/public/products-all/`
+    const params = new URLSearchParams({
+      page: '1',
+      page_size: String(PAGE_SIZE),
+      collection: slug.value,
+    })
 
-    while (url) {
-      const res = await $fetch(url)
-      if (Array.isArray(res?.results)) all.push(...res.results)
-      url = res?.next || null
+    if (gender.value !== 'all') {
+      params.append('gender', gender.value)
     }
 
-    return all
+    let url: string | null = `${baseUrl}?${params.toString()}`
+    const allProducts: Product[] = []
+    const res: ProductsResponse = await $fetch<ProductsResponse>(url as string)
+    if (Array.isArray(res?.results)) {
+      allProducts.push(...res.results)
+    }
+    return allProducts
   },
-  // 👇 also explicitly watch reactive sources for extra safety
   { watch: [slug, gender] }
 )
 
-/* ──────────────────────────────
-   Computed + handlers
-────────────────────────────── */
 const pending = computed(() => cPending.value || pPending.value)
 const collection = computed(() => collectionData.value || {})
 const products = computed(() => productsData.value || [])
 
-function onCtaClick() {
-  if (process.client) window.scrollTo({ top: 0, behavior: 'smooth' })
+function onCtaClick(): void {
+  if (process.client) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 </script>
-<style scoped>
-.image {
-background-image: url("public/logo/black_logo1.png");
-}
-</style>
-

@@ -34,6 +34,9 @@ export default defineNuxtConfig({
       ]
     }
   },
+  css: [
+    '~/assets/css/components/buttons.css',
+  ],
   modules: [
     '@nuxt/eslint',
     '@nuxt/fonts',

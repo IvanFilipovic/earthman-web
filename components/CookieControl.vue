@@ -25,11 +25,11 @@
                     <div class="flex items-center justify-between p-6">
                     <h2 class="text-xl font-semibold">Information</h2>
                     <button
-                        class="hover:bg-text_color/10 rounded p-1"
-                        aria-label="Close"
-                        @click="rejectAll"
+                      class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0"
+                      aria-label="Close"
+                      @click="rejectAll"
                     >
-                        <Icon name="lucide:x" class="w-5 h-5 my-auto" />
+                      <Icon name="lucide:x" class="w-5 h-5" />
                     </button>
                     </div>
 

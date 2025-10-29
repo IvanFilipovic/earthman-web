@@ -4493,7 +4493,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "63fba850-8d14-4444-8c95-0231730a7b9a",
+    "buildId": "dba163dc-316f-4bee-9d14-187a08c0b705",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -6049,5 +6049,5 @@ const listener = function(req, res) {
   return handler(req, res);
 };
 
-export { $fetch$1 as $, baseURL as A, createHooks as B, executeAsync as C, destr as D, toRouteMatcher as E, createRouter$1 as F, defu as G, getRequestURL as H, parse as I, getRequestHeader as J, isEqual as K, setCookie as L, deleteCookie as M, hash$1 as N, listener as O, appRootTag as a, buildAssetsURL as b, createError$1 as c, defineEventHandler as d, appRootAttrs as e, getResponseStatusText as f, getCookie as g, getResponseStatus as h, appId as i, defineRenderHandler as j, appTeleportTag as k, appTeleportAttrs as l, getQuery as m, appHead as n, getRouteRules as o, publicAssetsURL as p, hasProtocol as q, readBody as r, relative as s, joinURL as t, useRuntimeConfig as u, useNitroApp as v, klona as w, defuFn as x, sanitizeStatusCode as y, getContext as z };
+export { $fetch$1 as $, baseURL as A, createHooks as B, executeAsync as C, destr as D, toRouteMatcher as E, createRouter$1 as F, defu as G, getRequestURL as H, parse as I, getRequestHeader as J, isEqual as K, setCookie as L, deleteCookie as M, listener as N, appRootTag as a, buildAssetsURL as b, createError$1 as c, defineEventHandler as d, appRootAttrs as e, getResponseStatusText as f, getCookie as g, getResponseStatus as h, appId as i, defineRenderHandler as j, appTeleportTag as k, appTeleportAttrs as l, getQuery as m, appHead as n, getRouteRules as o, publicAssetsURL as p, hasProtocol as q, readBody as r, relative as s, joinURL as t, useRuntimeConfig as u, useNitroApp as v, klona as w, defuFn as x, sanitizeStatusCode as y, getContext as z };
 //# sourceMappingURL=nitro.mjs.map

@@ -1,0 +1,5 @@
+const ProductGallerySlider_vue_vue_type_style_index_0_scoped_20161c5c_lang = ".navigation-wrapper[data-v-20161c5c]{position:relative}.keen-slider[data-v-20161c5c]{width:100%}.gallery-image[data-v-20161c5c]{background:var(--background_color);border:1px solid rgba(0,0,0,.08);display:block;height:auto;margin-left:auto;margin-right:auto;max-width:100%;-o-object-fit:contain;object-fit:contain}.arrow[data-v-20161c5c]{align-items:center;border:none;color:#252525;cursor:pointer;display:inline-flex;height:44px;justify-content:center;padding:0;position:absolute;top:50%;transform:translateY(-50%);transition:all .2s ease;width:44px}.arrow[data-v-20161c5c]:hover:not(.arrow--disabled){background:#252525;color:#e2e2e2}.arrow--left[data-v-20161c5c]{left:8px}.arrow--right[data-v-20161c5c]{right:8px}.arrow--disabled[data-v-20161c5c]{cursor:not-allowed;opacity:.45;pointer-events:none}";
+export {
+  ProductGallerySlider_vue_vue_type_style_index_0_scoped_20161c5c_lang as default
+};
+//# sourceMappingURL=ProductGallerySlider-styles-1.mjs--ufJchC2.js.map

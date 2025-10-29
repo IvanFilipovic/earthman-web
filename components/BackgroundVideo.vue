@@ -1,22 +1,26 @@
 <template>
   <div :class="wrapperClasses">
-    <!-- Video background -->
     <video
+      ref="videoRef"
       class="absolute inset-0 w-full h-full object-cover"
-      :src="src"
       :poster="poster"
       autoplay
       muted
       loop
       playsinline
-    />
-    <!-- Optional overlay (darken, gradient, etc) -->
+      preload="auto"
+      @error="handleVideoError"
+    >
+      <source :src="src" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
     <div
       v-if="overlay"
       class="absolute inset-0"
       :class="overlayClasses"
     ></div>
-    <!-- Your content sits on top -->
+
     <div class="flex flex-col items-center justify-center h-full text-background_color px-4">
       <slot />
     </div>
@@ -24,27 +28,53 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  /** URL of your video file (mp4, webm, etc) */
-  src:             { type: String, required: true },
-  /** Poster image while video loads/fallback */
-  poster:          { type: String, default: '' },
-  /** Tailwind classes for the wrapper (size, positioning) */
-  wrapperClasses:  { 
-    type: String, 
-    default: 'relative w-full h-screen overflow-hidden' 
-  },
-  /** If true, applies a dark semi‑transparent overlay */
-  overlay:         { type: Boolean, default: true },
-  /** Tailwind classes for the overlay */
-  overlayClasses:  { 
-    type: String, 
-    default: 'bg-black/40' 
-  },
+interface Props {
+  src: string
+  poster?: string
+  wrapperClasses?: string
+  overlay?: boolean
+  overlayClasses?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  poster: '',
+  wrapperClasses: 'relative w-full h-screen overflow-hidden',
+  overlay: true,
+  overlayClasses: 'bg-black/40'
+})
+
+const videoRef = ref<HTMLVideoElement | null>(null)
+
+function handleVideoError(event: Event): void {
+  const video = event.target as HTMLVideoElement
+  console.warn('Video playback error:', video.error)
+  
+  if (video.error) {
+    console.error('Video error code:', video.error.code)
+    console.error('Video error message:', video.error.message)
+  }
+}
+
+function ensureVideoLoop(): void {
+  const video = videoRef.value
+  if (!video) return
+
+  video.addEventListener('ended', () => {
+    video.currentTime = 0
+    video.play().catch(err => {
+      console.warn('Video replay failed:', err)
+    })
+  })
+}
+
+onMounted(() => {
+  ensureVideoLoop()
+  
+  const video = videoRef.value
+  if (video) {
+    video.play().catch(err => {
+      console.warn('Initial video play failed:', err)
+    })
+  }
 })
 </script>
-
-<style scoped>
-/* ensure the video and overlay properly sit under your content */
-</style>
-  

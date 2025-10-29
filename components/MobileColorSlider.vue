@@ -1,17 +1,17 @@
 <template>
-  <div v-if="colors?.length" class="block md:hidden">
+  <div v-if="colors && colors.length > 0" class="block md:hidden">
     <div ref="sliderRef" class="keen-slider">
       <div
-        v-for="(c, i) in colors"
-        :key="c.variant_slug || i"
+        v-for="(color, i) in colors"
+        :key="i"
         class="keen-slider__slide"
       >
         <img
-          :src="c.avatar_image"
-          :alt="c.color"
-          class="w-full h-auto object-cover transition-opacity duration-200 border border-text_color/30"
+          :src="color.avatar_image"
+          :alt="color.color"
+          class="w-full h-auto object-cover border border-text_color/30"
           loading="lazy"
-          @click="$emit('go', c.variant_slug)"
+          @click="handleClick(color)"
         />
       </div>
     </div>
@@ -19,32 +19,39 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
 import { useKeenSlider } from 'keen-slider/vue.es'
+import type { KeenSliderInstance } from 'keen-slider'
 import 'keen-slider/keen-slider.min.css'
 
-type ColorItem = {
-  variant_slug: string
-  avatar_image: string
+interface ProductColor {
   color: string
+  avatar_image: string
+  variant_slug: string
 }
 
-const props = defineProps<{
-  colors: ColorItem[] | null | undefined
-}>()
+interface Props {
+  colors: ProductColor[]
+}
+
+interface Emits {
+  (e: 'go', variantSlug: string): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const current = ref(0)
+
 const [sliderRef, slider] = useKeenSlider({
   loop: true,
   initial: 0,
-  slideChanged(s) {
+  slideChanged(s: KeenSliderInstance) {
     current.value = s.track.details.rel
   },
 })
 
-// keep slider in sync if the color list changes (e.g., different product data)
 watch(
-  () => props.colors?.length ?? 0,
+  () => props.colors?.length,
   async () => {
     await nextTick()
     if (slider.value) {
@@ -55,7 +62,9 @@ watch(
   }
 )
 
-const dots = computed(() =>
-  slider.value ? [...Array(slider.value.track.details.slides.length).keys()] : []
-)
+function handleClick(color: ProductColor): void {
+  if (color.variant_slug) {
+    emit('go', color.variant_slug)
+  }
+}
 </script>

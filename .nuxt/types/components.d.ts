@@ -32,10 +32,12 @@ interface _GlobalComponents {
     'MobileMenu': typeof import("../../components/MobileMenu.vue")['default']
     'Newsletter': typeof import("../../components/Newsletter.vue")['default']
     'ProductAccordion': typeof import("../../components/ProductAccordion.vue")['default']
+    'ProductGallerySlider': typeof import("../../components/ProductGallerySlider.vue")['default']
     'ShopListing': typeof import("../../components/ShopListing.vue")['default']
     'ShopListingskeleton': typeof import("../../components/ShopListingskeleton.vue")['default']
     'Toast': typeof import("../../components/Toast.vue")['default']
     'Test': typeof import("../../components/test.vue")['default']
+    'TestCollectionListing': typeof import("../../components/testCollectionListing.vue")['default']
     'NuxtWelcome': typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
     'NuxtLayout': typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
     'NuxtErrorBoundary': typeof import("../../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
@@ -129,10 +131,12 @@ interface _GlobalComponents {
     'LazyMobileMenu': LazyComponent<typeof import("../../components/MobileMenu.vue")['default']>
     'LazyNewsletter': LazyComponent<typeof import("../../components/Newsletter.vue")['default']>
     'LazyProductAccordion': LazyComponent<typeof import("../../components/ProductAccordion.vue")['default']>
+    'LazyProductGallerySlider': LazyComponent<typeof import("../../components/ProductGallerySlider.vue")['default']>
     'LazyShopListing': LazyComponent<typeof import("../../components/ShopListing.vue")['default']>
     'LazyShopListingskeleton': LazyComponent<typeof import("../../components/ShopListingskeleton.vue")['default']>
     'LazyToast': LazyComponent<typeof import("../../components/Toast.vue")['default']>
     'LazyTest': LazyComponent<typeof import("../../components/test.vue")['default']>
+    'LazyTestCollectionListing': LazyComponent<typeof import("../../components/testCollectionListing.vue")['default']>
     'LazyNuxtWelcome': LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
     'LazyNuxtLayout': LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
     'LazyNuxtErrorBoundary': LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>

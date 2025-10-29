@@ -3,50 +3,40 @@
   <section>
     <AppNavigation :dark="false" />
 
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-2">
       <div class="flex justify-start w-full">
-        <div class="flex items-center py-1 text-xs md:text-sm text-text_color uppercase tracking-widest">
-          <NuxtLink to="/" class="hover:underline pr-2">HOME</NuxtLink>
-          <span class="pr-2">/</span>
-          <NuxtLink to="/shop" class="hover:underline pr-2">Shop</NuxtLink>
-          <span class="pr-2">/</span>
-          <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-2">
+        <div class="flex items-center py-1 text-[12px] md:text-sm text-text_color uppercase tracking-widest">
+          <NuxtLink to="/" class="hover:underline pr-1 md:pr-2">HOME</NuxtLink>
+          <span class="pr-1 md:pr-2">/</span>
+          <NuxtLink to="/shop" class="hover:underline pr-1 md:pr-2">Shop</NuxtLink>
+          <span class="pr-1 md:pr-2">/</span>
+          <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-1 md:pr-2">
             {{ product?.collection_slug }}
           </NuxtLink>
-          <span class="pr-2">/</span>
-          <span class="pr-2">{{ productName }}</span>
+          <span class="pr-1 md:pr-2">/</span>
+          <span class="pr-1 md:pr-2">{{ productName }}</span>
         </div>
       </div>
     </div>
-    <div class="hidden md:block">
-      <div class="relative grid grid-cols-12 gap-8 pt-8 mt-2 md:mt-6 px-4 md:px-8 product-grid">
-        <!-- LEFT: Gallery -->
-        <div class="md:col-span-8">
-          <div v-if="imagesToShow.length > 0" class="grid grid-cols-2 gap-y-7 place-content-between">
-              <img
-                v-for="(g, i) in variantGroups[activeColorIndex].gallery"
-                :key="g.id ?? i"
-                :src="g.image"
-                class="h-auto object-none bg-background_color mx-auto max-w-auto border border-text_color/30"
-                :alt="g.alt_text || productName"
-                loading="lazy"
-              />
-          </div>
 
-            <div v-else>
-              <div v-for="i in 2" :key="i" class="w-full aspect-[4/3] bg-background_color animate-pulse"></div>
-            </div>
+    <div class="hidden md:block">
+      <div class="relative grid grid-cols-12 gap-8 pt-8 mt-2 md:mt-6 px-4 md:px-8 items-start">
+        <div class="md:col-span-8">
+          <ProductGallerySlider 
+            v-if="imagesToShow.length > 0"
+            :images="imagesToShow"
+            :product-name="productName"
+            :key="`gallery-${activeColorIndex}`"
+          />
         </div>
 
-        <!-- RIGHT: Sticky Add-to-cart -->
-        <aside class="md:col-span-4 product-sticky">
+        <aside class="md:col-span-4 md:sticky md:top-4 md:self-start">
           <div class="bg-background_color border border-text_color/30 p-5 align-self:start">
-            <!-- Title / price -->
             <div class="flex items-start justify-between">
               <div>
                 <h1 class="text-sm font-light leading-tight text-text_color">{{ productCategory }}</h1>
                 <h1 class="text-xl font-medium leading-tight text-text_color">{{ productName }}</h1>
-                <p class="mt-1 text-sm text-text_color" v-if="activeColorName">Color: {{ activeColorName }}</p>
+                <p v-if="activeColorName" class="mt-1 text-sm text-text_color">Color: {{ activeColorName }}</p>
               </div>
               <div class="text-right">
                 <div v-if="product?.discount" class="space-x-2">
@@ -57,13 +47,13 @@
               </div>
             </div>
 
-            <!-- Color swatches -->
-            <div class="mt-4" v-if="variantGroups.length">
+            <div v-if="variantGroups.length" class="mt-4">
               <div class="text-xs uppercase tracking-widest mb-2">Color</div>
               <div class="flex gap-3">
                 <button
                   v-for="(vg, idx) in variantGroups"
                   :key="idx"
+                  type="button"
                   @click="setActiveColor(idx)"
                   class="w-8 h-8 border relative"
                   :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
@@ -75,8 +65,7 @@
               </div>
             </div>
 
-            <!-- Sizes -->
-            <div class="mt-6" v-if="activeSizes.length">
+            <div v-if="activeSizes.length" class="mt-6">
               <div class="flex items-center justify-between">
                 <div class="text-xs uppercase tracking-widest">Size</div>
                 <div class="text-xs text-text_color/70">
@@ -88,6 +77,7 @@
                 <button
                   v-for="s in activeSizes"
                   :key="s.slug"
+                  type="button"
                   @click="selectSize(s)"
                   class="border px-2 py-2 text-sm text-text_color"
                   :class="[
@@ -101,19 +91,18 @@
               </div>
             </div>
 
-            <!-- CTA Buttons -->
             <div class="mt-6 space-y-3">
               <button
-                class="primary-btn sweep group w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+                class="btn btn--primary w-full"
                 :disabled="!selectedVariantSlug"
                 @click="addToCart"
               >
-                <span class="btn-label">ADD TO CART</span>
-                <span class="sweep-overlay" aria-hidden="true"></span>
+                <span class="btn__text">Add to Cart</span>
+                <span class="btn__fill"></span>
               </button>
             </div>
 
-            <!-- Service bullets -->
             <ul class="mt-5 space-y-2 text-sm text-text_color/80">
               <li>✓ Free delivery over €250,-</li>
               <li>✓ Easy returns within 14 days</li>
@@ -142,51 +131,58 @@
         ]"
       />
     </div>
+
     <div class="block md:hidden mt-2 pt-8" id="mobile-product-wrap">
-      <div ref="sliderRef" class="keen-slider">
+      <div v-if="variantGroups.length" ref="sliderRef" class="keen-slider">
         <div
           v-for="(img, i) in variantGroups[activeColorIndex]?.gallery || []"
           :key="i"
           class="keen-slider__slide"
         >
-          <img :src="img.image" class="w-full h-auto object-cover border-t border-b border-text_color/30" :alt="img.alt_text || productName" />
-          
+          <img 
+            :src="img.image" 
+            :alt="img.alt_text || productName"
+            class="w-full h-auto object-cover border-t border-b border-text_color/30"
+          />
         </div>
-        
       </div>
-      <!-- Dots -->
-      <div v-if="slider" class="flex items-center justify-center gap-2 py-3">
+
+      <div v-if="variantGroups.length" class="flex items-center justify-center gap-2 py-3">
         <button
           v-for="idx in dots"
           :key="idx"
           type="button"
           class="flex items-center text-text_color"
           :aria-label="`Go to slide ${idx + 1}`"
-          @click="slider.moveToIdx(idx)"
+          @click="slider?.moveToIdx(idx)"
         >
-          <!-- Active uses lucide:minus, inactive uses lucide:dot -->
           <Icon
             :name="currentSlide === idx ? 'lucide:minus' : 'lucide:dot'"
             class="w-8 h-8 my-auto"
           />
         </button>
       </div>
-      <div class="pt-4 px-4
-      " v-if="variantGroups.length">
+
+      <div v-if="variantGroups.length" class="pt-4 px-4">
         <div class="text-xs uppercase tracking-widest mb-2">Color</div>
         <div class="flex gap-3">
           <button
             v-for="(vg, idx) in variantGroups"
             :key="idx"
+            type="button"
             @click="setActiveColor(idx)"
             class="w-8 h-8 border"
             :class="activeColorIndex === idx ? 'ring-2 ring-text_color' : ''"
             :style="{ backgroundColor: swatchBg(vg.color?.image) }"
-          ></button>
+          >
+            <span class="sr-only">{{ vg.color?.name }}</span>
+          </button>
         </div>
-        <p class="mt-1 text-sm text-text_color" v-if="activeColorName">Color: {{ activeColorName }}</p>
-
+        <p v-if="activeColorName" class="mt-1 text-sm text-text_color">
+          Color: {{ activeColorName }}
+        </p>
       </div>
+
       <div class="px-4 mt-4">
         <ProductAccordion
           :items="[
@@ -202,6 +198,7 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
           ]"
         />
       </div>
+
       <div class="sticky bottom-0 left-0 w-full bg-background_color z-40">
         <div class="flex flex-col items-start py-6 px-4 gap-4">
           <div>
@@ -216,22 +213,19 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
             <div v-else class="text-base font-semibold text-text_color">€{{ product?.price }}</div>
           </div>
           <button
+            type="button"
             class="w-full py-2 my-auto items-center text-center text-base font-medium tracking-wider bg-text_color text-background_color"
             @click="mobilePanelOpen = true"
           >
             <span class="my-auto">ADD</span>
           </button>
         </div>
-
-        
       </div>
 
       <TransitionRoot :show="mobilePanelOpen">
         <Dialog class="relative z-50" @close="mobilePanelOpen = false">
-          <!-- Overlay -->
           <div class="fixed inset-0 bg-text_color/30" aria-hidden="true"></div>
 
-          <!-- Panel -->
           <div class="fixed bottom-0 w-screen">
             <TransitionChild
               enter="transform transition ease-out duration-300"
@@ -241,33 +235,33 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
               leave-from="translate-y-0"
               leave-to="translate-y-full"
             >
-              <DialogPanel
-                class="w-full bg-background_color p-6"
-              >
+              <DialogPanel class="w-full bg-background_color p-6">
                 <div class="flex justify-between items-center mb-4">
                   <h2 class="text-base uppercase tracking-wider font-medium">Select Size</h2>
                 </div>
-                <!-- Sizes -->
-                <div class="mt-4" v-if="activeSizes.length">
+
+                <div v-if="activeSizes.length" class="mt-4">
                   <div class="text-xs uppercase tracking-widest mb-2">Size</div>
                   <div class="flex flex-col justify-center gap-3 items-center">
                     <button
                       v-for="s in activeSizes"
                       :key="s.slug"
+                      type="button"
                       @click="selectSize(s)"
                       class="border px-3 py-2 text-sm w-fit"
                       :class="[
                         s.available ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed',
                         selectedVariantSlug === s.slug ? 'border-text_color' : 'border-project_gray/50'
                       ]"
+                      :disabled="!s.available"
                     >
                       {{ s.size?.name }}
                     </button>
                   </div>
                 </div>
 
-                <!-- Add to cart -->
                 <button
+                  type="button"
                   class="mt-6 w-full py-3 text-base font-medium tracking-wider bg-text_color text-background_color disabled:opacity-50 disabled:cursor-not-allowed"
                   :disabled="!selectedVariantSlug"
                   @click="addToCart"
@@ -284,89 +278,144 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
 </template>
 
 <script setup lang="ts">
-import { useToast } from '~/composables/useToast'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useKeenSlider } from 'keen-slider/vue.es'
-import "keen-slider/keen-slider.min.css";
+import type { KeenSliderInstance } from 'keen-slider'
+import 'keen-slider/keen-slider.min.css'
+import { useToast } from '~/composables/useToast'
+
+interface GalleryImage {
+  id?: number
+  image: string
+  alt_text: string
+}
+
+interface Size {
+  name: string
+}
+
+interface SizeItem {
+  slug: string
+  size: Size
+  available: boolean
+}
+
+interface Color {
+  name: string
+  image: string | null
+  alt_text: string
+}
+
+interface VariantGroup {
+  color: Color
+  avatar_image: string
+  sizes: SizeItem[]
+  gallery: GalleryImage[]
+}
+
+interface Variant {
+  slug: string
+  color: Color
+  size: Size
+  available: boolean
+}
+
+interface ProductApi {
+  id: number
+  category: string
+  name: string
+  slug: string
+  description: string
+  price: string
+  discount: boolean
+  discount_price: string | null
+  collection_slug: string
+  available: boolean
+  variant_groups: VariantGroup[]
+  selected_variant: Variant | null
+}
+
+const config = useRuntimeConfig()
+const route = useRoute()
+const { success, error } = useToast()
 
 const mobilePanelOpen = ref(false)
 const currentSlide = ref(0)
-const [sliderRef, slider] = useKeenSlider({
-  loop: true,
-  initial: 0,
-  slideChanged(s) {
-    currentSlide.value = s.track.details.rel
-  },
-})
-const dots = computed(() =>
-  slider.value ? [...Array(slider.value.track.details.slides.length).keys()] : []
-)
-/** Types (lightweight) */
-type SizeItem = { slug: string; size: { name: string }, available: boolean }
-type VariantGroup = { color: { name: string; image: string | null; alt_text: string }, avatar_image: string, sizes: SizeItem[] }
-type Variant = { slug: string; color: { name: string; image: string | null; alt_text: string }, size: { name: string }, available: boolean }
-type ProductApi = {
-  id: number; category: string; name: string; slug: string; description: string;
-  price: string; discount: boolean; discount_price: string | null;
-  collection_slug: string; available: boolean;
-  variant_groups: VariantGroup[]; selected_variant: Variant | null
-}
-const config = useRuntimeConfig()
-const route = useRoute()
-const collectionParam = computed(() => String(route.params.collection ?? ''))
-const variantParam    = computed(() => String(route.params.product ?? ''))
-const { success, error } = useToast()
 const activeColorIndex = ref(0)
 const selectedVariantSlug = ref('')
 
-/** Fetch product for given collection + variant */
+const collectionParam = computed(() => String(route.params.collection ?? ''))
+const productSlugParam = computed(() => String(route.params.product ?? ''))
+
 const { data } = await useAsyncData<ProductApi | null>(
-  () => `product:${collectionParam.value}:${variantParam.value}`,
+  `product:${collectionParam.value}:${productSlugParam.value}`,
   async () => {
-    const url = `${config.public.apiBase}/public/products/${collectionParam.value}/${variantParam.value}/`
-    return await $fetch(url)
+    const url = `${config.public.apiBase}/public/products/${collectionParam.value}/${productSlugParam.value}/`
+    return await $fetch<ProductApi>(url)
   },
-  { watch: [collectionParam, variantParam] }
+  { 
+    watch: [collectionParam, productSlugParam],
+    getCachedData: (key) => {
+      return useNuxtApp().payload.data[key] || useNuxtApp().static.data[key]
+    }
+  }
 )
 
 const product = computed(() => data.value ?? null)
-
-/** Safe derived state */
 const productName = computed(() => product.value?.name ?? '')
 const productCategory = computed(() => product.value?.category ?? '')
 const variantGroups = computed<VariantGroup[]>(() => product.value?.variant_groups ?? [])
 const activeSizes = computed<SizeItem[]>(() => variantGroups.value[activeColorIndex.value]?.sizes ?? [])
 const inStock = computed(() => activeSizes.value.some(s => s?.available))
 const activeColorName = computed(() => variantGroups.value[activeColorIndex.value]?.color?.name ?? '')
+const imagesToShow = computed(() => variantGroups.value[activeColorIndex.value]?.gallery ?? [])
 
-const imagesToShow = computed(() =>
-  variantGroups.value[activeColorIndex.value]?.gallery ?? []
+const [sliderRef, slider] = useKeenSlider({
+  loop: true,
+  initial: 0,
+  slideChanged(s: KeenSliderInstance) {
+    currentSlide.value = s.track.details.rel
+  },
+})
+
+const dots = computed(() =>
+  slider.value ? [...Array(slider.value.track.details.slides.length).keys()] : []
 )
 
 watch(
   () => product.value,
   (p) => {
     if (!p) return
-    // try to locate the color group that contains the current variant slug
-    const groupIndex = p.variant_groups?.findIndex(g =>
-      (g?.sizes ?? []).some(s => s?.slug === variantParam.value)
-    ) ?? -1
-    activeColorIndex.value = groupIndex >= 0 ? groupIndex : 0
-
-    // set selected variant to the current URL variant if it exists in sizes
-    const match = (p.variant_groups?.[activeColorIndex.value]?.sizes ?? [])
-      .find(s => s?.slug === variantParam.value && s?.available)
-
-    if (match) {
-      selectedVariantSlug.value = match.slug
-    } else {
-      // fallback to first available size
-      const firstAvail = (p.variant_groups?.[activeColorIndex.value]?.sizes ?? []).find(s => s?.available)
-      selectedVariantSlug.value = firstAvail?.slug ?? ''
+    
+    const isVariantSlug = productSlugParam.value.includes('-') && productSlugParam.value.split('-').length > 1
+    
+    if (isVariantSlug) {
+      const groupIndex = p.variant_groups?.findIndex(g =>
+        (g?.sizes ?? []).some(s => s?.slug === productSlugParam.value)
+      ) ?? -1
+      
+      if (groupIndex >= 0) {
+        activeColorIndex.value = groupIndex
+        const match = (p.variant_groups?.[groupIndex]?.sizes ?? [])
+          .find(s => s?.slug === productSlugParam.value && s?.available)
+        
+        if (match) {
+          selectedVariantSlug.value = match.slug
+        } else {
+          const firstAvail = (p.variant_groups?.[groupIndex]?.sizes ?? []).find(s => s?.available)
+          selectedVariantSlug.value = firstAvail?.slug ?? ''
+        }
+        return
+      }
     }
+    
+    activeColorIndex.value = 0
+    const firstAvail = (p.variant_groups?.[0]?.sizes ?? []).find(s => s?.available)
+    selectedVariantSlug.value = firstAvail?.slug ?? ''
   },
   { immediate: true }
 )
+
 watch(
   () => variantGroups.value[activeColorIndex.value]?.gallery?.length ?? 0,
   async () => {
@@ -379,62 +428,37 @@ watch(
   }
 )
 
-const router = useRouter()
-
-/** Pick a slug for a given color index (prefer first available size) */
-function slugForColor(index: number, preferredSizeName?: string): string | undefined {
-  const sizes = variantGroups.value?.[index]?.sizes ?? []
-  // 1) same size & available
-  let pick = sizes.find(s => s.size?.name === preferredSizeName && s.available)
-  // 2) same size (even if unavailable)
-  if (!pick) pick = sizes.find(s => s.size?.name === preferredSizeName)
-  // 3) first available
-  if (!pick) pick = sizes.find(s => s.available)
-  // 4) otherwise first
-  if (!pick) pick = sizes[0]
-  return pick?.slug
-}
-/** Navigate to a given variant slug (if different) */
-function goToVariantSlug(nextSlug?: string) {
-  if (!nextSlug || nextSlug === variantParam.value) return
-  router.replace({
-    params: { collection: collectionParam.value, product: nextSlug },
-    query: route.query
-  })
-}
-
-function setActiveColor(i: number) {
-  // remember the currently selected size name (if any)
-  const currentSizeName =
-    activeSizes.value.find(s => s.slug === selectedVariantSlug.value)?.size?.name
-
+function setActiveColor(i: number): void {
+  const currentSizeName = activeSizes.value.find(s => s.slug === selectedVariantSlug.value)?.size?.name
   activeColorIndex.value = i
-
-  // choose a slug in the new color that matches the previous size if possible
-  const nextSlug = slugForColor(i, currentSizeName)
-  selectedVariantSlug.value = nextSlug ?? ''
-
-  // navigate so the page data/images update
-  goToVariantSlug(nextSlug)
+  const newSizes = variantGroups.value?.[i]?.sizes ?? []
+  
+  let pick = newSizes.find(s => s.size?.name === currentSizeName && s.available)
+  if (!pick) pick = newSizes.find(s => s.size?.name === currentSizeName)
+  if (!pick) pick = newSizes.find(s => s.available)
+  if (!pick) pick = newSizes[0]
+  
+  selectedVariantSlug.value = pick?.slug ?? ''
 }
 
-function selectSize(s: SizeItem) {
+function selectSize(s: SizeItem): void {
   if (!s?.available) return
   selectedVariantSlug.value = s.slug
 }
 
-async function addToCart() {
+async function addToCart(): Promise<void> {
   if (!selectedVariantSlug.value) {
     error('Please select a size')
     return
   }
+  
   try {
     await $fetch('/api/private/put/cart', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: {
         product_variant_slug: selectedVariantSlug.value,
-        quantity: 1, // set the TOTAL or keep your logic as-is
+        quantity: 1,
       },
     })
 
@@ -443,6 +467,7 @@ async function addToCart() {
         detail: { source: 'product', variant: selectedVariantSlug.value }
       }))
     }
+    
     success('Added to cart')
   } catch (e: any) {
     const msg = e?.data?.detail || e?.statusMessage || 'Could not add to cart'
@@ -451,37 +476,14 @@ async function addToCart() {
   }
 }
 
-
-/** Helpers */
-function swatchBg(hex?: string | null) {
-  if (!hex) return '#e5e7eb' // neutral fallback
+function swatchBg(hex?: string | null): string {
+  if (!hex) return '#e5e7eb'
   return `#${hex}`
 }
-
 </script>
-<style scoped>
-/* If you have a fixed header, set this to its height */
-:root {
-  --header-height: 0px;
-  --sticky-gap: 16px;
-}
 
-/* Prevent grid stretch; sticky hates stretched grid items */
-.product-grid {
-  /* Ensure the grid itself doesn't clip children */
-  align-items: start;
-  overflow: visible;
-}
-.image {
-background-image: url("public/logo/black_logo1.png");
-}
-/* Only stick on large screens */
-@media (min-width: 1024px) {
-  .product-sticky {
-    position: sticky;
-    top: calc(var(--header-height) + var(--sticky-gap));
-    align-self: start;   /* in case grid defaults to stretch */
-    z-index: 2;
-  }
+<style scoped>
+.keen-slider {
+  width: 100%;
 }
 </style>

@@ -1,251 +1,435 @@
-<!-- pages/checkout.vue -->
 <template>
   <section>
     <AppNavigation :dark="false" />
 
-    <!-- Breadcrumbs -->
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
       <div class="flex justify-start w-full">
-        <div class="flex items-center py-1 text-xs md:text-sm text-text_color uppercase tracking-widest">
+        <nav class="flex items-center py-1 text-xs md:text-sm text-text_color uppercase tracking-widest" aria-label="Breadcrumb">
           <NuxtLink to="/" class="hover:underline pr-2">HOME</NuxtLink>
-          <span class="pr-2">/</span>
+          <span class="pr-2" aria-hidden="true">/</span>
           <NuxtLink to="/shop" class="hover:underline pr-2">SHOP</NuxtLink>
-          <span class="pr-2">/</span>
-          <span class="pr-2">CHECKOUT</span>
-        </div>
+          <span class="pr-2" aria-hidden="true">/</span>
+          <span class="pr-2" aria-current="page">CHECKOUT</span>
+        </nav>
       </div>
     </div>
 
     <div class="hidden md:flex flex-col md:flex-row py-8 md:px-8 mt-6 md:gap-x-16">
-      <!-- LEFT: SINGLE FORM -->
-      <VForm class="w-full" @submit.prevent="submitOrder">
-        <!-- BILLING -->
+      <VForm v-slot="{ meta }" class="w-full" @submit="handleSubmit">
         <div class="space-y-8">
-          <h3 class="text-base uppercase tracking-widest py-2 border-b border-text_color/30">Billing</h3>
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Billing</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
-              <label class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
-              <Field name="email" type="email" :rules="emailRule" v-slot="{ field, meta }">
-                <input v-bind="field" class="input bg-[#3c7272]" :aria-invalid="!meta.valid && meta.touched" />
-              </Field>
-              <ErrorMessage name="email" v-slot="{ message }">
-                <!-- reserve space so form height doesn’t change -->
-                <div class="mt-1 h-4 overflow-hidden">
+              <label for="email" class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
+              <Field 
+                id="email"
+                name="email" 
+                type="email" 
+                :rules="emailRule" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  aria-describedby="email-error"
+                />
+                <div id="email-error" class="mt-1 h-4 overflow-hidden">
                   <transition name="fade-error">
-                    <p v-if="message" class="text-xs text-error_text_color leading-4">
-                      {{ message }}
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">
+                      {{ errorMessage }}
                     </p>
                   </transition>
                 </div>
-              </ErrorMessage>
+              </Field>
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Name</label>
-              <Field name="firstName" :rules="req('Name', 50)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="50" />
+              <label for="firstName" class="block text-xs uppercase tracking-widest mb-2">Name</label>
+              <Field 
+                id="firstName"
+                name="firstName" 
+                :rules="createRequiredRule('Name', 50)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="50"
+                  aria-describedby="firstName-error"
+                />
+                <div id="firstName-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="firstName" class="mt-1 text-xs text-error_text_color" />
             </div>
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Surname</label>
-              <Field name="lastName" :rules="req('Surname', 50)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="50" />
+              <label for="lastName" class="block text-xs uppercase tracking-widest mb-2">Surname</label>
+              <Field 
+                id="lastName"
+                name="lastName" 
+                :rules="createRequiredRule('Surname', 50)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="50"
+                  aria-describedby="lastName-error"
+                />
+                <div id="lastName-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="lastName" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
-              <label class="block text-xs uppercase tracking-widest mb-2">Address</label>
-              <Field name="address" :rules="req('Address', 120)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="120" placeholder="Street, number" />
+              <label for="address" class="block text-xs uppercase tracking-widest mb-2">Address</label>
+              <Field 
+                id="address"
+                name="address" 
+                :rules="createRequiredRule('Address', 120)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="120" 
+                  placeholder="Street, number"
+                  aria-describedby="address-error"
+                />
+                <div id="address-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="address" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Post code</label>
-              <Field name="postal_code" :rules="postalRule('Post code')" v-slot="{ field }">
-                <input v-bind="field" class="input" inputmode="numeric" maxlength="10" />
+              <label for="postal_code" class="block text-xs uppercase tracking-widest mb-2">Post code</label>
+              <Field 
+                id="postal_code"
+                name="postal_code" 
+                :rules="createPostalRule('Post code')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  inputmode="numeric" 
+                  maxlength="10"
+                  aria-describedby="postal_code-error"
+                />
+                <div id="postal_code-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="postal_code" class="mt-1 text-xs text-error_text_color" />
             </div>
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
-              <Field name="city" :rules="req('City', 60)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="60" />
+              <label for="city" class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
+              <Field 
+                id="city"
+                name="city" 
+                :rules="createRequiredRule('City', 60)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="60"
+                  aria-describedby="city-error"
+                />
+                <div id="city-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="city" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
-              <Field name="country" :rules="req('Country')" v-slot="{ field }">
-                <select v-bind="field" class="input">
+              <label for="country" class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
+              <Field 
+                id="country"
+                name="country" 
+                :rules="createRequiredRule('Country')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <select 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  aria-describedby="country-error"
+                >
+                  <option value="">Select country</option>
                   <option value="Croatia">Croatia</option>
                   <option value="Slovenia">Slovenia</option>
                   <option value="Austria">Austria</option>
                   <option value="Germany">Germany</option>
                   <option value="Italy">Italy</option>
                 </select>
+                <div id="country-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="country" class="mt-1 text-xs text-error_text_color" />
             </div>
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
-              <Field name="phone_number" :rules="phoneRule" v-slot="{ field }">
-                <input v-bind="field" type="tel" class="input" maxlength="20" />
+              <label for="phone_number" class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
+              <Field 
+                id="phone_number"
+                name="phone_number" 
+                :rules="phoneRule" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="tel" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="20"
+                  aria-describedby="phone_number-error"
+                />
+                <div id="phone_number-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="phone_number" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
         </div>
 
-        <!-- DELIVERY -->
         <div class="space-y-8 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 border-b border-text_color/30">Delivery</h3>
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Delivery</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
-              <label class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
-              <Field name="delivery_address" :rules="req('Delivery address', 120)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="120" placeholder="Street, number" />
+              <label for="delivery_address" class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
+              <Field 
+                id="delivery_address"
+                name="delivery_address" 
+                :rules="createRequiredRule('Delivery address', 120)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="120" 
+                  placeholder="Street, number"
+                  aria-describedby="delivery_address-error"
+                />
+                <div id="delivery_address-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="delivery_address" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
-              <Field name="delivery_postal_code" :rules="postalRule('Delivery post code')" v-slot="{ field }">
-                <input v-bind="field" class="input" inputmode="numeric" maxlength="10" />
+              <label for="delivery_postal_code" class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
+              <Field 
+                id="delivery_postal_code"
+                name="delivery_postal_code" 
+                :rules="createPostalRule('Delivery post code')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  inputmode="numeric" 
+                  maxlength="10"
+                  aria-describedby="delivery_postal_code-error"
+                />
+                <div id="delivery_postal_code-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="delivery_postal_code" class="mt-1 text-xs text-error_text_color" />
             </div>
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
-              <Field name="delivery_city" :rules="req('Delivery city', 60)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input" maxlength="60" />
+              <label for="delivery_city" class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
+              <Field 
+                id="delivery_city"
+                name="delivery_city" 
+                :rules="createRequiredRule('Delivery city', 60)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="60"
+                  aria-describedby="delivery_city-error"
+                />
+                <div id="delivery_city-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <ErrorMessage name="delivery_city" class="mt-1 text-xs text-error_text_color" />
             </div>
           </div>
         </div>
 
-        <!-- PAYMENT -->
         <div class="space-y-6 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 border-b border-text_color/30">Payment</h3>
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
 
           <div class="flex gap-3">
             <button
               type="button"
-              class="px-4 py-2 border text-sm uppercase"
-              :class="values.payment_method === 'card' ? 'border-text_color font-medium' : 'border-text_color/30'"
-              @click="setFieldValue('payment_method', 'card')"
-            >Card</button>
-
+              class="px-4 py-2 border text-sm uppercase transition-colors"
+              :class="selectedPaymentMethod === 'card' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
+              @click="selectPaymentMethod('card')"
+            >
+              Card
+            </button>
             <button
               type="button"
-              class="px-4 py-2 border text-sm uppercase"
-              :class="values.payment_method === 'paypal' ? 'border-text_color font-medium' : 'border-text_color/30'"
-              @click="setFieldValue('payment_method', 'paypal')"
-            >PayPal</button>
+              class="px-4 py-2 border text-sm uppercase transition-colors"
+              :class="selectedPaymentMethod === 'paypal' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
+              @click="selectPaymentMethod('paypal')"
+            >
+              PayPal
+            </button>
           </div>
-          <ErrorMessage name="payment_method" class="mt-1 text-xs text-error_text_color" />
+          
+          <Field name="payment_method" type="hidden" />
+          <div class="mt-1 h-4 overflow-hidden">
+            <ErrorMessage name="payment_method" v-slot="{ message }">
+              <transition name="fade-error">
+                <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
+              </transition>
+            </ErrorMessage>
+          </div>
 
-          <!-- Legal / marketing -->
           <div class="space-y-4 pt-2">
-            <label class="flex items-center gap-3 text-sm">
-              <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" />
-              I want to receive personalised commercial communications by email.
+            <label class="flex items-start gap-3 text-sm cursor-pointer">
+              <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" class="mt-0.5" />
+              <span>I want to receive personalised commercial communications by email.</span>
             </label>
 
-            <label class="flex items-center gap-3 text-sm">
+            <label class="flex items-start gap-3 text-sm cursor-pointer">
               <Field
                 name="privacyAccepted"
                 type="checkbox"
                 :value="true"
                 :unchecked-value="false"
-                :rules="(v:boolean)=> v ? true : 'You must accept the Privacy Policy'"
+                :rules="privacyRule"
+                class="mt-0.5"
               />
-              <a href="#" class="underline">I have read and understand the Privacy and Cookies Policy.</a>
+              <span>
+                <a href="#" class="underline hover:no-underline">I have read and understand the Privacy and Cookies Policy.</a>
+              </span>
             </label>
-            <ErrorMessage name="privacyAccepted" class="mt-1 text-xs text-error_text_color" />
+            <div class="mt-1 h-4 overflow-hidden">
+              <ErrorMessage name="privacyAccepted" v-slot="{ message }">
+                <transition name="fade-error">
+                  <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
+                </transition>
+              </ErrorMessage>
+            </div>
           </div>
         </div>
 
-        <!-- CTA -->
         <div class="pt-6">
           <button
-            class="w-full text-center py-3 primary-btn cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="ctaDisabled || submitting"
             type="submit"
+            class="w-full text-center py-3 uppercase tracking-widest text-sm transition-colors"
+            :class="isSubmitDisabled ? 'bg-project_gray text-text_color cursor-not-allowed' : 'primary-btn cursor-pointer hover:opacity-90'"
+            :disabled="isSubmitDisabled"
           >
             <span>{{ submitting ? 'Placing Order…' : 'Place Order' }}</span>
           </button>
-          <p v-if="errorMsg" class="mt-3 text-sm text-error_text_color">{{ errorMsg }}</p>
+          <div class="mt-3 h-5 overflow-hidden">
+            <transition name="fade-error">
+              <p v-if="errorMsg" class="text-sm text-error_text_color">{{ errorMsg }}</p>
+            </transition>
+          </div>
         </div>
       </VForm>
 
-      <!-- RIGHT: SUMMARY -->
       <aside class="w-full mt-10 md:mt-0">
         <div class="space-y-5">
           <h2 class="uppercase tracking-widest text-sm">Order Summary</h2>
 
-          <!-- Items -->
           <div v-if="cart.items.length" class="grid grid-cols-1 gap-y-4">
-            <div v-for="(it, i) in cart.items" :key="i" class="flex gap-4">
-              <img :src="it.avatar_image" :alt="it.product" class="w-22 h-40 object-cover border" />
+            <div v-for="(item, idx) in cart.items" :key="idx" class="flex gap-4">
+              <img :src="item.avatar_image" :alt="item.product" class="w-22 h-40 object-cover border" loading="lazy" />
               <div class="flex-1">
-                <div class="text-sm md:text-base leading-tight tracking-wider px-3">{{ it.product }}</div>
-                <div class="text-xs mt-1 tracking-wider px-3">Size: {{ it.size }}</div>
-                <div class="text-xs mt-1 tracking-wider px-3">Quantity: {{ it.quantity }}</div>
+                <div class="text-sm md:text-base leading-tight tracking-wider px-3">{{ item.product }}</div>
+                <div class="text-xs mt-1 tracking-wider px-3">Size: {{ item.size }}</div>
+                <div class="text-xs mt-1 tracking-wider px-3">Quantity: {{ item.quantity }}</div>
               </div>
               <div class="text-right">
                 <div class="text-sm md:text-base">
-                  <span v-if="it.unit_price_discounted !== it.unit_price_original" class="space-x-1">
-                    <span class="font-semibold">€{{ it.unit_price_discounted }}</span>
-                    <span class="line-through text-xs">€{{ it.unit_price_original }}</span>
+                  <span v-if="item.unit_price_discounted !== item.unit_price_original" class="space-x-1">
+                    <span class="font-semibold">€{{ item.unit_price_discounted }}</span>
+                    <span class="line-through text-xs">€{{ item.unit_price_original }}</span>
                   </span>
-                  <span v-else>€{{ it.unit_price_original }}</span>
+                  <span v-else>€{{ item.unit_price_original }}</span>
                 </div>
 
                 <button
-                  class="mt-3 text-xs uppercase tracking-widest border-b border-text_color/30"
-                  :disabled="removingSlug === (it.product_variant_slug ?? it.product_slug)"
-                  @click="removeItem(it)"
+                  type="button"
+                  class="mt-3 text-xs uppercase tracking-widest border-b border-text_color/30 hover:border-text_color transition-colors disabled:opacity-50"
+                  :disabled="removingSlug === getItemSlug(item)"
+                  @click="removeCartItem(item)"
                 >
-                  Remove item
+                  {{ removingSlug === getItemSlug(item) ? 'Removing...' : 'Remove item' }}
                 </button>
               </div>
             </div>
           </div>
           <div v-else class="text-sm opacity-70">Your cart is empty.</div>
 
-          <!-- Totals -->
           <div class="space-y-2 text-sm border-t border-text_color/30 pt-4">
             <div class="flex justify-between">
               <span>Subtotal</span>
-              <span>€{{ money(subtotal) }}</span>
+              <span>€{{ formatMoney(subtotal) }}</span>
             </div>
             <div class="flex justify-between">
               <span>Shipping</span>
               <span v-if="shippingFee === 0">€0 (Free)</span>
-              <span v-else>€{{ money(shippingFee) }}</span>
+              <span v-else>€{{ formatMoney(shippingFee) }}</span>
             </div>
             <div class="flex justify-between font-medium text-base pt-2">
               <span>Total</span>
-              <span>€{{ money(total) }}</span>
+              <span>€{{ formatMoney(total) }}</span>
             </div>
             <p class="text-xs opacity-70">
               Prices include VAT, excluding any import duties.
@@ -254,34 +438,31 @@
         </div>
       </aside>
     </div>
+
     <div class="md:hidden pb-24 max-w-screen-md mx-auto px-4 md:px-8 pt-4 gap-6">
-      <!-- ===== Top summary (mobile first) ===== -->
       <div class="border-t border-b border-text_color/30 bg-background_color text-text_color rounded-sm">
-        <!-- Header row -->
         <div class="flex items-center justify-between py-4">
           <div class="text-sm uppercase tracking-widest">
             Cart ({{ cart.items.length }})
           </div>
           <div class="text-base font-medium">
-            €{{ money(total) }}
+            €{{ formatMoney(total) }}
           </div>
         </div>
 
-        <!-- Shipping + subtotal -->
         <div class="pb-4 text-sm space-y-1">
           <div class="flex justify-between">
             <span>Subtotal</span>
-            <span>€{{ money(subtotal) }}</span>
+            <span>€{{ formatMoney(subtotal) }}</span>
           </div>
           <div class="flex justify-between">
             <span>Shipping</span>
             <span v-if="shippingFee === 0">€0 (Free)</span>
-            <span v-else>€{{ money(shippingFee) }}</span>
+            <span v-else>€{{ formatMoney(shippingFee) }}</span>
           </div>
         </div>
 
         <Popover v-slot="{ open }" class="block">
-          <!-- Toggle -->
           <PopoverButton
             class="w-full flex items-center justify-between py-4 text-sm border-t border-text_color/20"
           >
@@ -293,9 +474,8 @@
               class="w-4 h-4 transition-transform duration-150"
               :class="open ? 'rotate-180' : ''"
             />
-            </PopoverButton>
+          </PopoverButton>
 
-          <!-- List -->
           <transition
             enter-active-class="transition duration-200 ease-out"
             enter-from-class="opacity-0 translate-y-1"
@@ -304,33 +484,33 @@
             leave-from-class="opacity-100 translate-y-0"
             leave-to-class="opacity-0 translate-y-1"
           >
-            <!-- Use `static` so the panel mounts once; v-show drives visibility -->
             <PopoverPanel static v-show="open">
               <div class="max-h-80 overflow-y-auto divide-y divide-text_color/30">
                 <div
-                  v-for="(it, i) in cart.items"
-                  :key="i"
-                  class="flex gap-3  py-3"
+                  v-for="(item, idx) in cart.items"
+                  :key="idx"
+                  class="flex gap-3 py-3"
                 >
-                  <img :src="it.avatar_image" :alt="it.product" class="w-20 h-24 object-cover border" />
+                  <img :src="item.avatar_image" :alt="item.product" class="w-20 h-24 object-cover border" loading="lazy" />
                   <div class="flex-1 min-w-0">
-                    <div class="text-sm leading-tight line-clamp-2">{{ it.product }}</div>
-                    <div class="mt-1 text-xs opacity-70">Size: {{ it.size }}</div>
-                    <div class="mt-1 text-xs opacity-70">Qty: {{ it.quantity }}</div>
+                    <div class="text-sm leading-tight line-clamp-2">{{ item.product }}</div>
+                    <div class="mt-1 text-xs opacity-70">Size: {{ item.size }}</div>
+                    <div class="mt-1 text-xs opacity-70">Qty: {{ item.quantity }}</div>
                     <div class="mt-2 text-sm">
-                      <span v-if="it.unit_price_discounted !== it.unit_price_original" class="space-x-1">
-                        <span class="font-medium">€{{ it.unit_price_discounted }}</span>
-                        <span class="line-through text-xs">€{{ it.unit_price_original }}</span>
+                      <span v-if="item.unit_price_discounted !== item.unit_price_original" class="space-x-1">
+                        <span class="font-medium">€{{ item.unit_price_discounted }}</span>
+                        <span class="line-through text-xs">€{{ item.unit_price_original }}</span>
                       </span>
-                      <span v-else>€{{ it.unit_price_original }}</span>
+                      <span v-else>€{{ item.unit_price_original }}</span>
                     </div>
                   </div>
 
                   <button
-                    class="shrink-0 p-1 hover:bg-text_color/10 rounded-sm h-7"
-                    :disabled="removingSlug === (it.product_variant_slug ?? it.product_slug)"
-                    @click="removeItem(it)"
-                    aria-label="Remove item"
+                    type="button"
+                    class="shrink-0 p-1 hover:bg-text_color/10 rounded-sm h-7 transition-colors disabled:opacity-50"
+                    :disabled="removingSlug === getItemSlug(item)"
+                    @click="removeCartItem(item)"
+                    :aria-label="`Remove ${item.product}`"
                     title="Remove"
                   >
                     <Icon name="lucide:x" class="w-4 h-4" />
@@ -342,226 +522,371 @@
         </Popover>
       </div>
 
-      <VForm class="mt-6 space-y-10" @submit.prevent="submitOrder">
-        <!-- BILLING -->
-        <div class="space-y-6">
-          <h3 class="text-sm uppercase tracking-widest">Billing</h3>
+      <VForm v-slot="{ meta }" class="w-full" @submit="handleSubmit">
+        <div class="space-y-8">
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Billing</h3>
 
-          <div>
-            <label class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
-            <Field name="email" type="email" :rules="emailRule" v-slot="{ field, meta }">
-              <input v-bind="field" class="input w-full" :aria-invalid="!meta.valid && meta.touched" />
-            </Field>
-            <div class="mt-1 h-4 overflow-hidden">
-              <ErrorMessage name="email" v-slot="{ message }">
-                <transition name="fade-error">
-                  <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
-                </transition>
-              </ErrorMessage>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label for="email" class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
+              <Field 
+                id="email"
+                name="email" 
+                type="email" 
+                :rules="emailRule" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  aria-describedby="email-error"
+                />
+                <div id="email-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">
+                      {{ errorMessage }}
+                    </p>
+                  </transition>
+                </div>
+              </Field>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Name</label>
-              <Field name="firstName" :rules="req('Name', 50)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input w-full" maxlength="50" />
+              <label for="firstName" class="block text-xs uppercase tracking-widest mb-2">Name</label>
+              <Field 
+                id="firstName"
+                name="firstName" 
+                :rules="createRequiredRule('Name', 50)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="50"
+                  aria-describedby="firstName-error"
+                />
+                <div id="firstName-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="firstName" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
-
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Surname</label>
-              <Field name="lastName" :rules="req('Surname', 50)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input w-full" maxlength="50" />
+              <label for="lastName" class="block text-xs uppercase tracking-widest mb-2">Surname</label>
+              <Field 
+                id="lastName"
+                name="lastName" 
+                :rules="createRequiredRule('Surname', 50)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="50"
+                  aria-describedby="lastName-error"
+                />
+                <div id="lastName-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="lastName" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs uppercase tracking-widest mb-2">Address</label>
-            <Field name="address" :rules="req('Address', 120)" v-slot="{ field }">
-              <input v-bind="field" type="text" class="input w-full" maxlength="120" placeholder="Street, number" />
-            </Field>
-            <div class="mt-1 h-4 overflow-hidden">
-              <ErrorMessage name="address" v-slot="{ message }">
-                <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-              </ErrorMessage>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label for="address" class="block text-xs uppercase tracking-widest mb-2">Address</label>
+              <Field 
+                id="address"
+                name="address" 
+                :rules="createRequiredRule('Address', 120)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="120" 
+                  placeholder="Street, number"
+                  aria-describedby="address-error"
+                />
+                <div id="address-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
+              </Field>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Post code</label>
-              <Field name="postal_code" :rules="postalRule('Post code')" v-slot="{ field }">
-                <input v-bind="field" class="input w-full" inputmode="numeric" maxlength="10" />
+              <label for="postal_code" class="block text-xs uppercase tracking-widest mb-2">Post code</label>
+              <Field 
+                id="postal_code"
+                name="postal_code" 
+                :rules="createPostalRule('Post code')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  inputmode="numeric" 
+                  maxlength="10"
+                  aria-describedby="postal_code-error"
+                />
+                <div id="postal_code-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="postal_code" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
-
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
-              <Field name="city" :rules="req('City', 60)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input w-full" maxlength="60" />
+              <label for="city" class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
+              <Field 
+                id="city"
+                name="city" 
+                :rules="createRequiredRule('City', 60)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="60"
+                  aria-describedby="city-error"
+                />
+                <div id="city-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="city" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-3">
+          <div class="grid grid-cols-1 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
-              <Field name="country" :rules="req('Country')" v-slot="{ field }">
-                <select v-bind="field" class="input w-full">
+              <label for="country" class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
+              <Field 
+                id="country"
+                name="country" 
+                :rules="createRequiredRule('Country')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <select 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  aria-describedby="country-error"
+                >
+                  <option value="">Select country</option>
                   <option value="Croatia">Croatia</option>
                   <option value="Slovenia">Slovenia</option>
                   <option value="Austria">Austria</option>
                   <option value="Germany">Germany</option>
                   <option value="Italy">Italy</option>
                 </select>
+                <div id="country-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="country" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
-
             <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
-              <Field name="phone_number" :rules="phoneRule" v-slot="{ field }">
-                <input v-bind="field" type="tel" class="input w-full" maxlength="20" />
+              <label for="phone_number" class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
+              <Field 
+                id="phone_number"
+                name="phone_number" 
+                :rules="phoneRule" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="tel" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="20"
+                  aria-describedby="phone_number-error"
+                />
+                <div id="phone_number-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
               </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="phone_number" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
             </div>
           </div>
         </div>
 
-        <!-- DELIVERY -->
-        <div class="space-y-6">
-          <h3 class="text-sm uppercase tracking-widest">Delivery</h3>
+        <div class="space-y-8 mt-10">
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Delivery</h3>
 
-          <div>
-            <label class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
-            <Field name="delivery_address" :rules="req('Delivery address', 120)" v-slot="{ field }">
-              <input v-bind="field" type="text" class="input w-full" maxlength="120" placeholder="Street, number" />
-            </Field>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label for="delivery_address" class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
+              <Field 
+                id="delivery_address"
+                name="delivery_address" 
+                :rules="createRequiredRule('Delivery address', 120)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="120" 
+                  placeholder="Street, number"
+                  aria-describedby="delivery_address-error"
+                />
+                <div id="delivery_address-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
+              </Field>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="delivery_postal_code" class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
+              <Field 
+                id="delivery_postal_code"
+                name="delivery_postal_code" 
+                :rules="createPostalRule('Delivery post code')" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  inputmode="numeric" 
+                  maxlength="10"
+                  aria-describedby="delivery_postal_code-error"
+                />
+                <div id="delivery_postal_code-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
+              </Field>
+            </div>
+            <div>
+              <label for="delivery_city" class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
+              <Field 
+                id="delivery_city"
+                name="delivery_city" 
+                :rules="createRequiredRule('Delivery city', 60)" 
+                v-slot="{ field, errorMessage }"
+              >
+                <input 
+                  v-bind="field" 
+                  type="text" 
+                  class="input" 
+                  :class="{ 'border-error_text_color': errorMessage }"
+                  maxlength="60"
+                  aria-describedby="delivery_city-error"
+                />
+                <div id="delivery_city-error" class="mt-1 h-4 overflow-hidden">
+                  <transition name="fade-error">
+                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
+                  </transition>
+                </div>
+              </Field>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 mt-10">
+          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
+
+          <div class="flex gap-3">
+            <button
+              type="button"
+              class="px-4 py-2 border text-sm uppercase transition-colors"
+              :class="selectedPaymentMethod === 'card' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
+              @click="selectPaymentMethod('card')"
+            >
+              Card
+            </button>
+            <button
+              type="button"
+              class="px-4 py-2 border text-sm uppercase transition-colors"
+              :class="selectedPaymentMethod === 'paypal' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
+              @click="selectPaymentMethod('paypal')"
+            >
+              PayPal
+            </button>
+          </div>
+          
+          <Field name="payment_method" type="hidden" />
+          <div class="mt-1 h-4 overflow-hidden">
+            <ErrorMessage name="payment_method" v-slot="{ message }">
+              <transition name="fade-error">
+                <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
+              </transition>
+            </ErrorMessage>
+          </div>
+
+          <div class="space-y-4 pt-2">
+            <label class="flex items-start gap-3 text-sm cursor-pointer">
+              <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" class="mt-0.5" />
+              <span>I want to receive personalised commercial communications by email.</span>
+            </label>
+
+            <label class="flex items-start gap-3 text-sm cursor-pointer">
+              <Field
+                name="privacyAccepted"
+                type="checkbox"
+                :value="true"
+                :unchecked-value="false"
+                :rules="privacyRule"
+                class="mt-0.5"
+              />
+              <span>
+                <a href="#" class="underline hover:no-underline">I have read and understand the Privacy and Cookies Policy.</a>
+              </span>
+            </label>
             <div class="mt-1 h-4 overflow-hidden">
-              <ErrorMessage name="delivery_address" v-slot="{ message }">
-                <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
+              <ErrorMessage name="privacyAccepted" v-slot="{ message }">
+                <transition name="fade-error">
+                  <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
+                </transition>
               </ErrorMessage>
             </div>
           </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
-              <Field name="delivery_postal_code" :rules="postalRule('Delivery post code')" v-slot="{ field }">
-                <input v-bind="field" class="input w-full" inputmode="numeric" maxlength="10" />
-              </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="delivery_postal_code" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
-              <Field name="delivery_city" :rules="req('Delivery city', 60)" v-slot="{ field }">
-                <input v-bind="field" type="text" class="input w-full" maxlength="60" />
-              </Field>
-              <div class="mt-1 h-4 overflow-hidden">
-                <ErrorMessage name="delivery_city" v-slot="{ message }">
-                  <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-                </ErrorMessage>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- PAYMENT -->
-        <div class="space-y-6">
-          <h3 class="text-sm uppercase tracking-widest">Payment</h3>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              class="px-3 py-2 border text-xs"
-              :class="values.payment_method === 'card' ? 'border-text_color font-medium' : 'border-text_color/30'"
-              @click="setFieldValue('payment_method', 'card')"
-            >Card</button>
-            <button
-              type="button"
-              class="px-3 py-2 border text-xs"
-              :class="values.payment_method === 'paypal' ? 'border-text_color font-medium' : 'border-text_color/30'"
-              @click="setFieldValue('payment_method', 'paypal')"
-            >PayPal</button>
-            <button
-              type="button"
-              class="px-3 py-2 border text-xs"
-              :class="values.payment_method === 'cod' ? 'border-text_color font-medium' : 'border-text_color/30'"
-              @click="setFieldValue('payment_method', 'cod')"
-            >Cash</button>
-          </div>
-          <div class="mt-1 h-4 overflow-hidden">
-            <ErrorMessage name="payment_method" v-slot="{ message }">
-              <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-            </ErrorMessage>
-          </div>
-
-          <label class="flex items-center gap-3 text-sm">
-            <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" />
-            I want to receive personalised commercial communications by email.
-          </label>
-
-          <label class="flex items-center gap-3 text-sm">
-            <Field
-              name="privacyAccepted"
-              type="checkbox"
-              :value="true"
-              :unchecked-value="false"
-              :rules="(v:boolean)=> v ? true : 'You must accept the Privacy Policy'"
-            />
-            <a href="#" class="underline">I have read and understand the Privacy and Cookies Policy.</a>
-          </label>
-          <div class="mt-1 h-4 overflow-hidden">
-            <ErrorMessage name="privacyAccepted" v-slot="{ message }">
-              <transition name="fade-error"><p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p></transition>
-            </ErrorMessage>
-          </div>
-        </div>
-
-        <!-- CTA -->
-        <div class="pt-4">
+        <div class="pt-6">
           <button
-            class="w-full text-center py-3 primary-btn cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="ctaDisabled || submitting"
             type="submit"
+            class="w-full text-center py-3 uppercase tracking-widest text-sm transition-colors"
+            :class="isSubmitDisabled ? 'bg-project_gray text-text_color cursor-not-allowed' : 'primary-btn cursor-pointer hover:opacity-90'"
+            :disabled="isSubmitDisabled"
           >
             <span>{{ submitting ? 'Placing Order…' : 'Place Order' }}</span>
           </button>
-          <p v-if="errorMsg" class="mt-3 text-sm text-error_text_color">{{ errorMsg }}</p>
+          <div class="mt-3 h-5 overflow-hidden">
+            <transition name="fade-error">
+              <p v-if="errorMsg" class="text-sm text-error_text_color">{{ errorMsg }}</p>
+            </transition>
+          </div>
         </div>
       </VForm>
     </div>
@@ -571,17 +896,8 @@
 <script setup lang="ts">
 import { Form as VForm, Field, ErrorMessage, useForm } from 'vee-validate'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-const config = useRuntimeConfig()
 
-/* ---------------------------
-   Money + cart
---------------------------- */
-const FREE_THRESHOLD = 200
-const FLAT_SHIPPING = 12.99
-const toNum = (x: unknown) => Number.parseFloat(String(x ?? '0').replace(',', '.')) || 0
-const money = (n: number) => (Number.isInteger(n) ? n : n.toFixed(2))
-
-type CartItem = {
+interface CartItem {
   product: string
   quantity: number
   unit_price_discounted: string
@@ -591,31 +907,151 @@ type CartItem = {
   product_slug?: string
   product_variant_slug?: string
 }
-const cart = ref<{ items: CartItem[], cart_total_to_pay: string }>({ items: [], cart_total_to_pay: '0.00' })
-const loadingCart = ref(false)
-const lineTotal = (it: CartItem) => (toNum(it.unit_price_discounted ?? it.unit_price_original) * (it.quantity ?? 0))
-const subtotal = computed(() => cart.value.items.reduce((s, it) => s + lineTotal(it), 0))
-const shippingFee = computed(() => (subtotal.value >= FREE_THRESHOLD ? 0 : FLAT_SHIPPING))
-const total = computed(() => subtotal.value + shippingFee.value)
 
-async function fetchCart () {
+interface Cart {
+  items: CartItem[]
+  cart_total_to_pay: string
+}
+
+interface OrderPayload {
+  email: string
+  country: string
+  address: string
+  city: string
+  postal_code: string
+  phone_number: string
+  delivery_address: string
+  delivery_city: string
+  delivery_postal_code: string
+  payment_method: string
+  shipping_cost: number
+}
+
+const config = useRuntimeConfig()
+
+const FREE_THRESHOLD = 200
+const FLAT_SHIPPING = 12.99
+
+const cart = ref<Cart>({ items: [], cart_total_to_pay: '0.00' })
+const loadingCart = ref(false)
+const removingSlug = ref<string | null>(null)
+const submitting = ref(false)
+const errorMsg = ref('')
+const selectedPaymentMethod = ref<'card' | 'paypal' | ''>('')
+
+const { setFieldValue, values, meta } = useForm<Record<string, any>>()
+
+const toNumber = (value: unknown): number => {
+  return Number.parseFloat(String(value ?? '0').replace(',', '.')) || 0
+}
+
+const formatMoney = (amount: number): string => {
+  return Number.isInteger(amount) ? amount.toString() : amount.toFixed(2)
+}
+
+const calculateLineTotal = (item: CartItem): number => {
+  const price = toNumber(item.unit_price_discounted ?? item.unit_price_original)
+  return price * (item.quantity ?? 0)
+}
+
+const subtotal = computed(() => {
+  return cart.value.items.reduce((sum, item) => sum + calculateLineTotal(item), 0)
+})
+
+const shippingFee = computed(() => {
+  return subtotal.value >= FREE_THRESHOLD ? 0 : FLAT_SHIPPING
+})
+
+const total = computed(() => {
+  return subtotal.value + shippingFee.value
+})
+
+const isSubmitDisabled = computed(() => {
+  return !meta.value.valid || submitting.value || cart.value.items.length === 0
+})
+
+function createRequiredRule(label: string, maxLength?: number) {
+  return (value: string): string | true => {
+    if (!value || !String(value).trim()) {
+      return `${label} is required`
+    }
+    if (maxLength && String(value).length > maxLength) {
+      return `${label} must be less than ${maxLength + 1} characters`
+    }
+    return true
+  }
+}
+
+function emailRule(value: string): string | true {
+  if (!value || !value.trim()) {
+    return 'Email is required'
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+  if (!emailRegex.test(value)) {
+    return 'Please enter a valid email address'
+  }
+  return true
+}
+
+function phoneRule(value: string): string | true {
+  if (!value || !value.trim()) {
+    return 'Phone number is required'
+  }
+  const phoneRegex = /^[+()\-.\s\d]{7,20}$/
+  if (!phoneRegex.test(value)) {
+    return 'Please enter a valid phone number (+, digits, spaces, (), -)'
+  }
+  return true
+}
+
+function createPostalRule(label = 'Postal code') {
+  return (value: string): string | true => {
+    if (!value || !value.trim()) {
+      return `${label} is required`
+    }
+    const postalRegex = /^[A-Za-z0-9\s\-]{3,10}$/
+    if (!postalRegex.test(value)) {
+      return `${label} looks invalid`
+    }
+    return true
+  }
+}
+
+function privacyRule(value: boolean): string | true {
+  return value ? true : 'You must accept the Privacy Policy'
+}
+
+function selectPaymentMethod(method: 'card' | 'paypal'): void {
+  selectedPaymentMethod.value = method
+  setFieldValue('payment_method', method)
+}
+
+function getItemSlug(item: CartItem): string {
+  return item.product_variant_slug ?? item.product_slug ?? ''
+}
+
+async function fetchCart(): Promise<void> {
   try {
     loadingCart.value = true
-    const res: any = await $fetch('/api/private/get/cart')
-    res.items = (res.items ?? []).map((i: any) => ({ ...i, size: i.size ?? i.product_size }))
-    cart.value = res
+    const response = await $fetch<Cart>('/api/private/get/cart')
+    cart.value = {
+      ...response,
+      items: (response.items ?? []).map((item: any) => ({
+        ...item,
+        size: item.size ?? item.product_size
+      }))
+    }
+  } catch (error) {
+    console.error('Failed to fetch cart:', error)
   } finally {
     loadingCart.value = false
   }
 }
-onMounted(fetchCart)
 
-/* Remove item */
-const removingSlug = ref<string | null>(null)
-const itemSlug = (it: any) => it.product_variant_slug ?? it.product_slug
-async function removeItem(it: any) {
-  const slug = itemSlug(it)
+async function removeCartItem(item: CartItem): Promise<void> {
+  const slug = getItemSlug(item)
   if (!slug || removingSlug.value) return
+
   removingSlug.value = slug
   try {
     await $fetch('/api/private/delete/cart', {
@@ -623,117 +1059,94 @@ async function removeItem(it: any) {
       headers: { 'Content-Type': 'application/json' },
       body: { product_variant_slug: slug }
     })
+    
     await fetchCart()
-    if (process.client) window.dispatchEvent(new CustomEvent('cart:updated', { detail: { source: 'checkout', removed: slug } }))
-  } catch (e) {
-    console.error('Remove item failed', e)
+    
+    if (process.client) {
+      window.dispatchEvent(new CustomEvent('cart:updated', { 
+        detail: { source: 'checkout', removed: slug } 
+      }))
+    }
+  } catch (error) {
+    console.error('Failed to remove item:', error)
   } finally {
     removingSlug.value = null
   }
 }
 
-/* ---------------------------
-   Vee-validate rules
---------------------------- */
-const req = (label: string, max?: number) => (v: string) => {
-  if (!v || !String(v).trim()) return `${label} is required`
-  if (max && String(v).length > max) return `${label} must be < ${max + 1} chars`
-  return true
-}
-const emailRule = (v: string) => {
-  if (!v || !v.trim()) return 'Email is required'
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
-  if (!re.test(v)) return 'Please enter a valid email address'
-  return true
-}
-const phoneRule = (v: string) => {
-  if (!v || !v.trim()) return 'Phone number is required'
-  const re = /^[+()\-.\s\d]{7,20}$/
-  if (!re.test(v)) return 'Please enter a valid phone number (+, digits, spaces, (), -)'
-  return true
-}
-const postalRule = (label = 'Postal code') => (v: string) => {
-  if (!v || !v.trim()) return `${label} is required`
-  const re = /^[A-Za-z0-9\s\-]{3,10}$/
-  if (!re.test(v)) return `${label} looks invalid`
-  return true
-}
-
-/* ---------------------------
-   Form validity → enable CTA
---------------------------- */
-
-const { validateField, setFieldValue, values } = useForm()
-
-const ALL_FIELDS = [
-  // Billing
-  'email','firstName','lastName','address','postal_code','city','country','phone_number',
-  // Delivery
-  'delivery_address','delivery_postal_code','delivery_city',
-  // Payment
-  'payment_method','privacyAccepted'
-]
-
-const ctaDisabled = ref(true)
-watchEffect(async () => {
-  const res = await Promise.all(ALL_FIELDS.map(n => validateField(n, { mode: 'silent' })))
-  ctaDisabled.value = !res.every(r => r.valid)
-})
-
-/* ---------------------------
-   Submit order
---------------------------- */
-const submitting = ref(false)
-const errorMsg = ref<string>('')
-
-async function submitOrder () {
+async function handleSubmit(): Promise<void> {
   errorMsg.value = ''
-  // Final check
-  const res = await Promise.all(ALL_FIELDS.map(n => validateField(n)))
-  if (!res.every(r => r.valid)) {
-    errorMsg.value = 'Please complete all required fields.'
-    return
-  }
+
   if (cart.value.items.length === 0) {
     errorMsg.value = 'Your cart is empty.'
     return
   }
 
+  if (!selectedPaymentMethod.value) {
+    errorMsg.value = 'Please select a payment method.'
+    return
+  }
+
   try {
     submitting.value = true
-    const payload = {
-      // Billing
+    
+    const payload: OrderPayload = {
       email: values.email,
       country: values.country,
       address: values.address,
       city: values.city,
       postal_code: values.postal_code,
       phone_number: values.phone_number,
-      // Delivery
       delivery_address: values.delivery_address,
       delivery_city: values.delivery_city,
       delivery_postal_code: values.delivery_postal_code,
-      // Payment
-      payment_method: values.payment_method,
-      // Shipping derived
+      payment_method: selectedPaymentMethod.value,
       shipping_cost: shippingFee.value
     }
-    const resOrder: any = await $fetch(`${config.public.apiBase}/public/orders/create/`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
+
+    const response = await $fetch<{ order_reference: string; total_price: number }>(
+      `${config.public.apiBase}/public/orders/create/`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      }
+    )
+
+    await navigateTo({ 
+      path: '/thank-you', 
+      query: { 
+        ref: response.order_reference, 
+        total: response.total_price 
+      } 
     })
-    navigateTo({ path: '/thank-you', query: { ref: resOrder.order_reference, total: resOrder.total_price } })
-  } catch (e: any) {
-    errorMsg.value = e?.data?.detail || 'Could not create order.'
-    console.error('Order create failed', e)
+  } catch (error: any) {
+    errorMsg.value = error?.data?.detail || 'Could not create order. Please try again.'
+    console.error('Order creation failed:', error)
   } finally {
     submitting.value = false
   }
 }
+
+onMounted(() => {
+  fetchCart()
+})
 </script>
 
 <style scoped>
-.image { background-image: url("public/logo/black_logo1.png"); }
+.fade-error-enter-active,
+.fade-error-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fade-error-enter-from {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.fade-error-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
 </style>
