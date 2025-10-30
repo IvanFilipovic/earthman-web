@@ -6,23 +6,23 @@
     "file": "AppNavigation.Dfmv74Mz.css",
     "src": "_AppNavigation.Dfmv74Mz.css"
   },
-  "_Cc-idNvQ.js": {
+  "_DXAXb3fh.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Cc-idNvQ.js",
+    "file": "DXAXb3fh.js",
     "name": "vue.es",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_Dk5NpKYN.js": {
+  "_DaJuRDI-.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Dk5NpKYN.js",
+    "file": "DaJuRDI-.js",
     "name": "AppNavigation",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
@@ -152,7 +152,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CxYghcPv.js",
+    "file": "Cp2BuQjN.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -193,13 +193,13 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CH2DSpcu.js",
+    "file": "D4Tms01O.js",
     "name": "index",
     "src": "pages/about/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_Dk5NpKYN.js"
+      "_DaJuRDI-.js"
     ],
     "dynamicImports": [
       "node_modules/gsap/ScrollSmoother.js"
@@ -223,18 +223,18 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "ceXDxHOJ.js",
+    "file": "CYFAlMAZ.js",
     "name": "checkout",
     "src": "pages/checkout.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Dk5NpKYN.js",
+      "_DaJuRDI-.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "css": []
   },
-  "checkout.DPWmchWJ.css": {
-    "file": "checkout.DPWmchWJ.css",
+  "checkout.CDi1q1It.css": {
+    "file": "checkout.CDi1q1It.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -257,14 +257,14 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CqYQXaKk.js",
+    "file": "CA1RiV1W.js",
     "name": "_...slug_",
     "src": "pages/collections/[...slug].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Dk5NpKYN.js",
+      "_DaJuRDI-.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_Cc-idNvQ.js"
+      "_DXAXb3fh.js"
     ],
     "css": [
       "keen-slider.BWf4Yhr3.css"
@@ -281,13 +281,13 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CxK70lQ2.js",
+    "file": "DhZ7t6B0.js",
     "name": "index",
     "src": "pages/collections/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_Dk5NpKYN.js"
+      "_DaJuRDI-.js"
     ],
     "dynamicImports": [
       "node_modules/gsap/ScrollSmoother.js"
@@ -305,12 +305,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "uhqHpqft.js",
+    "file": "D-ZR07PJ.js",
     "name": "index",
     "src": "pages/index.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Dk5NpKYN.js",
+      "_DaJuRDI-.js",
       "node_modules/nuxt/dist/app/entry.js",
       "_DpJYeJpL.js"
     ],
@@ -333,14 +333,14 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Dt3GUJbt.js",
+    "file": "Qh7yiz8-.js",
     "name": "_...product_",
     "src": "pages/product/[collection]/[...product].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Dk5NpKYN.js",
+      "_DaJuRDI-.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_Cc-idNvQ.js",
+      "_DXAXb3fh.js",
       "_O5mbagr6.js"
     ],
     "css": []
@@ -369,13 +369,13 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CyrIqztC.js",
+    "file": "tvX9y8wr.js",
     "name": "index",
     "src": "pages/shop/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_Dk5NpKYN.js",
+      "_DaJuRDI-.js",
       "_DpJYeJpL.js"
     ],
     "dynamicImports": [

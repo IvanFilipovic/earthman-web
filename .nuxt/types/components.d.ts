@@ -101,6 +101,7 @@ interface _GlobalComponents {
     'HeadlessTabPanel': typeof import("../../node_modules/@headlessui/vue/dist/components/tabs/tabs")['TabPanel']
     'HeadlessTransitionChild': typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']
     'HeadlessTransitionRoot': typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']
+    'ColorScheme': typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
     'NuxtPage': typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']
     'NoScript': typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']
     'Link': typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -200,6 +201,7 @@ interface _GlobalComponents {
     'LazyHeadlessTabPanel': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/tabs/tabs")['TabPanel']>
     'LazyHeadlessTransitionChild': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']>
     'LazyHeadlessTransitionRoot': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']>
+    'LazyColorScheme': LazyComponent<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
     'LazyNuxtPage': LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']>
     'LazyNoScript': LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
     'LazyLink': LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']>

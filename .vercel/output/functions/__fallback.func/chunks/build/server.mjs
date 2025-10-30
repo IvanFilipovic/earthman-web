@@ -7670,63 +7670,63 @@ const _routes = [
   {
     name: "cart",
     path: "/cart",
-    component: () => import('./cart-NRdKto0m.mjs')
+    component: () => import('./cart-Crmc1745.mjs')
   },
   {
     name: __nuxt_page_meta$2?.name,
     path: "/shop",
-    component: () => import('./shop-l5Ot-jyR.mjs'),
+    component: () => import('./shop-IE_8G2H-.mjs'),
     children: [
       {
         name: "shop",
         path: "",
-        component: () => import('./index-B91g3x3U.mjs')
+        component: () => import('./index-BZNTPKUL.mjs')
       }
     ]
   },
   {
     name: __nuxt_page_meta$1?.name,
     path: "/about",
-    component: () => import('./about-Bpoft_pN.mjs'),
+    component: () => import('./about-DxIsvD06.mjs'),
     children: [
       {
         name: "about",
         path: "",
-        component: () => import('./index-Bl4NlQpZ.mjs')
+        component: () => import('./index-DmnnEQGk.mjs')
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-C-do1UUk.mjs')
+    component: () => import('./index-Da8uv5ra.mjs')
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import('./checkout-CyV9Vb0b.mjs')
+    component: () => import('./checkout-WPilHa19.mjs')
   },
   {
     name: __nuxt_page_meta?.name,
     path: "/collections",
-    component: () => import('./collections-CNllhe9i.mjs'),
+    component: () => import('./collections-BJDEzke5.mjs'),
     children: [
       {
         name: "collections",
         path: "",
-        component: () => import('./index-DTKEckSY.mjs')
+        component: () => import('./index-TgAprY0B.mjs')
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import('./_...slug_-DmaEeTuV.mjs')
+        component: () => import('./_...slug_-DHq5q3B0.mjs')
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import('./_...product_-DddCkwm7.mjs')
+    component: () => import('./_...product_-DytwA0_E.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -8928,6 +8928,29 @@ const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 = /* @__PURE
       nuxtApp.vueApp.component("Lazy" + name, component);
     }
   }
+});
+const preference = "system";
+const plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
+  const colorMode = nuxtApp.ssrContext?.islandContext ? ref({}) : useState("color-mode", () => reactive({
+    preference,
+    value: preference,
+    unknown: true,
+    forced: false
+  })).value;
+  const htmlAttrs = {};
+  {
+    useHead({ htmlAttrs });
+  }
+  useRouter().afterEach((to) => {
+    const forcedColorMode = to.meta.colorMode;
+    if (forcedColorMode && forcedColorMode !== "system") {
+      colorMode.value = htmlAttrs["data-color-mode-forced"] = forcedColorMode;
+      colorMode.forced = true;
+    } else if (forcedColorMode === "system") {
+      console.warn("You cannot force the colorMode to system at the page level.");
+    }
+  });
+  nuxtApp.provide("colorMode", colorMode);
 });
 /*!
   * shared v11.1.11
@@ -14164,6 +14187,7 @@ const plugins = [
   revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
   plugin,
   components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
+  plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A,
   switch_locale_path_ssr_NflG9_QeVcJ1jVig0vCfxB_cZhpEMQ9U2ujRUiYbbVw,
   route_locale_detect__HPHJq3Jg7gwhwgKEI8tQavopSAjmrCSPXl9HgL2h9U,
   preload_30FByJAs5vQa4mNNQLX15KPGCCVjIGrzdTjh6ve5W24,
@@ -14173,7 +14197,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import('./default-B6BroYR9.mjs').then((m) => m.default || m))
+  default: defineAsyncComponent(() => import('./default-B5LP7uug.mjs').then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -14991,8 +15015,8 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-yxmd2ocU.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-DgbSYUDs.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-PGKeyb-2.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-B60qHy5K.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));

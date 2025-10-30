@@ -9,11 +9,11 @@ import { defu, defuFn } from "/home/kai/Projekti/webshop/node_modules/defu/dist/
 import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, useRoute as useRoute$1, RouterView } from "vue-router";
 import { toRouteMatcher, createRouter } from "/home/kai/Projekti/webshop/node_modules/radix3/dist/index.mjs";
 import { klona } from "/home/kai/Projekti/webshop/node_modules/klona/dist/index.mjs";
+import { useHead as useHead$1, headSymbol } from "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
 import { createPathIndexLanguageParser, parseAcceptLanguage } from "@intlify/utils";
 import { parse as parse$1 } from "/home/kai/Projekti/webshop/node_modules/cookie-es/dist/index.mjs";
 import destr from "/home/kai/Projekti/webshop/node_modules/destr/dist/index.mjs";
 import { isEqual as isEqual$1 } from "/home/kai/Projekti/webshop/node_modules/ohash/dist/index.mjs";
-import { useHead as useHead$1, headSymbol } from "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
 import { setupDevtoolsPlugin } from "@vue/devtools-api";
 import Draggable from "gsap/Draggable.js";
 import { ScrollTrigger, ScrollToPlugin } from "gsap/all.js";
@@ -667,63 +667,63 @@ const _routes = [
   {
     name: "cart",
     path: "/cart",
-    component: () => import("./_nuxt/cart-NRdKto0m.js")
+    component: () => import("./_nuxt/cart-Crmc1745.js")
   },
   {
     name: __nuxt_page_meta$2?.name,
     path: "/shop",
-    component: () => import("./_nuxt/shop-l5Ot-jyR.js"),
+    component: () => import("./_nuxt/shop-IE_8G2H-.js"),
     children: [
       {
         name: "shop",
         path: "",
-        component: () => import("./_nuxt/index-B91g3x3U.js")
+        component: () => import("./_nuxt/index-BZNTPKUL.js")
       }
     ]
   },
   {
     name: __nuxt_page_meta$1?.name,
     path: "/about",
-    component: () => import("./_nuxt/about-Bpoft_pN.js"),
+    component: () => import("./_nuxt/about-DxIsvD06.js"),
     children: [
       {
         name: "about",
         path: "",
-        component: () => import("./_nuxt/index-Bl4NlQpZ.js")
+        component: () => import("./_nuxt/index-DmnnEQGk.js")
       }
     ]
   },
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-C-do1UUk.js")
+    component: () => import("./_nuxt/index-Da8uv5ra.js")
   },
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-CyV9Vb0b.js")
+    component: () => import("./_nuxt/checkout-WPilHa19.js")
   },
   {
     name: __nuxt_page_meta?.name,
     path: "/collections",
-    component: () => import("./_nuxt/collections-CNllhe9i.js"),
+    component: () => import("./_nuxt/collections-BJDEzke5.js"),
     children: [
       {
         name: "collections",
         path: "",
-        component: () => import("./_nuxt/index-DTKEckSY.js")
+        component: () => import("./_nuxt/index-TgAprY0B.js")
       },
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-DmaEeTuV.js")
+        component: () => import("./_nuxt/_...slug_-DHq5q3B0.js")
       }
     ]
   },
   {
     name: "product-collection-product",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-DddCkwm7.js")
+    component: () => import("./_nuxt/_...product_-DytwA0_E.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1935,6 +1935,29 @@ const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 = /* @__PURE
       nuxtApp.vueApp.component("Lazy" + name, component);
     }
   }
+});
+const preference = "system";
+const plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
+  const colorMode = nuxtApp.ssrContext?.islandContext ? ref({}) : useState("color-mode", () => reactive({
+    preference,
+    value: preference,
+    unknown: true,
+    forced: false
+  })).value;
+  const htmlAttrs = {};
+  {
+    useHead({ htmlAttrs });
+  }
+  useRouter().afterEach((to) => {
+    const forcedColorMode = to.meta.colorMode;
+    if (forcedColorMode && forcedColorMode !== "system") {
+      colorMode.value = htmlAttrs["data-color-mode-forced"] = forcedColorMode;
+      colorMode.forced = true;
+    } else if (forcedColorMode === "system") {
+      console.warn("You cannot force the colorMode to system at the page level.");
+    }
+  });
+  nuxtApp.provide("colorMode", colorMode);
 });
 /*!
   * shared v11.1.11
@@ -7974,6 +7997,7 @@ const plugins = [
   revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
   plugin,
   components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
+  plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A,
   switch_locale_path_ssr_NflG9_QeVcJ1jVig0vCfxB_cZhpEMQ9U2ujRUiYbbVw,
   route_locale_detect__HPHJq3Jg7gwhwgKEI8tQavopSAjmrCSPXl9HgL2h9U,
   preload_30FByJAs5vQa4mNNQLX15KPGCCVjIGrzdTjh6ve5W24,
@@ -7983,7 +8007,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-B6BroYR9.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-B5LP7uug.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -8801,8 +8825,8 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-yxmd2ocU.js"));
-    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-DgbSYUDs.js"));
+    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-PGKeyb-2.js"));
+    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-B60qHy5K.js"));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));

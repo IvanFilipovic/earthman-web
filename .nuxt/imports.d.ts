@@ -40,3 +40,5 @@ export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_mod
 export { useGtag } from '../node_modules/nuxt-gtag/dist/runtime/composables/useGtag';
 export { useTrackEvent } from '../node_modules/nuxt-gtag/dist/runtime/composables/useTrackEvent';
 export { useGsap } from './gsapComposables';
+export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

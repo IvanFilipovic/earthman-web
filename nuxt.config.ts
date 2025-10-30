@@ -49,7 +49,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-aos',
     'nuxt-gtag',
-    '@hypernym/nuxt-gsap'
+    '@hypernym/nuxt-gsap',
+    '@nuxtjs/color-mode',
   ],
   tailwindcss: {
     cssPath: '~/assets/css/main.css',

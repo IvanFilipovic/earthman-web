@@ -29,7 +29,7 @@
           type="email"
           required
           placeholder="Email Address"
-          class="flex-1 px-4 py-2 bg-background_color bg-opacity-20 placeholder-background_color placeholder-opacity-75 border border-background_color border-opacity-50 focus:outline-none focus:ring-2 focus:ring-background_color focus:ring-opacity-50 text-background_color"
+          class="flex-1 px-4 py-2 bg-text_color bg-opacity-85 placeholder-background_color border border-background_color border-opacity-50 focus:outline-none focus:ring-2 focus:ring-background_color focus:ring-opacity-50 text-background_color"
         />
         
         <button

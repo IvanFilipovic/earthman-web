@@ -9,6 +9,7 @@ import { createPathIndexLanguageParser, parseAcceptLanguage } from '@intlify/uti
 import { createRouterMatcher } from 'vue-router';
 import { getIcons } from '@iconify/utils';
 import { consola } from 'consola';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'ipx';
 
@@ -4493,7 +4494,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "dba163dc-316f-4bee-9d14-187a08c0b705",
+    "buildId": "9b4424fc-cbd5-4ffc-9b4b-912a25fb7e77",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -5503,8 +5504,17 @@ const _ifp7RgCKY8ciEdz4Rnc0BqLtKVIcRUEzFX_Oc7e0LCU = defineNitroPlugin(async (ni
   });
 });
 
+const script = "\"use strict\";(()=>{const t=window,e=document.documentElement,c=[\"dark\",\"light\"],n=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"system\";let i=n===\"system\"?u():n;const r=e.getAttribute(\"data-color-mode-forced\");r&&(i=r),l(i),t[\"__NUXT_COLOR_MODE__\"]={preference:n,value:i,getColorScheme:u,addColorScheme:l,removeColorScheme:d};function l(o){const s=\"\"+o+\"-mode\",a=\"\";e.classList?e.classList.add(s):e.className+=\" \"+s,a&&e.setAttribute(\"data-\"+a,o)}function d(o){const s=\"\"+o+\"-mode\",a=\"\";e.classList?e.classList.remove(s):e.className=e.className.replace(new RegExp(s,\"g\"),\"\"),a&&e.removeAttribute(\"data-\"+a)}function f(o){return t.matchMedia(\"(prefers-color-scheme\"+o+\")\")}function u(){if(t.matchMedia&&f(\"\").media!==\"not all\"){for(const o of c)if(f(\":\"+o).matches)return o}return\"light\"}})();function getStorageValue(t,e){switch(t){case\"localStorage\":return window.localStorage.getItem(e);case\"sessionStorage\":return window.sessionStorage.getItem(e);case\"cookie\":return getCookie(e);default:return null}}function getCookie(t){const c=(\"; \"+window.document.cookie).split(\"; \"+t+\"=\");if(c.length===2)return c.pop()?.split(\";\").shift()}";
+
+const _8BsYEJWWol3UvQyLHmaomcgK6_5huiyq04Qb8mEO4YI = (function(nitro) {
+  nitro.hooks.hook("render:html", (htmlContext) => {
+    htmlContext.head.push(`<script>${script}<\/script>`);
+  });
+});
+
 const plugins = [
-  _ifp7RgCKY8ciEdz4Rnc0BqLtKVIcRUEzFX_Oc7e0LCU
+  _ifp7RgCKY8ciEdz4Rnc0BqLtKVIcRUEzFX_Oc7e0LCU,
+_8BsYEJWWol3UvQyLHmaomcgK6_5huiyq04Qb8mEO4YI
 ];
 
 const _DRIVE_LETTER_START_RE = /^[A-Za-z]:\//;
@@ -5689,8 +5699,10 @@ function publicAssetsURL(...path) {
   return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
+const require = createRequire(globalThis._importMeta_.url);
+
 const collections = {
-  'lucide': () => import('../_/icons.mjs').then(m => m.default),
+  'lucide': () => require('@iconify-json/lucide/icons.json'),
 };
 
 const DEFAULT_ENDPOINT = "https://api.iconify.design";

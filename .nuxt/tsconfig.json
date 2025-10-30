@@ -152,6 +152,9 @@
       "#gsap": [
         "./gsapComposables"
       ],
+      "#color-mode-options": [
+        "./color-mode-options.mjs"
+      ],
       "#vue-router": [
         "../node_modules/vue-router"
       ],
@@ -162,7 +165,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dba163dc-316f-4bee-9d14-187a08c0b705.json"
+        "./manifest/meta/dev"
       ],
       "#components": [
         "./components"
@@ -215,6 +218,6 @@
     "../.data",
     "../node_modules/runtime/server",
     "../node_modules/dist/runtime/server",
-    "../.vercel/output"
+    "dev"
   ]
 }

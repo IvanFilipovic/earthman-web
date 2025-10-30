@@ -80,7 +80,12 @@
 
         <div ref="instagramGrid">
           <div ref="instagramGrid">
-          <InstagramGrid :posts="posts" :initial="7" :step="6" />
+            <div class="hidden lg:block">
+              <InstagramGrid :posts="posts" :initial="5" :step="6" />
+            </div>
+            <div class="lg:hidden block">
+              <InstagramGrid :posts="posts" :initial="3" :step="6" />
+            </div>
         </div>
         </div>
       </div>
