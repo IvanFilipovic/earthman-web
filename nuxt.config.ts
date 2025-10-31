@@ -68,7 +68,7 @@ export default defineNuxtConfig({
   // ==================== Tailwind Configuration ====================
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
-    viewer: false, // Disable in production
+    viewer: false,
   },
 
   // ==================== Google Analytics ====================
@@ -110,7 +110,7 @@ export default defineNuxtConfig({
     ],
     provider: 'ipx',
     ipx: {
-      maxAge: 60 * 60 * 24 * 365, // Cache for 1 year
+      maxAge: 60 * 60 * 24 * 365,
     }
   },
 
@@ -129,20 +129,15 @@ export default defineNuxtConfig({
   // ==================== Icon Configuration ====================
   icon: {
     serverBundle: {
-      collections: ['lucide'] // Only bundle icons you use
+      collections: ['lucide']
     }
   },
 
   // ==================== Build Configuration ====================
   vite: {
     build: {
-      // Increase chunk size warning limit
       chunkSizeWarningLimit: 1000,
-      
-      // Enable CSS code splitting
       cssCodeSplit: true,
-      
-      // Optimize dependencies
       rollupOptions: {
         output: {
           manualChunks: {
@@ -158,52 +153,40 @@ export default defineNuxtConfig({
     }
   },
 
-  // ==================== Nitro Configuration ====================
+  // ==================== Nitro Configuration (VERCEL OPTIMIZED) ====================
   nitro: {
-    preset: 'node-server', // Change based on your hosting
+    preset: 'vercel', // ✅ Vercel preset
     
-    // Compression
     compressPublicAssets: {
       gzip: true,
       brotli: true,
     },
 
-    // Minify
     minify: true,
 
-    // Prerendering for static pages
     prerender: {
       crawlLinks: true,
       routes: ['/'],
     },
 
-    // Cache configuration
+    // Vercel-specific route rules
     routeRules: {
-      // Homepage - cache for 1 hour
       '/': { 
-        swr: 3600,
-        headers: {
-          'Cache-Control': 'public, max-age=3600, s-maxage=3600'
-        }
+        isr: 3600, // ✅ Use ISR (Incremental Static Regeneration) for Vercel
       },
       
-      // Shop pages - cache for 5 minutes
       '/shop/**': { 
-        swr: 300,
-        headers: {
-          'Cache-Control': 'public, max-age=300, s-maxage=300'
-        }
+        isr: 300,
       },
       
-      // Product pages - cache for 10 minutes
       '/product/**': { 
-        swr: 600,
-        headers: {
-          'Cache-Control': 'public, max-age=600, s-maxage=600'
-        }
+        isr: 600,
       },
 
-      // API routes - no cache
+      '/collections/**': {
+        isr: 3600,
+      },
+
       '/api/**': { 
         cors: true,
         headers: {
@@ -211,18 +194,7 @@ export default defineNuxtConfig({
         }
       },
 
-      // Static assets - cache for 1 year
       '/_nuxt/**': {
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable'
-        }
-      },
-      '/fonts/**': {
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable'
-        }
-      },
-      '/images/**': {
         headers: {
           'Cache-Control': 'public, max-age=31536000, immutable'
         }
@@ -230,11 +202,12 @@ export default defineNuxtConfig({
     },
   },
 
-  // ==================== Experimental Features ====================
+  // ==================== Experimental Features (DISABLED FOR VERCEL) ====================
   experimental: {
-    payloadExtraction: true, // Extract payload for better caching
-    renderJsonPayloads: true,
-    // viewTransition: false, // Disabled - causes issues with GSAP animations
+    // ❌ DISABLED - These cause issues on Vercel
+    // payloadExtraction: true,
+    // renderJsonPayloads: true,
+    // viewTransition: false,
   },
 
   // ==================== Router Configuration ====================
@@ -249,22 +222,7 @@ export default defineNuxtConfig({
   // ==================== Typescript Configuration ====================
   typescript: {
     strict: true,
-    typeCheck: false, // Disable in dev for speed, enable in CI/CD
+    typeCheck: false,
     shim: false,
-  },
-
-  // ==================== Hooks for Production Build ====================
-  hooks: {
-    'build:manifest': (manifest) => {
-      // Remove prefetch links for better performance
-      for (const key in manifest) {
-        const file = manifest[key]
-        if (file.assets) {
-          file.assets = file.assets.filter(
-            (asset: string) => !asset.endsWith('.webp') && !asset.endsWith('.png')
-          )
-        }
-      }
-    }
   },
 })

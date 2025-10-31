@@ -158,6 +158,7 @@
     ],
     "css": [],
     "assets": [
+      "earth-man920.CBzC0h3U.png",
       "/fonts/neue-einstellung/NeueEinstellung-Regular.woff2"
     ]
   },
@@ -235,7 +236,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CAjtrzwY.js",
+    "file": "BcgDKCGa.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -308,7 +309,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C6-FZFnn.js",
+    "file": "D5DxPQqY.js",
     "name": "checkout",
     "src": "pages/checkout.vue",
     "isDynamicEntry": true,
@@ -323,8 +324,8 @@
     ],
     "css": []
   },
-  "checkout.DeYyKDMs.css": {
-    "file": "checkout.DeYyKDMs.css",
+  "checkout.Cl0I_5Hn.css": {
+    "file": "checkout.Cl0I_5Hn.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -348,7 +349,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BjWU_PAT.js",
+    "file": "CsGnWdTO.js",
     "name": "_...slug_",
     "src": "pages/collections/[...slug].vue",
     "isDynamicEntry": true,
@@ -365,8 +366,8 @@
     ],
     "css": []
   },
-  "_...NYjiU8Uk.css": {
-    "file": "_...NYjiU8Uk.css",
+  "_...C4-zXROu.css": {
+    "file": "_...C4-zXROu.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

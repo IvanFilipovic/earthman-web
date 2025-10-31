@@ -1,7 +1,7 @@
 <template>
   <!--[slug.vue]-->
   <section class="collection-page">
-    <div class="fixed top-0 left-0 w-full z-50">
+    <div class="w-full z-50">
       <AppNavigation :dark="false" />
     </div>
     

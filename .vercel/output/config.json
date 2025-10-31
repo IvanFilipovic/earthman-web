@@ -4,26 +4,26 @@
     "index.html": {
       "path": ""
     },
-    "terms/index.html": {
-      "path": "terms"
-    },
-    "cookie-policy/index.html": {
-      "path": "cookie-policy"
-    },
     "cart/index.html": {
       "path": "cart"
+    },
+    "terms/index.html": {
+      "path": "terms"
     },
     "privacy/index.html": {
       "path": "privacy"
     },
+    "cookie-policy/index.html": {
+      "path": "cookie-policy"
+    },
     "about/index.html": {
       "path": "about"
     },
-    "collections/index.html": {
-      "path": "collections"
-    },
     "shop/index.html": {
       "path": "shop"
+    },
+    "collections/index.html": {
+      "path": "collections"
     },
     "checkout/index.html": {
       "path": "checkout"
@@ -44,24 +44,6 @@
     },
     {
       "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=3600"
-      },
-      "src": "/"
-    },
-    {
-      "headers": {
-        "Cache-Control": "public, max-age=300, s-maxage=300"
-      },
-      "src": "/shop/(.*)"
-    },
-    {
-      "headers": {
-        "Cache-Control": "public, max-age=600, s-maxage=600"
-      },
-      "src": "/product/(.*)"
-    },
-    {
-      "headers": {
         "access-control-allow-origin": "*",
         "access-control-allow-methods": "*",
         "access-control-allow-headers": "*",
@@ -76,18 +58,6 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       },
       "src": "/_nuxt/(.*)"
-    },
-    {
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      },
-      "src": "/fonts/(.*)"
-    },
-    {
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      },
-      "src": "/images/(.*)"
     },
     {
       "headers": {
@@ -141,6 +111,10 @@
     {
       "src": "(?<url>/product/.*)",
       "dest": "/product/[...]-isr?url=$url"
+    },
+    {
+      "src": "(?<url>/collections/.*)",
+      "dest": "/collections/[...]-isr?url=$url"
     },
     {
       "src": "/(.*)",

@@ -704,7 +704,7 @@ const _routes = [
   {
     name: "checkout",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-BI3hUnas.js")
+    component: () => import("./_nuxt/checkout-Bc0bpM5K.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -719,7 +719,7 @@ const _routes = [
       {
         name: "collections-slug",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-CiKLIyRS.js")
+        component: () => import("./_nuxt/_...slug_-DqGlqjlD.js")
       }
     ]
   },
