@@ -105,3 +105,121 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* ========================================
+   CLICKABILITY FIX - Add to main.css
+   ======================================== */
+
+/* Ensure all interactive elements are clickable */
+button,
+a,
+[role="button"],
+.btn,
+.cursor-pointer {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Links should always be clickable */
+a {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Breadcrumbs - ensure always clickable */
+.breadcrumbs,
+.breadcrumb,
+[class*="breadcrumb"] {
+  position: relative;
+  z-index: 10;
+}
+
+.breadcrumbs a,
+.breadcrumb a,
+[class*="breadcrumb"] a {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Filter buttons - ensure always clickable */
+.filter-buttons,
+.gender-filters,
+[class*="filter"] button {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+}
+
+/* Page content - clear fixed navigation */
+.page-content,
+.page-wrapper,
+main {
+  position: relative;
+  padding-top: 5rem; /* Adjust based on your nav height */
+  z-index: 1;
+}
+
+/* Cards with clickable elements */
+.card,
+[class*="card"] {
+  position: relative;
+  z-index: 1;
+}
+
+.card a,
+.card button,
+[class*="card"] a,
+[class*="card"] button {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+}
+
+/* Overlays should not block clicks (unless intended) */
+.overlay:not(.overlay-clickable) {
+  pointer-events: none;
+}
+
+/* But content inside overlays should be clickable */
+.overlay button,
+.overlay a {
+  pointer-events: auto !important;
+}
+
+/* Fix for elements with transitions */
+* {
+  pointer-events: auto;
+}
+
+/* Z-index scale for consistency */
+:root {
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-navigation: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+  --z-notification: 80;
+}
+
+/* Apply z-index scale */
+.z-base { z-index: var(--z-base); }
+.z-dropdown { z-index: var(--z-dropdown); }
+.z-sticky { z-index: var(--z-sticky); }
+.z-fixed { z-index: var(--z-fixed); }
+.z-modal { z-index: var(--z-modal); }
+.z-navigation { z-index: var(--z-navigation); }
+.z-popover { z-index: var(--z-popover); }
+.z-tooltip { z-index: var(--z-tooltip); }
+.z-notification { z-index: var(--z-notification); }

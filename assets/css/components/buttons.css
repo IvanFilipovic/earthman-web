@@ -28,7 +28,7 @@
   width: 0;
   height: 100%;
   z-index: 1;
-  transition: width 0.4s ease;
+  transition: width 0.6s ease;
 }
 
 /* Primary Button - Dark background, light text, blue hover */

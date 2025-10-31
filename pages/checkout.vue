@@ -201,7 +201,7 @@ async function removeCartItem(item: CartItem): Promise<void> {
     
     await fetchCart()
     
-    if (process.client) {
+    if (import.meta.client) {
       window.dispatchEvent(new CustomEvent('cart:updated', { 
         detail: { source: 'checkout', removed: slug } 
       }))
@@ -594,23 +594,40 @@ onMounted(() => {
         <div class="space-y-6 mt-10">
           <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
 
-          <div class="flex gap-3">
-            <button
-              type="button"
-              class="px-4 py-2 border text-sm uppercase transition-colors"
-              :class="selectedPaymentMethod === 'card' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
-              @click="selectPaymentMethod('card')"
-            >
-              Card
-            </button>
-            <button
-              type="button"
-              class="px-4 py-2 border text-sm uppercase transition-colors"
-              :class="selectedPaymentMethod === 'paypal' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
-              @click="selectPaymentMethod('paypal')"
-            >
-              PayPal
-            </button>
+          <div class="flex flex-col md:flex-row gap-3">
+          <label class="flex-1 cursor-pointer">
+          <input 
+          type="radio" 
+          name="payment" 
+          value="card" 
+          class="sr-only peer" 
+          @change="selectPaymentMethod('card')"
+          />
+          <div 
+          class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
+          :class="selectedPaymentMethod === 'card' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
+          >
+          <img src="/logo/stripe.png" alt="Card Payment" class="w-5 h-5 object-contain" />
+          <span>Card</span>
+          </div>
+          </label>
+
+          <label class="flex-1 cursor-pointer">
+          <input 
+          type="radio" 
+          name="payment" 
+          value="paypal" 
+          class="sr-only peer" 
+          @change="selectPaymentMethod('paypal')"
+          />
+          <div 
+          class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
+          :class="selectedPaymentMethod === 'paypal' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
+          >
+          <img src="/logo/paypal.png" alt="PayPal" class="w-5 h-5 object-contain" />
+          <span>PayPal</span>
+          </div>
+          </label>
           </div>
 
           <div class="space-y-4 pt-2">
@@ -719,7 +736,7 @@ onMounted(() => {
     </div>
 
     <!-- MOBILE FORM - Add v-model to all fields like desktop -->
-    <div class="md:hidden pb-24 max-w-screen-md mx-auto px-4 md:px-8 pt-4 gap-6">
+    <div class="md:hidden pb-10 max-w-screen-md mx-auto px-4 md:px-8 pt-4 gap-6">
       <div class="border-t border-b border-text_color/30 bg-background_color text-text_color rounded-sm">
         <div class="flex items-center justify-between py-4">
           <div class="text-sm uppercase tracking-widest">
@@ -1105,23 +1122,40 @@ onMounted(() => {
         <div class="space-y-6 mt-10">
           <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
 
-          <div class="flex gap-3">
-            <button
-              type="button"
-              class="px-4 py-2 border text-sm uppercase transition-colors"
-              :class="selectedPaymentMethod === 'card' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
-              @click="selectPaymentMethod('card')"
-            >
-              Card
-            </button>
-            <button
-              type="button"
-              class="px-4 py-2 border text-sm uppercase transition-colors"
-              :class="selectedPaymentMethod === 'paypal' ? 'border-text_color font-medium bg-text_color/5' : 'border-text_color/30 hover:border-text_color/50'"
-              @click="selectPaymentMethod('paypal')"
-            >
-              PayPal
-            </button>
+          <div class="flex flex-col md:flex-row gap-3">
+            <label class="flex-1 justify-center items-center cursor-pointer">
+              <input 
+                type="radio" 
+                name="payment" 
+                value="card" 
+                class="sr-only peer" 
+                @change="selectPaymentMethod('card')"
+              />
+              <div 
+                class="px-4 py-3 border text-sm mx-auto uppercase transition-colors flex justify-center items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
+                :class="selectedPaymentMethod === 'card' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
+              >
+                <img src="/logo/stripe.png" alt="Card Payment" class="w-5 h-5 object-contain" />
+                <span>Card</span>
+              </div>
+            </label>
+
+            <label class="flex-1 justify-center items-center cursor-pointer">
+              <input 
+                type="radio" 
+                name="payment" 
+                value="paypal" 
+                class="sr-only peer" 
+                @change="selectPaymentMethod('paypal')"
+              />
+              <div 
+                class="px-4 py-3 border text-sm mx-auto uppercase transition-colors flex justify-center items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
+                :class="selectedPaymentMethod === 'paypal' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
+              >
+                <img src="/logo/paypal.png" alt="PayPal" class="w-5 h-5 object-contain" />
+                <span>PayPal</span>
+              </div>
+            </label>
           </div>
 
           <div class="space-y-4 pt-2">

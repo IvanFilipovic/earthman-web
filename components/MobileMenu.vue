@@ -53,12 +53,12 @@
                         <NuxtLink
                             to="/collections"
                             :class="[linkColorClass, navWeight('/collections'), 'text-sm my-auto px-4']"
-                        >COLLECTIONS</NuxtLink>
+                        >STORIES</NuxtLink>
 
                         <NuxtLink
                             to="/about"
                             :class="[linkColorClass, navWeight('/about'), 'text-sm my-auto px-4']"
-                        >OUR STORY</NuxtLink>
+                        >ABOUT</NuxtLink>
                         
                     </div>
                     <div class="flex flex-col items-end overflow-y-auto py-5 space-y-6">

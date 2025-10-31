@@ -10,7 +10,7 @@
               class="group cursor-pointer relative min-h-[50vh] md:min-h-full overflow-hidden w-full"
             >
               <img
-                :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                :src="item.currentImage || item.colors?.[0]?.avatar_image"
                 :alt="item.alt_text || item.name"
                 class="absolute inset-0 max-w-full h-full object-contain mx-auto transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
@@ -19,7 +19,7 @@
               />
               <div class="absolute inset-0"></div>
               
-              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-background_color bg-text_color w-[50%]">
+              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-text_color bg-background_color/80 w-full">
                 <div class="hero-content">
                   <p class="text-xs tracking-widest uppercase mb-1 opacity-80">
                     {{ item.category }}
@@ -67,7 +67,7 @@
             >
               <div class="relative overflow-hidden">
                 <img
-                  :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                  :src="item.currentImage || item.colors?.[0]?.avatar_image"
                   :alt="item.alt_text || item.name"
                   class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
@@ -83,7 +83,7 @@
                 />
                 <div v-else class="block md:hidden">
                   <img
-                    :src="item.link_image"
+                    :src="item.currentImage"
                     :alt="item.alt_text || item.name"
                     class="w-full h-auto object-cover border border-text_color/30"
                     loading="lazy"
@@ -146,7 +146,7 @@
             >
               <div class="relative overflow-hidden">
                 <img
-                  :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+                  :src="item.currentImage || item.colors?.[0]?.avatar_image"
                   :alt="item.alt_text || item.name"
                   class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
@@ -162,7 +162,7 @@
                 />
                 <div v-else class="block md:hidden">
                   <img
-                    :src="item.link_image"
+                    :src="item.currentImage"
                     :alt="item.alt_text || item.name"
                     class="w-full h-auto object-cover border border-text_color/30"
                     loading="lazy"
@@ -214,11 +214,11 @@
               </div>
             </article>
 
-            <div class="col-span-2 md:col-span-2 flex flex-col justify-center">
+            <div class="col-span-2 md:col-span-2 flex flex-col justify-center section-trigger-line">
               <h4 class="section-heading uppercase tracking-wider text-xs md:text-sm mb-3 px-4">
                 {{ section.heading }}
               </h4>
-              <div class="flex flex-col ">
+              <div class="flex flex-col">
                 <span
                   v-for="(line, i) in splitText(section.text)"
                   :key="i"
@@ -256,7 +256,6 @@ interface Product {
   name: string
   category: string
   price: string
-  link_image: string
   alt_text?: string
   hot?: boolean
   colors?: ProductColor[]
@@ -418,7 +417,7 @@ function onEnterColor(item: Product, color: ProductColor, colorIdx: number): voi
 }
 
 function onLeaveColor(item: Product): void {
-  item.currentImage = item.colors?.[0]?.avatar_image || item.link_image
+  item.currentImage = item.colors?.[0]?.avatar_image
   hoveredColorIndex.value[item.slug] = null
   hoveredSlug.value = null
 }
@@ -448,7 +447,7 @@ function initializeGSAP(): void {
         },
         y: 80,
         opacity: 0,
-        duration: 1.4,
+        duration: 0.9,
         ease: 'power4.out'
       })
     })
@@ -473,7 +472,7 @@ function initializeGSAP(): void {
           trigger: heading,
           start: 'top 80%'
         },
-        y: 60,
+        y: 40,
         opacity: 0,
         duration: 1.2,
         ease: 'power4.out'
@@ -483,14 +482,14 @@ function initializeGSAP(): void {
     document.querySelectorAll('.section-text-line').forEach((line, index) => {
       gsap.from(line, {
         scrollTrigger: {
-          trigger: line,
-          start: 'top 85%'
+          trigger: '.section-trigger-line',
+          start: 'top 90%'
         },
-        y: 40,
+        y: 30,
         opacity: 0,
         duration: 1,
         ease: 'power4.out',
-        delay: index * 0.1
+        delay: index * 0.5
       })
     })
   })

@@ -35,8 +35,8 @@ const linkGroups = [
   {
     title: "EARTHMAN",
     links: [
-      { label: "Our Story",      href: "/about" },
-      { label: "Projects",      href: "/collections" },
+      { label: "About",      href: "/about" },
+      { label: "Stories",      href: "/collections" },
       { label: "Shop",          href: "/shop" },
     ],
   },

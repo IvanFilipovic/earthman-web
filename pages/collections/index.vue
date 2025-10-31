@@ -1,57 +1,59 @@
 <template>
-  <div>
+  <div class="collections-page">
     <div ref="navWrap" class="fixed top-0 left-0 w-full z-50">
       <AppNavigation :dark="isDark" />
     </div>
 
-    <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-background_color">
-      <p class="text-text_color text-xl">Loading collections...</p>
-    </div>
+    <Transition name="fade" mode="out-in" @after-enter="initializeGSAP">
+      <div v-if="loading" key="loading" class="fixed inset-0 flex items-center justify-center bg-background_color z-40">
+        <p class="text-text_color text-xl">Loading collections...</p>
+      </div>
 
-    <div v-else id="smooth-wrapper">
-      <div id="smooth-content" class="stage">
-        <section
-          v-for="(collection, i) in collections"
-          :key="collection.id || i"
-          class="slide"
-          :class="`slide--${(i % 2) + 1}`"
-        >
-          <div class="slide__bg" :style="{ backgroundImage: `url(${collection.element_one_image})` }">
-            <div class="slide__overlay"></div>
-          </div>
-
-          <div class="slide__content">
-            <div class="slide__content-inner">
-              <h2 class="slide__title">
-                <span class="slide__title-line">
-                  <span class="line__inner">{{ collection.name }}</span>
-                </span>
-              </h2>
-
-              <div class="slide__cta">
-                <NuxtLink
-                  :to="`/collections/${encodeURIComponent(collection.slug)}`"
-                  class="btn btn--secondary"
-                >
-                  <span class="btn__text">View Story</span>
-                  <span class="btn__fill"></span>
-                </NuxtLink>
-              </div>
+      <div v-else key="content" id="smooth-wrapper">
+        <div id="smooth-content">
+          <section
+            v-for="(collection, i) in collections"
+            :key="collection.id || i"
+            class="slide"
+            :class="`slide--${(i % 2) + 1}`"
+          >
+            <div class="slide__bg" :style="{ backgroundImage: `url(${collection.element_one_image})` }">
+              <div class="slide__overlay"></div>
             </div>
 
-            <button
-              v-if="i < collections.length - 1"
-              type="button"
-              class="slide__scroll-btn"
-              @click="scrollToNext(i + 1)"
-            >
-              <span class="slide__scroll-line"></span>
-              <Icon name="lucide:chevron-down" class="slide__scroll-icon" />
-            </button>
-          </div>
-        </section>
+            <div class="slide__content">
+              <div class="slide__content-inner">
+                <h2 class="slide__title">
+                  <span class="slide__title-line">
+                    <span class="line__inner">{{ collection.name }}</span>
+                  </span>
+                </h2>
+
+                <div class="slide__cta">
+                  <NuxtLink
+                    :to="`/collections/${encodeURIComponent(collection.slug)}`"
+                    class="btn btn--secondary"
+                  >
+                    <span class="btn__text">View Story</span>
+                    <span class="btn__fill"></span>
+                  </NuxtLink>
+                </div>
+              </div>
+
+              <button
+                v-if="i < collections.length - 1"
+                type="button"
+                class="slide__scroll-btn"
+                @click="scrollToNext(i + 1)"
+              >
+                <span class="slide__scroll-line"></span>
+                <Icon name="lucide:chevron-down" class="slide__scroll-icon" />
+              </button>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -110,90 +112,110 @@ async function fetchCollections(): Promise<void> {
 }
 
 function initializeGSAP(): void {
-  ctx = gsap.context(() => {
-    if (ScrollSmoother) {
-      smoother = ScrollSmoother.create({
-        smooth: 1.5,
-        effects: true,
-        normalizeScroll: true,
-        smoothTouch: 0.2,
-        wrapper: '#smooth-wrapper',
-        content: '#smooth-content'
-      })
+  // Wait for DOM to be fully ready after transition
+  nextTick(() => {
+    const wrapper = document.querySelector('#smooth-wrapper')
+    const content = document.querySelector('#smooth-content')
+    const slides = document.querySelectorAll('.slide')
+    
+    if (!wrapper || !content || slides.length === 0) {
+      console.error('Elements not found for GSAP initialization')
+      return
     }
 
-    document.querySelectorAll<HTMLElement>('.slide').forEach((slide, index) => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: slide,
-          start: 'top 60%',
-          end: 'bottom 40%',
-          onEnter: () => {
-            isDark.value = index % 2 === 0
-          },
-          onEnterBack: () => {
-            isDark.value = index % 2 === 0
-          }
+    ctx = gsap.context(() => {
+      // Initialize ScrollSmoother
+      if (ScrollSmoother) {
+        try {
+          smoother = ScrollSmoother.create({
+            smooth: 1.5,
+            effects: true,
+            normalizeScroll: true,
+            smoothTouch: 0.2,
+            wrapper: '#smooth-wrapper',
+            content: '#smooth-content'
+          })
+        } catch (error) {
+          console.error('ScrollSmoother error:', error)
         }
-      })
+      }
 
-      tl.from(slide.querySelector('.line__inner'), {
-        y: 120,
-        duration: 1.4,
-        ease: 'power4.out'
-      })
-        .from(
-          slide.querySelector('.btn'),
-          {
+      // Animate slides
+      slides.forEach((slide, index) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: slide,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            onEnter: () => {
+              isDark.value = index % 2 === 0
+            },
+            onEnterBack: () => {
+              isDark.value = index % 2 === 0
+            }
+          }
+        })
+
+        const lineInner = slide.querySelector('.line__inner')
+        const btn = slide.querySelector('.btn')
+        const scrollBtn = slide.querySelector('.slide__scroll-btn')
+
+        if (lineInner) {
+          tl.from(lineInner, {
+            y: 120,
+            duration: 1.4,
+            ease: 'power4.out'
+          })
+        }
+
+        if (btn) {
+          tl.from(btn, {
             y: 80,
             opacity: 0,
             duration: 1.2,
             ease: 'power4.out'
-          },
-          0.2
-        )
-        .from(
-          slide.querySelector('.slide__scroll-btn'),
-          {
+          }, 0.2)
+        }
+
+        if (scrollBtn) {
+          tl.from(scrollBtn, {
             y: 40,
             opacity: 0,
             duration: 1,
             ease: 'power4.out'
-          },
-          0.3
-        )
-    })
-
-    document.querySelectorAll<HTMLElement>('.slide').forEach((slide) => {
-      const bg = slide.querySelector('.slide__bg') as HTMLElement
-
-      gsap.fromTo(
-        bg,
-        { y: '-20vh', scale: 1.2 },
-        {
-          y: '20vh',
-          scale: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: slide,
-            scrub: true,
-            start: 'top bottom',
-            end: 'bottom top'
-          }
+          }, 0.3)
         }
-      )
-    })
+      })
 
-    gsap.set('.stage', { autoAlpha: 1 })
+      // Parallax backgrounds
+      slides.forEach((slide) => {
+        const bg = slide.querySelector('.slide__bg') as HTMLElement
+        
+        if (bg) {
+          gsap.fromTo(
+            bg,
+            { y: '-20vh', scale: 1.2 },
+            {
+              y: '20vh',
+              scale: 1,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: slide,
+                scrub: true,
+                start: 'top bottom',
+                end: 'bottom top'
+              }
+            }
+          )
+        }
+      })
+    })
   })
 }
 
 onMounted(async () => {
   await fetchCollections()
-  
-  nextTick(() => {
-    initializeGSAP()
-  })
+  // GSAP will initialize via @after-enter callback
 })
 
 onBeforeUnmount(() => {
@@ -205,6 +227,23 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Collections page wrapper */
+.collections-page {
+  position: relative;
+  min-height: 100vh;
+}
+
 /* Button Base Styles */
 .btn {
   position: relative;
@@ -246,13 +285,7 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Page styles */
-.stage {
-  position: relative;
-  visibility: hidden;
-  min-height: 100vh;
-}
-
+/* Slide styles */
 .slide {
   position: relative;
   display: flex;

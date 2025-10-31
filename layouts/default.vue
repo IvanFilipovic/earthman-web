@@ -5,6 +5,7 @@
             <AppFooter />
         </div>
         <Toast />
+        <CookieControl />
     </div>
 </template>
 <script setup lang="ts">

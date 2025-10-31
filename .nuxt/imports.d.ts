@@ -30,9 +30,9 @@ export { requestIdleCallback, cancelIdleCallback } from '#app/compat/idle-callba
 export { setInterval } from '#app/compat/interval';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
+export { useCart } from '../composables/useCart';
 export { useToast } from '../composables/useToast';
 export { useImage } from '../node_modules/@nuxt/image/dist/runtime/composables';
-export { useGSAP } from '../node_modules/v-gsap-nuxt/dist/runtime/plugin';
 export { useI18n } from '../node_modules/vue-i18n/dist/vue-i18n';
 export { useRouteBaseName, useLocalePath, useLocaleRoute, useSwitchLocalePath, useLocaleHead, useBrowserLocale, useCookieLocale, useSetI18nParams, useI18nPreloadKeys, defineI18nRoute, defineI18nLocale, defineI18nConfig } from '../node_modules/@nuxtjs/i18n/dist/runtime/composables/index';
 export { provideUseId as provideHeadlessUseId } from '../node_modules/@headlessui/vue/dist/headlessui.esm';
@@ -41,4 +41,3 @@ export { useGtag } from '../node_modules/nuxt-gtag/dist/runtime/composables/useG
 export { useTrackEvent } from '../node_modules/nuxt-gtag/dist/runtime/composables/useTrackEvent';
 export { useGsap } from './gsapComposables';
 export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
-export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

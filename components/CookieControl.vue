@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="z-50">
         <TransitionRoot
             appear
             :show="opend"
@@ -37,7 +37,7 @@
                     <div class="px-6 pb-4 space-y-4 text-sm leading-relaxed">
                         <p>
                             We and selected third parties use cookies or similar technologies for technical purposes and, with your consent, also for functionality, experience, measurement and marketing (personalized ads) as specified in the
-                            <NuxtLink to="/cookie-policy" class="underline">Cookie Policy</NuxtLink>.
+                            <NuxtLink to="/" class="underline">Cookie Policy</NuxtLink>.
                         </p>
                         <p>You can freely give, refuse, or withdraw your consent at any time.</p>
 

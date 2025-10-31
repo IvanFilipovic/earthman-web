@@ -51,7 +51,6 @@ interface _GlobalComponents {
     'NuxtImg': typeof import("../../node_modules/@nuxt/image/dist/runtime/components/NuxtImg.vue")['default']
     'NuxtPicture': typeof import("../../node_modules/@nuxt/image/dist/runtime/components/NuxtPicture.vue")['default']
     'Icon': typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
-    'GSAPTransition': typeof import("../../node_modules/v-gsap-nuxt/dist/runtime/components/GSAPTransition.vue")['default']
     'NuxtLinkLocale': typeof import("../../node_modules/@nuxtjs/i18n/dist/runtime/components/NuxtLinkLocale")['default']
     'SwitchLocalePathLink': typeof import("../../node_modules/@nuxtjs/i18n/dist/runtime/components/SwitchLocalePathLink")['default']
     'HeadlessCombobox': typeof import("../../node_modules/@headlessui/vue/dist/components/combobox/combobox")['Combobox']
@@ -151,7 +150,6 @@ interface _GlobalComponents {
     'LazyNuxtImg': LazyComponent<typeof import("../../node_modules/@nuxt/image/dist/runtime/components/NuxtImg.vue")['default']>
     'LazyNuxtPicture': LazyComponent<typeof import("../../node_modules/@nuxt/image/dist/runtime/components/NuxtPicture.vue")['default']>
     'LazyIcon': LazyComponent<typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']>
-    'LazyGSAPTransition': LazyComponent<typeof import("../../node_modules/v-gsap-nuxt/dist/runtime/components/GSAPTransition.vue")['default']>
     'LazyNuxtLinkLocale': LazyComponent<typeof import("../../node_modules/@nuxtjs/i18n/dist/runtime/components/NuxtLinkLocale")['default']>
     'LazySwitchLocalePathLink': LazyComponent<typeof import("../../node_modules/@nuxtjs/i18n/dist/runtime/components/SwitchLocalePathLink")['default']>
     'LazyHeadlessCombobox': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/combobox/combobox")['Combobox']>

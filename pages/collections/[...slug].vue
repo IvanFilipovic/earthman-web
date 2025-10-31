@@ -1,12 +1,14 @@
 <template>
   <!--[slug.vue]-->
-  <section>
-    <div>
+  <section class="collection-page">
+    <div class="fixed top-0 left-0 w-full z-50">
       <AppNavigation :dark="false" />
-      
+    </div>
+    
+    <div class="pt-20 relative z-10">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
         <div class="flex justify-start w-full">
-          <div class="flex items-center">
+          <div class="flex items-center gap-1">
             <button 
               type="button"
               :class="typeBtnClass('all')"
@@ -67,14 +69,19 @@ interface Collection {
 }
 
 interface Product {
+  id: number
   slug: string
   name: string
+  gender: string
   category: string
   price: string
-  link_image: string
+  discount: boolean
+  discount_price: string | null
+  hot: boolean
+  new: boolean
+  available: boolean
   alt_text?: string
-  hot?: boolean
-  colors?: ProductColor[]
+  colors: ProductColor[]
 }
 
 interface ProductsResponse {
@@ -129,7 +136,7 @@ function setType(value: GenderType): void {
 }
 
 function typeBtnClass(btnType: GenderType): string {
-  const base = 'pr-8 py-1 text-sm text-text_color'
+  const base = 'pr-8 py-1 text-sm text-text_color cursor-pointer hover:opacity-70 transition-opacity duration-200'
   const active = type.value === btnType ? 'font-bold' : 'bg-background_color'
   return `${base} ${active}`
 }
@@ -171,8 +178,22 @@ const collection = computed(() => collectionData.value || {})
 const products = computed(() => productsData.value || [])
 
 function onCtaClick(): void {
-  if (process.client) {
+  if (import.meta.client) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 </script>
+
+<style scoped>
+.collection-page {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Ensure buttons are clickable */
+button {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+</style>

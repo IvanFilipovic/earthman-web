@@ -70,14 +70,17 @@ interface Product {
   id: number
   name: string
   slug: string
+  gender: string
   category: string
   price: string
-  link_image: string
+  discount: boolean
+  discount_price: string | null
+  hot: boolean
+  new: boolean
+  available: boolean
   alt_text?: string
-  hot?: boolean
-  colors?: ProductColor[]
+  colors: ProductColor[]
   currentImage?: string
-  defaultImage?: string
 }
 
 interface Collection {
@@ -303,11 +306,7 @@ async function fetchProducts(): Promise<void> {
     )
     
     count.value = res.count
-    products.value = res.results.map(product => ({
-      ...product,
-      defaultImage: product.link_image,
-      currentImage: product.link_image
-    }))
+    products.value = res.results
   } catch (error) {
     console.error('Failed to fetch products:', error)
   } finally {

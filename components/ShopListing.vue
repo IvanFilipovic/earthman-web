@@ -12,14 +12,16 @@
             @mouseenter="hoveredSlug = item.slug"
             @mouseleave="hoveredSlug = null"
           >
+            <!-- Desktop Main Image -->
             <img
-              :src="item.currentImage || item.colors?.[0]?.avatar_image || item.link_image"
+              :src="getMainImage(item)"
               :alt="item.alt_text || item.name"
               class="hidden md:block max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
               loading="lazy"
-              @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+              @click="goToProduct(item.slug, getDefaultVariantSlug(item))"
             />
 
+            <!-- Mobile Slider -->
             <div v-if="item.colors && item.colors.length > 0" class="block md:hidden">
               <div 
                 :ref="(el) => setSliderRef(el, item.slug)" 
@@ -41,31 +43,26 @@
               </div>
             </div>
 
-            <div v-else class="block md:hidden">
-              <img
-                :src="item.link_image"
-                :alt="item.alt_text || item.name"
-                class="w-full h-auto object-cover border border-text_color/30"
-                loading="lazy"
-                @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-              />
-            </div>
-
+            <!-- View Button on Hover -->
             <button
               v-show="hoveredSlug === item.slug"
               type="button"
               class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light w-auto px-2 mx-auto opacity-0 transition-opacity duration-200"
               :class="{ 'opacity-100': hoveredSlug === item.slug }"
-              @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
+              @click="goToProduct(item.slug, getDefaultVariantSlug(item))"
             >
               VIEW
             </button>
           </div>
 
+          <!-- Product Info -->
           <div class="py-3 text-left">
             <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
-            <h3 class="uppercase tracking-wider text-[13px] md:text-sm font-normal truncate py-1">{{ item.name }}</h3>
+            <h3 class="uppercase tracking-wider text-[13px] md:text-sm font-normal truncate py-1">
+              {{ item.name }}
+            </h3>
 
+            <!-- Color Swatches -->
             <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
               <div
                 v-for="(color, colorIdx) in item.colors"
@@ -82,6 +79,7 @@
                   @click="goToProduct(item.slug, color.variant_slug)"
                 />
 
+                <!-- Hover Icon -->
                 <div
                   class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
                   :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
@@ -94,7 +92,8 @@
               </div>
             </div>
 
-            <p class="mt-1 text-xs font-light">€{{ parseFloat(item.price).toFixed(2) }}</p>
+            <!-- Price -->
+            <p class="mt-1 text-xs font-light">€{{ formatPrice(item.price) }}</p>
           </div>
         </div>
       </div>
@@ -117,12 +116,10 @@ interface Product {
   name: string
   category: string
   price: string
-  link_image: string
   alt_text?: string
   hot?: boolean
-  colors?: ProductColor[]
+  colors: ProductColor[]
   currentImage?: string
-  defaultImage?: string
 }
 
 interface Props {
@@ -131,12 +128,106 @@ interface Props {
 
 const props = defineProps<Props>()
 const router = useRouter()
+const route = useRoute()
 
 const hoveredSlug = ref<string | null>(null)
 const hoveredColorIndex = ref<Record<string, number | null>>({})
 const sliderElements = ref<Record<string, HTMLElement>>({})
 const sliderInstances = ref<Record<string, any>>({})
 const sliderCurrents = ref<Record<string, number>>({})
+
+// Get filtered colors from URL query params
+const filteredColors = computed<string[]>(() => {
+  const colorParam = route.query.color
+  
+  if (!colorParam) {
+    return []
+  }
+  
+  // Handle both single color and array of colors
+  if (Array.isArray(colorParam)) {
+    return colorParam.map(c => normalizeColorName(String(c)))
+  }
+  
+  return [normalizeColorName(String(colorParam))]
+})
+
+// Normalize color names for matching (lowercase, trim, remove extra spaces)
+function normalizeColorName(color: string): string {
+  return color.toLowerCase().trim().replace(/\s+/g, ' ')
+}
+
+// Check if a color matches any filtered color
+function matchesFilteredColor(productColor: ProductColor): boolean {
+  if (filteredColors.value.length === 0) {
+    return false
+  }
+  
+  const normalizedProductColor = normalizeColorName(productColor.color)
+  
+  return filteredColors.value.some(filterColor => {
+    // Exact match
+    if (normalizedProductColor === filterColor) {
+      return true
+    }
+    
+    // Partial match (e.g., "Blue" matches "Navy Blue")
+    if (normalizedProductColor.includes(filterColor) || filterColor.includes(normalizedProductColor)) {
+      return true
+    }
+    
+    return false
+  })
+}
+
+// Get the main image to display for a product
+function getMainImage(item: Product): string {
+  // Priority 1: User hovering over a color swatch
+  if (item.currentImage) {
+    return item.currentImage
+  }
+  
+  // Priority 2: No colors available (shouldn't happen based on new API)
+  if (!item.colors || item.colors.length === 0) {
+    return '' // Fallback to empty string
+  }
+  
+  // Priority 3: Match filtered colors
+  if (filteredColors.value.length > 0) {
+    const matchedColor = item.colors.find(color => matchesFilteredColor(color))
+    
+    if (matchedColor) {
+      return matchedColor.avatar_image
+    }
+  }
+  
+  // Priority 4: Default - first color
+  return item.colors[0].avatar_image
+}
+
+// Get the default variant slug (for navigation)
+function getDefaultVariantSlug(item: Product): string | undefined {
+  // No colors available
+  if (!item.colors || item.colors.length === 0) {
+    return undefined
+  }
+  
+  // If colors are filtered, try to match
+  if (filteredColors.value.length > 0) {
+    const matchedColor = item.colors.find(color => matchesFilteredColor(color))
+    
+    if (matchedColor) {
+      return matchedColor.variant_slug
+    }
+  }
+  
+  // Default: use first color's variant_slug
+  return item.colors[0].variant_slug
+}
+
+function formatPrice(price: string): string {
+  return parseFloat(price).toFixed(2)
+}
 
 function setSliderRef(el: any, slug: string): void {
   if (el) {
@@ -194,17 +285,6 @@ function initializeSliders(): void {
   })
 }
 
-function getMobileSliderCurrent(slug: string): number {
-  return sliderCurrents.value[slug] || 0
-}
-
-function moveToSlide(slug: string, index: number): void {
-  const slider = sliderInstances.value[slug]
-  if (slider && typeof slider.moveToIdx === 'function') {
-    slider.moveToIdx(index)
-  }
-}
-
 function isColorHovered(item: Product, colorIdx: number): boolean {
   return hoveredColorIndex.value[item.slug] === colorIdx
 }
@@ -216,7 +296,8 @@ function onEnterColor(item: Product, color: ProductColor, colorIdx: number): voi
 }
 
 function onLeaveColor(item: Product): void {
-  item.currentImage = item.colors?.[0]?.avatar_image || item.link_image
+  // Reset to default image (will recalculate based on filters or first color)
+  item.currentImage = undefined
   hoveredColorIndex.value[item.slug] = null
   hoveredSlug.value = null
 }

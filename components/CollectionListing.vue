@@ -15,7 +15,7 @@
             class="col__content" 
             :class="`col__content--${getColorVariant(i)}`"
           >
-            <h2 class="col__content-title">
+            <h2 :class="`col__content-title--${getColorVariant(i)}`">
               <span class="line__inner">{{ collection.name || 'Collection' }}</span>
             </h2>
 
@@ -226,9 +226,22 @@ function handleResize(): void {
   color: theme('colors.background_color');
 }
 
-.col__content-title {
+.col__content-title--1 {
+  background-color: theme('colors.text_color');
+  margin: 0 0 3rem;
+  color: theme('colors.background_color');
+  overflow: hidden;
+  width: fit-content;
+  padding: 0 8px;
+}
+
+.col__content-title--2 {
+  background-color: theme('colors.background_color');
+  color: theme('colors.text_color');
   margin: 0 0 3rem;
   overflow: hidden;
+  width: fit-content;
+  padding: 0 8px;
 }
 
 .line__inner {
@@ -287,7 +300,10 @@ function handleResize(): void {
     text-align: center;
   }
 
-  .col__content-title {
+  .col__content-title--1 {
+    margin: 0 0 1.5rem;
+  } 
+  .col__content-title--2 {
     margin: 0 0 1.5rem;
   }
 

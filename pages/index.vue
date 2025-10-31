@@ -9,7 +9,7 @@
       <div class="absolute inset-x-0 top-0 w-full">
         <AppNavigation :dark="true" />
       </div>
-      <div class="absolute inset-x-0 bottom-6 md:bottom-0 left-0 flex items-center flex-col pb-8 text-background_color px-4 md:text-end md:self-end">
+      <div class="absolute inset-x-0 bottom-[50px] md:bottom-0 left-0 flex items-center flex-col pb-8 text-background_color px-4 md:text-end md:self-end">
         <h1 class="text-4xl md:text-6xl font-bold mb-4 self-center text-center md:self-end">
           Welcome to Our Shop
         </h1>

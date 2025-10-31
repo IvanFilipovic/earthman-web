@@ -143,12 +143,6 @@
       "#internal-i18n-types": [
         "../node_modules/@nuxtjs/i18n/dist/types"
       ],
-      "#aos": [
-        "../node_modules/nuxt-aos/dist/runtime"
-      ],
-      "#aos/*": [
-        "../node_modules/nuxt-aos/dist/runtime/*"
-      ],
       "#gsap": [
         "./gsapComposables"
       ],
@@ -165,7 +159,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dev"
+        "./manifest/meta/90d8f367-b79f-4be1-b564-a3a5d5078b2f.json"
       ],
       "#components": [
         "./components"
@@ -218,6 +212,6 @@
     "../.data",
     "../node_modules/runtime/server",
     "../node_modules/dist/runtime/server",
-    "dev"
+    "../.vercel/output"
   ]
 }

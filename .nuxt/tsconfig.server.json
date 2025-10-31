@@ -140,12 +140,6 @@
       "#internal-i18n-types": [
         "../node_modules/@nuxtjs/i18n/dist/types"
       ],
-      "#aos": [
-        "../node_modules/nuxt-aos/dist/runtime"
-      ],
-      "#aos/*": [
-        "../node_modules/nuxt-aos/dist/runtime/*"
-      ],
       "#gsap": [
         "./gsapComposables"
       ],
@@ -182,11 +176,9 @@
     "../node_modules/@nuxt/icon/node_modules",
     "../node_modules/@nuxt/image/node_modules",
     "../node_modules/@nuxtjs/tailwindcss/node_modules",
-    "../node_modules/v-gsap-nuxt/node_modules",
     "../node_modules/@nuxtjs/i18n/node_modules",
     "../node_modules/nuxt-headlessui/node_modules",
     "../node_modules/@pinia/nuxt/node_modules",
-    "../node_modules/nuxt-aos/node_modules",
     "../node_modules/nuxt-gtag/node_modules",
     "../node_modules/@hypernym/nuxt-gsap/node_modules",
     "../node_modules/@nuxtjs/color-mode/node_modules",
