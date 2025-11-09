@@ -23,6 +23,7 @@ export const Carusel: typeof import("../components/Carusel.vue")['default']
 export const CollectionHome: typeof import("../components/CollectionHome.vue")['default']
 export const CollectionListing: typeof import("../components/CollectionListing.vue")['default']
 export const CollectionShopListing: typeof import("../components/CollectionShopListing.vue")['default']
+export const CollectionShopListingSkeleton: typeof import("../components/CollectionShopListingSkeleton.vue")['default']
 export const CookieControl: typeof import("../components/CookieControl.vue")['default']
 export const Filter: typeof import("../components/Filter.vue")['default']
 export const FilterPanel: typeof import("../components/FilterPanel.vue")['default']
@@ -122,6 +123,7 @@ export const LazyCarusel: LazyComponent<typeof import("../components/Carusel.vue
 export const LazyCollectionHome: LazyComponent<typeof import("../components/CollectionHome.vue")['default']>
 export const LazyCollectionListing: LazyComponent<typeof import("../components/CollectionListing.vue")['default']>
 export const LazyCollectionShopListing: LazyComponent<typeof import("../components/CollectionShopListing.vue")['default']>
+export const LazyCollectionShopListingSkeleton: LazyComponent<typeof import("../components/CollectionShopListingSkeleton.vue")['default']>
 export const LazyCookieControl: LazyComponent<typeof import("../components/CookieControl.vue")['default']>
 export const LazyFilter: LazyComponent<typeof import("../components/Filter.vue")['default']>
 export const LazyFilterPanel: LazyComponent<typeof import("../components/FilterPanel.vue")['default']>

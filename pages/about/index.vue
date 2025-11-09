@@ -42,7 +42,7 @@
               <h2 class="section-title text-2xl md:text-3xl tracking-wide mb-4 mx-auto uppercase">
                 Crafted with Intent
               </h2>
-              <p class="section-text text-sm leading-normal md:leading-loose text-center mx-auto px-4 py-2">
+              <p class="section-text text-sm md:text-base leading-normal md:leading-loose text-center mx-auto px-4 py-2">
                 We design for longevity: timeless silhouettes, resilient materials, and a supply chain
                 we're proud of. Every piece is cut in small batches and finished by hand.
                 Our studio blends traditional techniques with forward-looking processes—prioritizing
@@ -67,7 +67,7 @@
               <h2 class="section-title text-2xl md:text-3xl tracking-wide mb-4 mx-auto uppercase">
                 Community Driven
               </h2>
-              <p class="section-text text-sm leading-normal md:leading-loose text-center mx-auto px-4 py-2">
+              <p class="section-text text-sm md:text-base leading-normal md:leading-loose text-center mx-auto px-4 py-2">
                 We design for longevity: timeless silhouettes, resilient materials, and a supply chain
                 we're proud of. Every piece is cut in small batches and finished by hand.
                 Our studio blends traditional techniques with forward-looking processes—prioritizing

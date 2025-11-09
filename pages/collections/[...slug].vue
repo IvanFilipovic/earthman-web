@@ -5,7 +5,8 @@
       <AppNavigation :dark="false" />
     </div>
     
-    <div class="pt-20 relative z-10">
+    <div class="relative z-10">
+      
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
         <div class="flex justify-start w-full">
           <div class="flex items-center gap-1">
@@ -40,9 +41,11 @@
           </div>
         </div>
       </div>
-
-      <TestCollectionListing
-        v-if="!pending && products.length"
+      <CollectionShopListingSkeleton v-if="loading1 && loading2"
+        :animate=true
+      />
+      <CollectionShopListing
+        v-else
         :products="products"
         :collection="collection"
         @cta-click="onCtaClick"
@@ -52,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import TestCollectionListing from '~/components/testCollectionListing.vue'
 
 interface ProductColor {
   color: string
@@ -140,7 +142,6 @@ function typeBtnClass(btnType: GenderType): string {
   const active = type.value === btnType ? 'font-bold' : 'bg-background_color'
   return `${base} ${active}`
 }
-
 const { data: collectionData, pending: cPending } = await useAsyncData<Collection>(
   `collection:${slug.value}`,
   async () => {
@@ -173,7 +174,9 @@ const { data: productsData, pending: pPending } = await useAsyncData<Product[]>(
   { watch: [slug, gender] }
 )
 
-const pending = computed(() => cPending.value || pPending.value)
+const loading1 = cPending.value
+const loading2 = pPending.value
+console.log(cPending.value, pPending.value)
 const collection = computed(() => collectionData.value || {})
 const products = computed(() => productsData.value || [])
 

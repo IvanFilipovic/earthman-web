@@ -22,11 +22,11 @@
     "shop/index.html": {
       "path": "shop"
     },
-    "collections/index.html": {
-      "path": "collections"
-    },
     "checkout/index.html": {
       "path": "checkout"
+    },
+    "collections/index.html": {
+      "path": "collections"
     }
   },
   "routes": [

@@ -23,6 +23,7 @@ interface _GlobalComponents {
     'CollectionHome': typeof import("../../components/CollectionHome.vue")['default']
     'CollectionListing': typeof import("../../components/CollectionListing.vue")['default']
     'CollectionShopListing': typeof import("../../components/CollectionShopListing.vue")['default']
+    'CollectionShopListingSkeleton': typeof import("../../components/CollectionShopListingSkeleton.vue")['default']
     'CookieControl': typeof import("../../components/CookieControl.vue")['default']
     'Filter': typeof import("../../components/Filter.vue")['default']
     'FilterPanel': typeof import("../../components/FilterPanel.vue")['default']
@@ -122,6 +123,7 @@ interface _GlobalComponents {
     'LazyCollectionHome': LazyComponent<typeof import("../../components/CollectionHome.vue")['default']>
     'LazyCollectionListing': LazyComponent<typeof import("../../components/CollectionListing.vue")['default']>
     'LazyCollectionShopListing': LazyComponent<typeof import("../../components/CollectionShopListing.vue")['default']>
+    'LazyCollectionShopListingSkeleton': LazyComponent<typeof import("../../components/CollectionShopListingSkeleton.vue")['default']>
     'LazyCookieControl': LazyComponent<typeof import("../../components/CookieControl.vue")['default']>
     'LazyFilter': LazyComponent<typeof import("../../components/Filter.vue")['default']>
     'LazyFilterPanel': LazyComponent<typeof import("../../components/FilterPanel.vue")['default']>

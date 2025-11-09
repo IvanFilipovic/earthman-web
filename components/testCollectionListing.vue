@@ -222,7 +222,7 @@
                 <span
                   v-for="(line, i) in splitText(section.text)"
                   :key="i"
-                  class="section-text-line -mx-4 px-4 md:-mx-0 py-1 md:py-2 my-1 md:my-3 text-sm md:text-base leading-relaxed tracking-wide bg-text_color text-background_color"
+                  class="section-text-line px-4 py-1 md:py-2 my-1 md:my-3 text-sm md:text-base leading-relaxed tracking-wide text-text_color"
                 >
                   {{ line }}
                 </span>

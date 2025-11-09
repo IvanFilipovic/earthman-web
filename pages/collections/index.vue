@@ -49,6 +49,15 @@
                 <span class="slide__scroll-line"></span>
                 <Icon name="lucide:chevron-down" class="slide__scroll-icon" />
               </button>
+              <button
+                v-else-if="i === collections.length - 1 && collections.length > 1"
+                type="button"
+                class="slide__scroll-btn"
+                @click="scrollToTop()"
+              >
+                <Icon name="lucide:chevron-up" class="slide__scroll-icon" />
+                <span class="slide__scroll-line"></span>
+              </button>
             </div>
           </section>
         </div>
@@ -89,6 +98,16 @@ let ctx: gsap.Context | null = null
 
 function scrollToNext(index: number): void {
   const target = document.querySelector(`.slide:nth-child(${index + 1})`)
+  if (target) {
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: { y: target, offsetY: 0 },
+      ease: 'power2.inOut'
+    })
+  }
+}
+function scrollToTop(): void {
+  const target = document.querySelector(`.slide:nth-child(${1})`)
   if (target) {
     gsap.to(window, {
       duration: 1.2,
@@ -298,7 +317,7 @@ onBeforeUnmount(() => {
 .slide__bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
+  background-size: fill;
   background-position: center;
   z-index: 1;
 }
@@ -309,7 +328,7 @@ onBeforeUnmount(() => {
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.5) 100%
+    rgba(0, 0, 0, 0.5) 50%
   );
   z-index: 2;
 }
@@ -391,16 +410,17 @@ onBeforeUnmount(() => {
 
 .slide__scroll-line {
   display: block;
-  width: 1px;
-  height: 60px;
+  width: 2px;
+  height: 30px;
+  animation: bounce 2s infinite;
   background: theme('colors.background_color');
-  opacity: 0.6;
 }
 
 .slide__scroll-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   animation: bounce 2s infinite;
+  background-color: theme('colors.background_color');
 }
 
 @keyframes bounce {

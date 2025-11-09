@@ -17,16 +17,16 @@
         ></div>
       </TransitionChild>
 
-      <!-- Panel Container -->
+      <!-- Panel Container - Changed from right-0 to left-0 -->
       <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute inset-y-0 right-0 flex max-w-full">
+        <div class="absolute inset-y-0 left-0 flex max-w-full">
           <TransitionChild
             enter="transform transition ease-out duration-300"
-            enter-from="translate-x-full"
+            enter-from="-translate-x-full"
             enter-to="translate-x-0"
             leave="transform transition ease-in duration-200"
             leave-from="translate-x-0"
-            leave-to="translate-x-full"
+            leave-to="-translate-x-full"
           >
             <DialogPanel class="w-screen max-w-md bg-background_color h-full shadow-xl flex flex-col pointer-events-auto">
               <!-- Header -->

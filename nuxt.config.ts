@@ -65,6 +65,12 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+    ],
+    defaultLocale: 'en',
+  },
   // ==================== Tailwind Configuration ====================
   tailwindcss: {
     cssPath: '~/assets/css/main.css',

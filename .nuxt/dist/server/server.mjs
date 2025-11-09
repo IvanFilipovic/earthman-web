@@ -658,7 +658,7 @@ const __nuxt_page_meta$1 = null;
 const __nuxt_page_meta = null;
 const _routes = [
   {
-    name: "cart",
+    name: "cart___en",
     path: "/cart",
     component: () => import("./_nuxt/cart-txG0XdY1.js")
   },
@@ -668,9 +668,9 @@ const _routes = [
     component: () => import("./_nuxt/shop-Bqqohwry.js"),
     children: [
       {
-        name: "shop",
+        name: "shop___en",
         path: "",
-        component: () => import("./_nuxt/index-yeXOApUw.js")
+        component: () => import("./_nuxt/index-97wj-H4T.js")
       }
     ]
   },
@@ -680,31 +680,31 @@ const _routes = [
     component: () => import("./_nuxt/about-DA_Xx9px.js"),
     children: [
       {
-        name: "about",
+        name: "about___en",
         path: "",
-        component: () => import("./_nuxt/index-Co57cE9d.js")
+        component: () => import("./_nuxt/index-DCd9ztJ9.js")
       }
     ]
   },
   {
-    name: "index",
+    name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-B8uVHH7v.js")
+    component: () => import("./_nuxt/index-CtIc2jWc.js")
   },
   {
-    name: "terms",
+    name: "terms___en",
     path: "/terms",
     component: () => import("./_nuxt/terms-CHdH2R3U.js")
   },
   {
-    name: "privacy",
+    name: "privacy___en",
     path: "/privacy",
     component: () => import("./_nuxt/privacy-cqxSvzRZ.js")
   },
   {
-    name: "checkout",
+    name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-Bc0bpM5K.js")
+    component: () => import("./_nuxt/checkout-DpkikTE5.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -712,26 +712,26 @@ const _routes = [
     component: () => import("./_nuxt/collections-H4tbJagx.js"),
     children: [
       {
-        name: "collections",
+        name: "collections___en",
         path: "",
-        component: () => import("./_nuxt/index-BqlLwbne.js")
+        component: () => import("./_nuxt/index-DiN3hw8g.js")
       },
       {
-        name: "collections-slug",
+        name: "collections-slug___en",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-DqGlqjlD.js")
+        component: () => import("./_nuxt/_...slug_-CofZYIvS.js")
       }
     ]
   },
   {
-    name: "cookie-policy",
+    name: "cookie-policy___en",
     path: "/cookie-policy",
     component: () => import("./_nuxt/cookie-policy-BR-LPMip.js")
   },
   {
-    name: "product-collection-product",
+    name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-DJrrTGxb.js")
+    component: () => import("./_nuxt/_...product_-Cns2yiNC.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1075,7 +1075,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = Symbol.for("nuxt:client-only");
-const __nuxt_component_3 = defineComponent({
+const __nuxt_component_4 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -1870,10 +1870,29 @@ function createLocaleRouteNameGetter(defaultLocale) {
 function createLocalizedRouteByPathResolver(router) {
   return (route) => router.resolve(route);
 }
-const localeCodes = [];
-const localeLoaders = {};
+const localeCodes = [
+  "en"
+];
+const localeLoaders = {
+  en: [
+    {
+      key: "locale_en_46json_ad7f07e0",
+      load: () => import(
+        "./_nuxt/en-B2iD-3A1.js"
+        /* webpackChunkName: "locale_en_46json_ad7f07e0" */
+      ),
+      cache: true
+    }
+  ]
+};
 const vueI18nConfigs = [];
-const normalizedLocales = [];
+const normalizedLocales = [
+  {
+    code: "en",
+    name: "English",
+    language: void 0
+  }
+];
 const cacheMessages = /* @__PURE__ */ new Map();
 async function loadVueI18nOptions(vueI18nConfigs2) {
   const nuxtApp = useNuxtApp();
@@ -7372,7 +7391,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$1;
-  const _component_ClientOnly = __nuxt_component_3;
+  const _component_ClientOnly = __nuxt_component_4;
   const _component_NuxtPage = __nuxt_component_0;
   _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
@@ -7506,7 +7525,7 @@ export {
   __nuxt_component_0 as a,
   useRouter as b,
   useRoute as c,
-  __nuxt_component_3 as d,
+  __nuxt_component_4 as d,
   entry$1 as default,
   useRuntimeConfig as e,
   useRequestEvent as f,

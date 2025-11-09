@@ -8,7 +8,7 @@ export default {
         secondary_button_color: '#00c90d',
         background_color: '#e2e2e2',
         text_color: '#252525',
-        project_gray: '#878787',
+        project_gray: '#B4B4B4',
         success_text_color: '#00c90d',
         error_text_color: '#C90D00',
       }

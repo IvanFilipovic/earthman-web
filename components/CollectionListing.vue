@@ -26,7 +26,7 @@
                 class="btn"
                 :class="getButtonVariant(i)"
               >
-                <span class="btn__text">View Story</span>
+                <span class="btn__text">{{ $t('story_button') }}</span>
                 <span class="btn__fill"></span>
               </NuxtLink>
             </div>
@@ -218,26 +218,24 @@ function handleResize(): void {
 
 .col__content--1 {
   background: theme('colors.background_color');
-  color: theme('colors.text_color');
+  color: theme('colors.background_color');
 }
 
 .col__content--2 {
   background: theme('colors.text_color');
-  color: theme('colors.background_color');
+  color: theme('colors.text_color');
 }
 
 .col__content-title--1 {
-  background-color: theme('colors.text_color');
   margin: 0 0 3rem;
-  color: theme('colors.background_color');
+  color: theme('colors.text_color');
   overflow: hidden;
   width: fit-content;
   padding: 0 8px;
 }
 
 .col__content-title--2 {
-  background-color: theme('colors.background_color');
-  color: theme('colors.text_color');
+  color: theme('colors.background_color');
   margin: 0 0 3rem;
   overflow: hidden;
   width: fit-content;

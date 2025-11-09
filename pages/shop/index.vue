@@ -6,6 +6,18 @@
       <div id="smooth-content">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-6">
           <div class="flex justify-between w-full">
+              <div class="flex gap-3 justify-start w-full">
+              <div class="flex items-center gap-3">
+                <button 
+                  type="button"
+                  class="text-md uppercase tracking-widest items-center flex gap-2"
+                  @click="filterOpen = true"
+                >
+                  <Icon name="lucide:sliders-horizontal" class="w-5 h-5" />
+                  <span class="my-auto">Filters</span>
+                </button>
+              </div>
+            </div>
             <div class="flex gap-3 justify-end w-full">
               <div class="flex items-center gap-3">
                 <span class="uppercase text-xs tracking-widest ml-4">Page</span>
@@ -19,16 +31,9 @@
                 >
                   {{ p }}
                 </button>
-
-                <button 
-                  type="button"
-                  class="text-md uppercase tracking-widest"
-                  @click="filterOpen = true"
-                >
-                  Filters
-                </button>
               </div>
             </div>
+
           </div>
         </div>
 

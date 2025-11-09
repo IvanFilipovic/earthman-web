@@ -333,7 +333,9 @@ declare module 'nuxt/schema' {
 
       skipSettingLocaleOnNavigate: boolean,
 
-      locales: Array<any>,
+      locales: Array<{
+
+      }>,
 
       detectBrowserLanguage: {
          alwaysRedirect: boolean,
@@ -375,7 +377,11 @@ declare module 'nuxt/schema' {
          nitroContextDetection: boolean,
       },
 
-      domainLocales: any,
+      domainLocales: {
+         en: {
+            domain: string,
+         },
+      },
    },
   }
 }

@@ -91,6 +91,43 @@
               </div>
             </div>
 
+            <div class="mt-6">
+              <div class="text-xs uppercase tracking-widest mb-2">Quantity</div>
+              <div class="flex items-center gap-3">
+                <button
+                  type="button"
+                  @click="decrementQuantity"
+                  class="w-10 h-10 flex items-center justify-center border border-text_color/30 hover:bg-text_color/5 transition-colors duration-200"
+                  :disabled="quantity <= 1"
+                  :class="{ 'opacity-40 cursor-not-allowed': quantity <= 1 }"
+                >
+                  <Icon name="lucide:minus" class="w-4 h-4 text-text_color" />
+                </button>
+                
+                <input
+                  v-model.number="quantity"
+                  type="number"
+                  min="1"
+                  max="99"
+                  class="w-16 h-10 text-center border border-text_color/30 bg-background_color text-text_color focus:outline-none focus:border-text_color"
+                  @blur="validateQuantity"
+                />
+                
+                <button
+                  type="button"
+                  @click="incrementQuantity"
+                  class="w-10 h-10 flex items-center justify-center border border-text_color/30 hover:bg-text_color/5 transition-colors duration-200"
+                  :disabled="quantity >= 99"
+                  :class="{ 'opacity-40 cursor-not-allowed': quantity >= 99 }"
+                >
+                  <Icon name="lucide:plus" class="w-4 h-4 text-text_color" />
+                </button>
+              </div>
+              <p v-if="currentCartQuantity > 0" class="mt-2 text-xs text-text_color/70">
+                {{ currentCartQuantity }} already in cart
+              </p>
+            </div>
+
             <div class="mt-6 space-y-3">
               <button
                 type="button"
@@ -237,7 +274,7 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
             >
               <DialogPanel class="w-full bg-background_color p-6">
                 <div class="flex justify-between items-center mb-4">
-                  <h2 class="text-base uppercase tracking-wider font-medium">Select Size</h2>
+                  <h2 class="text-base uppercase tracking-wider font-medium">Select Size & Quantity</h2>
                 </div>
 
                 <div v-if="activeSizes.length" class="mt-4">
@@ -258,6 +295,43 @@ We accept returns within 14 days. Sale items can only be refunded as store credi
                       {{ s.size?.name }}
                     </button>
                   </div>
+                </div>
+
+                <div class="mt-6">
+                  <div class="text-xs uppercase tracking-widest mb-2">Quantity</div>
+                  <div class="flex items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      @click="decrementQuantity"
+                      class="w-10 h-10 flex items-center justify-center border border-text_color/30 hover:bg-text_color/5 transition-colors duration-200"
+                      :disabled="quantity <= 1"
+                      :class="{ 'opacity-40 cursor-not-allowed': quantity <= 1 }"
+                    >
+                      <Icon name="lucide:minus" class="w-4 h-4 text-text_color" />
+                    </button>
+                    
+                    <input
+                      v-model.number="quantity"
+                      type="number"
+                      min="1"
+                      max="99"
+                      class="w-16 h-10 text-center border border-text_color/30 bg-background_color text-text_color focus:outline-none focus:border-text_color"
+                      @blur="validateQuantity"
+                    />
+                    
+                    <button
+                      type="button"
+                      @click="incrementQuantity"
+                      class="w-10 h-10 flex items-center justify-center border border-text_color/30 hover:bg-text_color/5 transition-colors duration-200"
+                      :disabled="quantity >= 99"
+                      :class="{ 'opacity-40 cursor-not-allowed': quantity >= 99 }"
+                    >
+                      <Icon name="lucide:plus" class="w-4 h-4 text-text_color" />
+                    </button>
+                  </div>
+                  <p v-if="currentCartQuantity > 0" class="mt-2 text-xs text-center text-text_color/70">
+                    {{ currentCartQuantity }} already in cart
+                  </p>
                 </div>
 
                 <button
@@ -335,6 +409,15 @@ interface ProductApi {
   selected_variant: Variant | null
 }
 
+interface CartItem {
+  product_variant_slug: string
+  quantity: number
+}
+
+interface CartData {
+  items: CartItem[]
+}
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const { success, error } = useToast()
@@ -343,6 +426,8 @@ const mobilePanelOpen = ref(false)
 const currentSlide = ref(0)
 const activeColorIndex = ref(0)
 const selectedVariantSlug = ref('')
+const quantity = ref(1)
+const currentCartQuantity = ref(0)
 
 const collectionParam = computed(() => String(route.params.collection ?? ''))
 const productSlugParam = computed(() => String(route.params.product ?? ''))
@@ -428,6 +513,43 @@ watch(
   }
 )
 
+watch(
+  () => selectedVariantSlug.value,
+  async (newSlug) => {
+    if (newSlug) {
+      await fetchCartQuantity(newSlug)
+    }
+  }
+)
+
+onMounted(() => {
+  if (import.meta.client) {
+    window.addEventListener('cart:updated', handleCartUpdate)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (import.meta.client) {
+    window.removeEventListener('cart:updated', handleCartUpdate)
+  }
+})
+
+function handleCartUpdate(): void {
+  if (selectedVariantSlug.value) {
+    fetchCartQuantity(selectedVariantSlug.value)
+  }
+}
+
+async function fetchCartQuantity(variantSlug: string): Promise<void> {
+  try {
+    const cartData = await $fetch<CartData>('/api/private/get/cart')
+    const item = cartData?.items?.find((i: CartItem) => i.product_variant_slug === variantSlug)
+    currentCartQuantity.value = item?.quantity || 0
+  } catch (e) {
+    currentCartQuantity.value = 0
+  }
+}
+
 function setActiveColor(i: number): void {
   const currentSizeName = activeSizes.value.find(s => s.slug === selectedVariantSlug.value)?.size?.name
   activeColorIndex.value = i
@@ -446,6 +568,26 @@ function selectSize(s: SizeItem): void {
   selectedVariantSlug.value = s.slug
 }
 
+function incrementQuantity(): void {
+  if (quantity.value < 99) {
+    quantity.value++
+  }
+}
+
+function decrementQuantity(): void {
+  if (quantity.value > 1) {
+    quantity.value--
+  }
+}
+
+function validateQuantity(): void {
+  if (quantity.value < 1) {
+    quantity.value = 1
+  } else if (quantity.value > 99) {
+    quantity.value = 99
+  }
+}
+
 async function addToCart(): Promise<void> {
   if (!selectedVariantSlug.value) {
     error('Please select a size')
@@ -453,22 +595,28 @@ async function addToCart(): Promise<void> {
   }
   
   try {
+    const totalQuantity = currentCartQuantity.value + quantity.value
+    
     await $fetch('/api/private/put/cart', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: {
         product_variant_slug: selectedVariantSlug.value,
-        quantity: 1,
+        quantity: totalQuantity,
       },
     })
 
-    if (typeof window !== 'undefined') {
+    if (import.meta.client) {
       window.dispatchEvent(new CustomEvent('cart:updated', {
-        detail: { source: 'product', variant: selectedVariantSlug.value }
+        detail: { source: 'product', variant: selectedVariantSlug.value, quantity: totalQuantity }
       }))
     }
     
-    success('Added to cart')
+    success(`Added ${quantity.value} to cart (total: ${totalQuantity})`)
+    
+    currentCartQuantity.value = totalQuantity
+    mobilePanelOpen.value = false
+    quantity.value = 1
   } catch (e: any) {
     const msg = e?.data?.detail || e?.statusMessage || 'Could not add to cart'
     error(msg)
@@ -485,5 +633,15 @@ function swatchBg(hex?: string | null): string {
 <style scoped>
 .keen-slider {
   width: 100%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 </style>

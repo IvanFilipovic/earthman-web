@@ -260,6 +260,12 @@ async function handleRemoveItem(item: CartItem): Promise<void> {
   
   try {
     await removeItem(item)
+    
+    if (import.meta.client) {
+      window.dispatchEvent(new CustomEvent('cart:updated', {
+        detail: { source: 'cart-panel', variant: slug, action: 'remove' }
+      }))
+    }
   } finally {
     removingSlug.value = null
   }

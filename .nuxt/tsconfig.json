@@ -159,7 +159,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/d97ee63d-6dfc-4442-bf61-e093b2e8cc2d.json"
+        "./manifest/meta/2688966d-ba70-4efe-9100-1034b7660ab6.json"
       ],
       "#components": [
         "./components"
@@ -200,6 +200,7 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
+    "../i18n/**/*",
     "../**/*",
     "../.config/nuxt.*",
     "./nuxt.d.ts",
