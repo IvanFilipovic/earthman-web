@@ -27,7 +27,7 @@
                     <button
                       class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0"
                       aria-label="Close"
-                      @click="rejectAll"
+                      @click="opend = false"
                     >
                       <Icon name="lucide:x" class="w-5 h-5" />
                     </button>
@@ -137,8 +137,8 @@ const prefs = useCookie<CookiePrefs | null>('cookie_prefs', {
   default: () => null,
 })
 
-const opend = ref(prefs.value === null)       // show modal if no choice yet
-const necessary = ref(true)                   // locked
+const opend = ref(prefs.value === null)
+const necessary = ref(true)
 const measurement = ref(prefs.value?.measurement ?? false)
 const marketing = ref(prefs.value?.marketing ?? false)
 const hasInited = ref(false)

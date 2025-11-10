@@ -176,6 +176,11 @@ onBeforeUnmount(() => {
 function handleResize(): void {
   ScrollTrigger.refresh()
 }
+// Handle CartPanel and other panels
+if (import.meta.client) {
+  const smootherRef = computed(() => smoother)
+  useScrollSmootherPanels(smootherRef)
+}
 </script>
 
 <style scoped>

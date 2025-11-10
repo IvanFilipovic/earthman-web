@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const data = await $fetch(`${apiBase}/public/cart/`, {
     method: 'GET',
     headers: {
-      cookie: cookieHeader,               // ← single cookie only
+      cookie: cookieHeader,
     },
   })
   return data

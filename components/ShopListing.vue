@@ -74,7 +74,7 @@
                 <img
                   :src="color.avatar_image"
                   :alt="color.color"
-                  class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/40 cursor-pointer"
+                  class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/30 cursor-pointer"
                   loading="lazy"
                   @click="goToProduct(item.slug, color.variant_slug)"
                 />
@@ -82,18 +82,20 @@
                 <!-- Hover Icon -->
                 <div
                   class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
-                  :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                  :class="isColorHovered(item, colorIdx) ? 'opacity-100 bg-text_color' : 'opacity-0 bg-text_color'"
                 >
                   <Icon
                     name="lucide:square-arrow-out-up-right"
-                    class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
+                    class="absolute inset-0 w-4 h-4 z-10 bg-background_color m-auto"
                   />
                 </div>
               </div>
             </div>
-
-            <!-- Price -->
-            <p class="mt-1 text-xs font-light">€{{ formatPrice(item.price) }}</p>
+            <div v-if="item?.discount" class="space-x-2">
+              <span class="mt-1 text-xs font-light tracking-widest text-error_text_color">€{{ formatPrice(item.discount_price) }}</span>
+              <span id="price" class="mt-1 text-xs font-light tracking-widest text-text_color">€{{ formatPrice(item.price) }}</span>
+            </div>
+            <p v-else class="mt-1 text-xs font-light tracking-widest text-text_color">€{{ formatPrice(item.price) }}</p>
           </div>
         </div>
       </div>
@@ -115,6 +117,8 @@ interface Product {
   slug: string
   name: string
   category: string
+  discount_price: string
+  discount: boolean
   price: string
   alt_text?: string
   hot?: boolean
@@ -311,5 +315,8 @@ function goToProduct(slug: string, variantSlug?: string): void {
 <style scoped>
 .keen-slider {
   width: 100%;
+}
+#price {
+  text-decoration: line-through;
 }
 </style>

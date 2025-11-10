@@ -243,6 +243,11 @@ onBeforeUnmount(() => {
   smoother?.kill?.()
   ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 })
+// Handle CartPanel and other panels
+if (import.meta.client) {
+  const smootherRef = computed(() => smoother)
+  useScrollSmootherPanels(smootherRef)
+}
 </script>
 
 <style scoped>

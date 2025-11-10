@@ -18,7 +18,7 @@
         <img
           src="~public/logo/earth-man920.png"
           alt="Your Brand Name"
-          class="max-w-[100%] h-auto"
+          class="max-w-[100%] h-auto object-contain"
         />
       </div>
     </div>

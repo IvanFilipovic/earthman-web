@@ -19,14 +19,14 @@
     "about/index.html": {
       "path": "about"
     },
+    "collections/index.html": {
+      "path": "collections"
+    },
     "shop/index.html": {
       "path": "shop"
     },
     "checkout/index.html": {
       "path": "checkout"
-    },
-    "collections/index.html": {
-      "path": "collections"
     }
   },
   "routes": [

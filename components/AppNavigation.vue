@@ -55,11 +55,11 @@
                 >
                   <Icon name="lucide:shopping-cart" class="w-6 h-6" :class="linkColorClass" />
                   <span
-                    v-if="itemCount > 0"
+                    v-if="cartStore.itemCount > 0"
                     class="absolute -top-1 -right-1 bg-text_color text-background_color text-[12px] w-4 h-4 flex items-center justify-center"
-                    aria-label="{itemCount} items in cart"
+                    :aria-label="`${cartStore.itemCount} items in cart`"
                   >
-                    {{ itemCount }}
+                    {{ cartStore.itemCount }}
                   </span>
                 </button>
               </ClientOnly>
@@ -110,11 +110,11 @@
             >
               <Icon name="lucide:shopping-cart" class="w-6 h-6" :class="linkColorClass" />
               <span
-                v-if="itemCount > 0"
+                v-if="cartStore.itemCount > 0"
                 class="absolute -top-1 -right-1 bg-text_color text-background_color text-[10px] w-[14px] h-[14px] md:text-[12px] md:w-4 md:h-4 flex items-center justify-center"
-                aria-label="{itemCount} items in cart"
+                :aria-label="`${cartStore.itemCount} items in cart`"
               >
-                {{ itemCount }}
+                {{ cartStore.itemCount }}
               </span>
             </button>
           </ClientOnly>
@@ -134,6 +134,8 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '~/stores/cart'
+
 interface Props {
   dark?: boolean
 }
@@ -143,7 +145,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const route = useRoute()
-const { itemCount, fetchCart } = useCart()
+const cartStore = useCartStore()
 
 const cartOpen = ref(false)
 const mobileMenuOpen = ref(false)
@@ -169,12 +171,28 @@ function openMobileMenu(): void {
 }
 
 function handleCartUpdate(): void {
-  fetchCart()
+  // Force refetch cart to ensure accurate count
+  cartStore.fetchCart(true)
 }
 
-onMounted(() => {
-  fetchCart()
+// Emit events for ScrollSmoother pages when cart opens/closes
+watch(cartOpen, (isOpen) => {
+  if (import.meta.client) {
+    window.dispatchEvent(new CustomEvent(isOpen ? 'panel:open' : 'panel:close'))
+  }
+})
+
+// Emit events for ScrollSmoother pages when mobile menu opens/closes
+watch(mobileMenuOpen, (isOpen) => {
+  if (import.meta.client) {
+    window.dispatchEvent(new CustomEvent(isOpen ? 'panel:open' : 'panel:close'))
+  }
+})
+
+onMounted(async () => {
+  await cartStore.fetchCart()
   
+  // Listen for cart updates from other components
   if (import.meta.client) {
     window.addEventListener('cart:updated', handleCartUpdate)
   }

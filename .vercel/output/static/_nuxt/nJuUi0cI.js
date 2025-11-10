@@ -1,0 +1,1 @@
+import{D as l,q as o}from"./DHOatR1P.js";function t(e){const n=()=>{e.value&&e.value.paused(!0)},a=()=>{e.value&&e.value.paused(!1)};l(()=>{window.addEventListener("panel:open",n),window.addEventListener("panel:close",a)}),o(()=>{window.removeEventListener("panel:open",n),window.removeEventListener("panel:close",a)})}export{t as u};

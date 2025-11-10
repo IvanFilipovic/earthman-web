@@ -670,7 +670,7 @@ const _routes = [
       {
         name: "shop___en",
         path: "",
-        component: () => import("./_nuxt/index-97wj-H4T.js")
+        component: () => import("./_nuxt/index-C49CCQlU.js")
       }
     ]
   },
@@ -682,14 +682,14 @@ const _routes = [
       {
         name: "about___en",
         path: "",
-        component: () => import("./_nuxt/index-DCd9ztJ9.js")
+        component: () => import("./_nuxt/index-DVT58mta.js")
       }
     ]
   },
   {
     name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-CtIc2jWc.js")
+    component: () => import("./_nuxt/index-BchPZOjG.js")
   },
   {
     name: "terms___en",
@@ -704,7 +704,7 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-DpkikTE5.js")
+    component: () => import("./_nuxt/checkout-C7kHWhkb.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -714,12 +714,12 @@ const _routes = [
       {
         name: "collections___en",
         path: "",
-        component: () => import("./_nuxt/index-DiN3hw8g.js")
+        component: () => import("./_nuxt/index-C3-K_v0N.js")
       },
       {
         name: "collections-slug___en",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-CofZYIvS.js")
+        component: () => import("./_nuxt/_...slug_-BlFoCgih.js")
       }
     ]
   },
@@ -731,7 +731,7 @@ const _routes = [
   {
     name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-Cns2yiNC.js")
+    component: () => import("./_nuxt/_...product_-Qv_d6mYM.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1423,7 +1423,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     };
   }
 });
-const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-Ccr6sSLn.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
+const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-qGNUStbk.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["Icon", LazyIcon]
 ];
@@ -1878,7 +1878,7 @@ const localeLoaders = {
     {
       key: "locale_en_46json_ad7f07e0",
       load: () => import(
-        "./_nuxt/en-B2iD-3A1.js"
+        "./_nuxt/en-D32wdEvh.js"
         /* webpackChunkName: "locale_en_46json_ad7f07e0" */
       ),
       cache: true
@@ -7169,7 +7169,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-DqGGz7pP.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-D0MJZjKW.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -7541,12 +7541,11 @@ export {
   parseURL as p,
   nuxtLinkDefaults as q,
   resolveRouteObject as r,
-  useState as s,
-  asyncDataDefaults as t,
+  asyncDataDefaults as s,
+  createError as t,
   useHead as u,
-  createError as v,
+  useAppConfig as v,
   withLeadingSlash as w,
-  useAppConfig as x,
-  useCookie as y
+  useCookie as x
 };
 //# sourceMappingURL=server.mjs.map

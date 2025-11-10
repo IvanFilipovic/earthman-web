@@ -40,7 +40,7 @@
               </div>
               <div class="text-right">
                 <div v-if="product?.discount" class="space-x-2">
-                  <span class="text-lg font-semibold text-text_color">€{{ product?.discount_price }}</span>
+                  <span class="text-lg font-semibold text-error_text_color">€{{ product?.discount_price }}</span>
                   <span class="line-through text-text_color">€{{ product?.price }}</span>
                 </div>
                 <div v-else class="text-lg font-semibold text-text_color">€{{ product?.price }}</div>
@@ -357,6 +357,7 @@ import { useKeenSlider } from 'keen-slider/vue.es'
 import type { KeenSliderInstance } from 'keen-slider'
 import 'keen-slider/keen-slider.min.css'
 import { useToast } from '~/composables/useToast'
+import { useCartStore } from '~/stores/cart'
 
 interface GalleryImage {
   id?: number
@@ -409,28 +410,24 @@ interface ProductApi {
   selected_variant: Variant | null
 }
 
-interface CartItem {
-  product_variant_slug: string
-  quantity: number
-}
-
-interface CartData {
-  items: CartItem[]
-}
-
 const config = useRuntimeConfig()
 const route = useRoute()
 const { success, error } = useToast()
+const cartStore = useCartStore()
 
 const mobilePanelOpen = ref(false)
 const currentSlide = ref(0)
 const activeColorIndex = ref(0)
 const selectedVariantSlug = ref('')
 const quantity = ref(1)
-const currentCartQuantity = ref(0)
 
 const collectionParam = computed(() => String(route.params.collection ?? ''))
 const productSlugParam = computed(() => String(route.params.product ?? ''))
+
+const currentCartQuantity = computed(() => {
+  if (!selectedVariantSlug.value) return 0
+  return cartStore.getVariantQuantity(selectedVariantSlug.value)
+})
 
 const { data } = await useAsyncData<ProductApi | null>(
   `product:${collectionParam.value}:${productSlugParam.value}`,
@@ -466,6 +463,10 @@ const [sliderRef, slider] = useKeenSlider({
 const dots = computed(() =>
   slider.value ? [...Array(slider.value.track.details.slides.length).keys()] : []
 )
+
+onMounted(async () => {
+  await cartStore.fetchCart()
+})
 
 watch(
   () => product.value,
@@ -513,43 +514,6 @@ watch(
   }
 )
 
-watch(
-  () => selectedVariantSlug.value,
-  async (newSlug) => {
-    if (newSlug) {
-      await fetchCartQuantity(newSlug)
-    }
-  }
-)
-
-onMounted(() => {
-  if (import.meta.client) {
-    window.addEventListener('cart:updated', handleCartUpdate)
-  }
-})
-
-onBeforeUnmount(() => {
-  if (import.meta.client) {
-    window.removeEventListener('cart:updated', handleCartUpdate)
-  }
-})
-
-function handleCartUpdate(): void {
-  if (selectedVariantSlug.value) {
-    fetchCartQuantity(selectedVariantSlug.value)
-  }
-}
-
-async function fetchCartQuantity(variantSlug: string): Promise<void> {
-  try {
-    const cartData = await $fetch<CartData>('/api/private/get/cart')
-    const item = cartData?.items?.find((i: CartItem) => i.product_variant_slug === variantSlug)
-    currentCartQuantity.value = item?.quantity || 0
-  } catch (e) {
-    currentCartQuantity.value = 0
-  }
-}
-
 function setActiveColor(i: number): void {
   const currentSizeName = activeSizes.value.find(s => s.slug === selectedVariantSlug.value)?.size?.name
   activeColorIndex.value = i
@@ -595,26 +559,11 @@ async function addToCart(): Promise<void> {
   }
   
   try {
-    const totalQuantity = currentCartQuantity.value + quantity.value
+    await cartStore.addToCart(selectedVariantSlug.value, quantity.value)
     
-    await $fetch('/api/private/put/cart', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: {
-        product_variant_slug: selectedVariantSlug.value,
-        quantity: totalQuantity,
-      },
-    })
-
-    if (import.meta.client) {
-      window.dispatchEvent(new CustomEvent('cart:updated', {
-        detail: { source: 'product', variant: selectedVariantSlug.value, quantity: totalQuantity }
-      }))
-    }
-    
+    const totalQuantity = currentCartQuantity.value
     success(`Added ${quantity.value} to cart (total: ${totalQuantity})`)
     
-    currentCartQuantity.value = totalQuantity
     mobilePanelOpen.value = false
     quantity.value = 1
   } catch (e: any) {

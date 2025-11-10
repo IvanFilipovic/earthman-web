@@ -10,10 +10,10 @@
               <div class="flex items-center gap-3">
                 <button 
                   type="button"
-                  class="text-md uppercase tracking-widest items-center flex gap-2"
+                  class="text-xs uppercase tracking-widest items-center flex gap-2"
                   @click="filterOpen = true"
                 >
-                  <Icon name="lucide:sliders-horizontal" class="w-5 h-5" />
+                  <Icon name="lucide:sliders-horizontal" class="w-4 h-4" />
                   <span class="my-auto">Filters</span>
                 </button>
               </div>
@@ -79,7 +79,7 @@ interface Product {
   category: string
   price: string
   discount: boolean
-  discount_price: string | null
+  discount_price: string
   hot: boolean
   new: boolean
   available: boolean
@@ -351,6 +351,22 @@ watch(
     fetchProducts()
   }
 )
+
+// Pause ScrollSmoother when FilterPanel opens
+watch(
+  filterOpen,
+  (isOpen) => {
+    if (smoother) {
+      smoother.paused(isOpen)
+    }
+  }
+)
+
+// Handle CartPanel and other panels
+if (import.meta.client) {
+  const smootherRef = computed(() => smoother)
+  useScrollSmootherPanels(smootherRef)
+}
 
 onMounted(async () => {
   initializeFiltersFromQuery()

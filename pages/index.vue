@@ -10,7 +10,7 @@
         <AppNavigation :dark="true" />
       </div>
       <div class="min-h-screen flex flex-col justify-end items-center md:items-end px-4 md:px-8 pb-12 md:pb-16 z-40 w-full">
-        <div class="text-background_color text-center md:text-right max-w-2xl">
+        <div class="text-background_color text-center md:text-right max-w-2xl pb-6">
           <h1 class="text-4xl md:text-6xl font-bold mb-4">
             {{ $t('welcome_title') }}
           </h1>
@@ -33,6 +33,14 @@
     <Newsletter />
   </section>
 </template>
+<script setup lang="ts">
+let smoother: any = null
+// Handle CartPanel and other panels
+if (import.meta.client) {
+  const smootherRef = computed(() => smoother)
+  useScrollSmootherPanels(smootherRef)
+}
+</script>
 
 <style scoped>
 /* Ensure the button displays correctly */
