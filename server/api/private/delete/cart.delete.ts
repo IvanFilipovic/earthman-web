@@ -9,18 +9,13 @@ export default defineEventHandler(async (event) => {
   let sessionId = getCookie(event, cookieName) || 'none'
   
   const cookieHeader = `${cookieName}=${encodeURIComponent(sessionId)}`
-  
-  // Get product_slug from query (Nuxt sends this)
   const query = getQuery(event)
   let product_slug = query.product_slug as string
-  
-  // Fallback to body
   if (!product_slug) {
     try {
       const body = await readBody(event)
       product_slug = body?.product_slug
     } catch (e) {
-      // Ignore
     }
   }
   
@@ -31,12 +26,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   
-  console.log('🔍 DELETE /cart - Got product_slug from Nuxt:', product_slug)
-  
-  // Django expects "product_variant_slug" in body
   try {
-    console.log('🚀 Sending to Django with product_variant_slug:', product_slug)
-    
     const data = await $fetch(`${apiBase}/public/cart/item/delete/`, {
       method: 'DELETE',
       headers: {
@@ -44,11 +34,9 @@ export default defineEventHandler(async (event) => {
         cookie: cookieHeader,
       },
       body: {
-        product_variant_slug: product_slug,  // Django field name
+        product_variant_slug: product_slug,
       },
     })
-    
-    console.log('✅ DELETE /cart - Success')
     return data
   } catch (err: any) {
     console.error('❌ DELETE /cart - Django error:', err)

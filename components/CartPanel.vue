@@ -277,11 +277,6 @@ function getItemOriginalTotal(item: CartItem): number {
 
 async function handleClearCart(): Promise<void> {
   if (isClearing.value) return
-  
-  if (!confirm('Are you sure you want to clear your cart?')) {
-    return
-  }
-  
   isClearing.value = true
   
   try {

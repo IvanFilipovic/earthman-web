@@ -1,0 +1,1 @@
+{"file":"virtual_public-Dgbfu3-q.js","mappings":";AAAuD,MAAA,aAAe,gBAAgB,wBAAwB;","names":[],"sources":["../../../../virtual:public?%2Flogo%2Fearth-man920.png"],"sourcesContent":["import { publicAssetsURL } from '#internal/nuxt/paths';export default publicAssetsURL(\"/logo/earth-man920.png\")"],"version":3}

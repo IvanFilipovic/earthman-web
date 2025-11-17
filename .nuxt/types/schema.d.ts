@@ -12,6 +12,7 @@ declare module '@nuxt/schema' {
     ["nuxt-gtag"]?: ModuleDependencyMeta<typeof import("nuxt-gtag").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@hypernym/nuxt-gsap"]?: ModuleDependencyMeta<typeof import("@hypernym/nuxt-gsap").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxtjs/color-mode"]?: ModuleDependencyMeta<typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
+    ["nuxt-nodemailer"]?: ModuleDependencyMeta<typeof import("nuxt-nodemailer").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxt/devtools"]?: ModuleDependencyMeta<typeof import("@nuxt/devtools").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxt/telemetry"]?: ModuleDependencyMeta<typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
   }
@@ -60,6 +61,10 @@ declare module '@nuxt/schema' {
      * Configuration for `@nuxtjs/color-mode`
      */
     ["colorMode"]: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O, unknown, boolean> ? O : Record<string, any>
+    /**
+     * Configuration for `nuxt-nodemailer`
+     */
+    ["nodemailer"]: typeof import("nuxt-nodemailer").default extends NuxtModule<infer O, unknown, boolean> ? O : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      */
@@ -115,6 +120,10 @@ declare module '@nuxt/schema' {
      */
     ["colorMode"]?: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
     /**
+     * Configuration for `nuxt-nodemailer`
+     */
+    ["nodemailer"]?: typeof import("nuxt-nodemailer").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
+    /**
      * Configuration for `@nuxt/devtools`
      */
     ["devtools"]?: typeof import("@nuxt/devtools").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
@@ -122,7 +131,7 @@ declare module '@nuxt/schema' {
      * Configuration for `@nuxt/telemetry`
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxt/eslint", Exclude<NuxtConfig["eslint"], boolean>] | ["@nuxt/fonts", Exclude<NuxtConfig["fonts"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/image", Exclude<NuxtConfig["image"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/i18n", Exclude<NuxtConfig["i18n"], boolean>] | ["nuxt-headlessui", Exclude<NuxtConfig["headlessui"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["nuxt-gtag", Exclude<NuxtConfig["gtag"], boolean>] | ["@hypernym/nuxt-gsap", Exclude<NuxtConfig["gsap"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxt/eslint", Exclude<NuxtConfig["eslint"], boolean>] | ["@nuxt/fonts", Exclude<NuxtConfig["fonts"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/image", Exclude<NuxtConfig["image"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/i18n", Exclude<NuxtConfig["i18n"], boolean>] | ["nuxt-headlessui", Exclude<NuxtConfig["headlessui"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["nuxt-gtag", Exclude<NuxtConfig["gtag"], boolean>] | ["@hypernym/nuxt-gsap", Exclude<NuxtConfig["gsap"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["nuxt-nodemailer", Exclude<NuxtConfig["nodemailer"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
 }
 declare module 'nuxt/schema' {
@@ -138,6 +147,7 @@ declare module 'nuxt/schema' {
     ["nuxt-gtag"]?: ModuleDependencyMeta<typeof import("nuxt-gtag").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@hypernym/nuxt-gsap"]?: ModuleDependencyMeta<typeof import("@hypernym/nuxt-gsap").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxtjs/color-mode"]?: ModuleDependencyMeta<typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
+    ["nuxt-nodemailer"]?: ModuleDependencyMeta<typeof import("nuxt-nodemailer").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxt/devtools"]?: ModuleDependencyMeta<typeof import("@nuxt/devtools").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
     ["@nuxt/telemetry"]?: ModuleDependencyMeta<typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
   }
@@ -197,6 +207,11 @@ declare module 'nuxt/schema' {
      * @see https://www.npmjs.com/package/@nuxtjs/color-mode
      */
     ["colorMode"]: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O, unknown, boolean> ? O : Record<string, any>
+    /**
+     * Configuration for `nuxt-nodemailer`
+     * @see https://www.npmjs.com/package/nuxt-nodemailer
+     */
+    ["nodemailer"]: typeof import("nuxt-nodemailer").default extends NuxtModule<infer O, unknown, boolean> ? O : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      * @see https://www.npmjs.com/package/@nuxt/devtools
@@ -265,6 +280,11 @@ declare module 'nuxt/schema' {
      */
     ["colorMode"]?: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
     /**
+     * Configuration for `nuxt-nodemailer`
+     * @see https://www.npmjs.com/package/nuxt-nodemailer
+     */
+    ["nodemailer"]?: typeof import("nuxt-nodemailer").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
+    /**
      * Configuration for `@nuxt/devtools`
      * @see https://www.npmjs.com/package/@nuxt/devtools
      */
@@ -274,7 +294,7 @@ declare module 'nuxt/schema' {
      * @see https://www.npmjs.com/package/@nuxt/telemetry
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxt/eslint", Exclude<NuxtConfig["eslint"], boolean>] | ["@nuxt/fonts", Exclude<NuxtConfig["fonts"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/image", Exclude<NuxtConfig["image"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/i18n", Exclude<NuxtConfig["i18n"], boolean>] | ["nuxt-headlessui", Exclude<NuxtConfig["headlessui"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["nuxt-gtag", Exclude<NuxtConfig["gtag"], boolean>] | ["@hypernym/nuxt-gsap", Exclude<NuxtConfig["gsap"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxt/eslint", Exclude<NuxtConfig["eslint"], boolean>] | ["@nuxt/fonts", Exclude<NuxtConfig["fonts"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/image", Exclude<NuxtConfig["image"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/i18n", Exclude<NuxtConfig["i18n"], boolean>] | ["nuxt-headlessui", Exclude<NuxtConfig["headlessui"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["nuxt-gtag", Exclude<NuxtConfig["gtag"], boolean>] | ["@hypernym/nuxt-gsap", Exclude<NuxtConfig["gsap"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["nuxt-nodemailer", Exclude<NuxtConfig["nodemailer"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
   interface RuntimeConfig {
    app: {
@@ -291,12 +311,30 @@ declare module 'nuxt/schema' {
 
    apiBase: string,
 
+   contactEmailRecipient: string,
+
    nitro: {
       envPrefix: string,
    },
 
    icon: {
       serverKnownCssClasses: Array<any>,
+   },
+
+   nodemailer: {
+      from: string,
+
+      host: string,
+
+      port: number,
+
+      secure: boolean,
+
+      auth: {
+         user: string,
+
+         pass: string,
+      },
    },
   }
   interface PublicRuntimeConfig {

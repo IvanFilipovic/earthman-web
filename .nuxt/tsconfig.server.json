@@ -182,6 +182,7 @@
     "../node_modules/nuxt-gtag/node_modules",
     "../node_modules/@hypernym/nuxt-gsap/node_modules",
     "../node_modules/@nuxtjs/color-mode/node_modules",
+    "../node_modules/nuxt-nodemailer/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist"

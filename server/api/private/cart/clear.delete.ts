@@ -8,8 +8,6 @@ export default defineEventHandler(async (event) => {
   
   const cookieHeader = `${cookieName}=${encodeURIComponent(sessionId)}`
   
-  console.log('🔍 DELETE /cart/clear - Clearing cart')
-  
   try {
     const data = await $fetch(`${apiBase}/public/cart/clear/`, {
       method: 'DELETE',
@@ -19,7 +17,6 @@ export default defineEventHandler(async (event) => {
       },
     })
     
-    console.log('✅ DELETE /cart/clear - Success')
     return data
   } catch (err: any) {
     console.error('❌ DELETE /cart/clear - Django error:', err)

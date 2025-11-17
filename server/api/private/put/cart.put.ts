@@ -17,10 +17,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Quantity must be 1 or more' })
   }
 
-  console.log('🔍 PUT /cart - Got from Nuxt:', { product_slug: body.product_slug, quantity: body.quantity })
 
   try {
-    // Django expects "product_variant_slug"
     const data = await $fetch(`${apiBase}/public/cart/item/`, {
       method: 'PUT',
       headers: {
@@ -28,12 +26,11 @@ export default defineEventHandler(async (event) => {
         cookie: cookieHeader,
       },
       body: {
-        product_variant_slug: body.product_slug,  // Django field name
+        product_variant_slug: body.product_slug,
         quantity: body.quantity,
       },
     })
     
-    console.log('✅ PUT /cart - Success')
     return data
   } catch (err: any) {
     console.error('❌ PUT /cart - Django error:', err)

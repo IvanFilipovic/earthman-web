@@ -44,7 +44,7 @@
       <CollectionShopListingSkeleton v-if="loading1 && loading2"
         :animate=true
       />
-      <CollectionShopListing
+      <TestCollectionListing
         v-else
         :products="products"
         :collection="collection"

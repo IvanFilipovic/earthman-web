@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     // Private keys (only available on the server)
     apiSecret: '',
     apiBase: process.env.INTERNAL_API_BASE || 'https://earthmanweb.pythonanywhere.com',
-    
+    contactEmailRecipient: 'ivan.filipovic233@gmail.com',
     // Public keys (exposed to client-side)
     public: {
       cartSessionCookie: process.env.NUXT_PUBLIC_CART_SESSION_COOKIE || 'cart_session_id',
@@ -63,13 +63,25 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@hypernym/nuxt-gsap',
     '@nuxtjs/color-mode',
+    'nuxt-nodemailer',
   ],
-
+  // ==================== i18n Configuration ====================
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
     ],
     defaultLocale: 'en',
+  },
+  // ==================== Nodemailer Configuration ====================
+  nodemailer: {
+    from: '"Earthman Contact" <noreply@earthman.com>',
+    host: process.env.NUXT_NODEMAILER_HOST || 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.NUXT_NODEMAILER_AUTH_USER || '',
+      pass: process.env.NUXT_NODEMAILER_AUTH_PASS || '',
+    },
   },
   // ==================== Tailwind Configuration ====================
   tailwindcss: {

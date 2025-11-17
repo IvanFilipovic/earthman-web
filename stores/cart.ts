@@ -153,14 +153,10 @@ export const useCartStore = defineStore('cart', {
 
       const removedItem = this.items.splice(index, 1)[0]
 
-      console.log('🚀 removeFromCart - Removing:', variantSlug)
-
       try {
         await $fetch(`/api/private/delete/cart?product_slug=${encodeURIComponent(variantSlug)}`, {
           method: 'DELETE',
         })
-
-        console.log('✅ removeFromCart - Success')
 
         const newTotal = this.merchandiseTotal.toFixed(2)
         this.totals.toPay = newTotal

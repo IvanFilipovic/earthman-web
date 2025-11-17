@@ -1,7 +1,7 @@
 <template>
   <div class="collections-page">
     <div ref="navWrap" class="fixed top-0 left-0 w-full z-50">
-      <AppNavigation :dark="isDark" />
+      <AppNavigation :dark="true" />
     </div>
 
     <Transition name="fade" mode="out-in" @after-enter="initializeGSAP">
@@ -322,7 +322,7 @@ if (import.meta.client) {
 .slide__bg {
   position: absolute;
   inset: 0;
-  background-size: fill;
+  background-size: cover;
   background-position: center;
   z-index: 1;
 }

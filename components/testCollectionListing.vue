@@ -3,32 +3,46 @@
     <div class="collection-content">
       <div v-for="(section, idx) in sections" :key="idx">
         <div v-if="section.layout === 'hero'" class="pb-8 md:pb-12">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 min-h-screen">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             <article
               v-for="item in section.items"
               :key="item.slug"
-              class="group cursor-pointer relative min-h-[50vh] md:min-h-full overflow-hidden w-full"
+              class="group cursor-pointer relative h-[100vh] overflow-hidden w-full md:w-2/3 mx-auto"
             >
               <img
                 :src="item.currentImage || item.colors?.[0]?.avatar_image"
                 :alt="item.alt_text || item.name"
-                class="absolute inset-0 max-w-full h-full object-contain mx-auto transition-transform duration-700 group-hover:scale-105"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
                 @mouseenter="hoveredSlug = item.slug"
                 @mouseleave="hoveredSlug = null"
               />
               <div class="absolute inset-0"></div>
               
-              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-text_color bg-background_color/80 w-full">
+              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-text_color bg-background_color/85 w-full">
                 <div class="hero-content">
                   <p class="text-xs tracking-widest uppercase mb-1 opacity-80">
                     {{ item.category }}
                   </p>
-                  <h2 class="hero-title text-2xl md:text-3xl lg:text-4xl font-bold mb-3 uppercase tracking-tight">
+                  <h2 class="hero-title text-xl md:text-2xl font-bold mb-1 uppercase tracking-tight">
                     {{ item.name }}
                   </h2>
+
+                  <div class="flex items-center gap-3 mb-2">
+                    <div v-if="item.discount && item.discount_price" class="flex items-center gap-2">
+                      <span class="text-sm md:text-base font-semibold">
+                        {{ formatPrice(item.discount_price) }}
+                      </span>
+                      <span class="text-sm md:text-base line-through opacity-70">
+                        {{ formatPrice(item.price) }}
+                      </span>
+                    </div>
+                    <span v-else class="text-sm md:text-base">
+                      {{ formatPrice(item.price) }}
+                    </span>
+                  </div>
                   
-                  <div class="flex items-center gap-2 mb-4">
+                  <div class="flex items-center gap-2 mb-2">
                     <div 
                       v-for="(color, colorIdx) in item.colors?.slice(0, 4)"
                       :key="colorIdx"
@@ -39,7 +53,7 @@
                       <img
                         :src="color.avatar_image"
                         :alt="color.color"
-                        class="w-8 h-8 md:w-10 md:h-10 object-cover border-2 border-background_color cursor-pointer transition-transform hover:scale-110"
+                        class="w-8 h-8 md:w-10 md:h-10 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
                         @click="goToProduct(item.slug, color.variant_slug)"
                       />
                     </div>
@@ -59,78 +73,69 @@
         </div>
 
         <div v-else-if="section.layout === 'triple'" class="pb-8 md:pb-12">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-10">
             <article
               v-for="item in section.items"
               :key="item.slug"
-              class="group cursor-pointer"
+              class="group cursor-pointer relative h-[100vh] overflow-hidden w-full"
             >
-              <div class="relative overflow-hidden">
-                <img
-                  :src="item.currentImage || item.colors?.[0]?.avatar_image"
-                  :alt="item.alt_text || item.name"
-                  class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                  @mouseenter="hoveredSlug = item.slug"
-                  @mouseleave="hoveredSlug = null"
-                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                />
+              <img
+                :src="item.currentImage || item.colors?.[0]?.avatar_image"
+                :alt="item.alt_text || item.name"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                @mouseenter="hoveredSlug = item.slug"
+                @mouseleave="hoveredSlug = null"
+              />
+              <div class="absolute inset-0"></div>
+              
+              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-text_color bg-background_color/85 w-full">
+                <div class="hero-content">
+                  <p class="text-xs tracking-widest uppercase mb-1 opacity-80">
+                    {{ item.category }}
+                  </p>
+                  <h2 class="hero-title text-lg md:text-2xl font-bold mb-1 uppercase tracking-tight">
+                    {{ item.name }}
+                  </h2>
 
-                <MobileColorSlider
-                  v-if="item.colors && item.colors.length > 0"
-                  :colors="item.colors"
-                  @go="(variantSlug: string) => goToProduct(item.slug, variantSlug)"
-                />
-                <div v-else class="block md:hidden">
-                  <img
-                    :src="item.currentImage"
-                    :alt="item.alt_text || item.name"
-                    class="w-full h-auto object-cover border border-text_color/30"
-                    loading="lazy"
-                    @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                  />
-                </div>
-
-                <button
-                  v-show="hoveredSlug === item.slug"
-                  type="button"
-                  class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light px-2 transition-opacity duration-200"
-                  :class="{ 'opacity-100': hoveredSlug === item.slug, 'opacity-0': hoveredSlug !== item.slug }"
-                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                >
-                  VIEW
-                </button>
-              </div>
-
-              <div class="pt-3 md:pt-4 text-left">
-                <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
-                <h3 class="uppercase tracking-wider text-sm font-normal truncate py-1">{{ item.name }}</h3>
-                
-                <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
-                  <div
-                    v-for="(color, colorIdx) in item.colors"
-                    :key="colorIdx"
-                    class="relative"
-                    @mouseenter="onEnterColor(item, color, colorIdx)"
-                    @mouseleave="onLeaveColor(item)"
-                  >
-                    <img
-                      :src="color.avatar_image"
-                      :alt="color.color"
-                      class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_text_color/40 cursor-pointer"
-                      loading="lazy"
-                      @click="goToProduct(item.slug, color.variant_slug)"
-                    />
-                    <div
-                      class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
-                      :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                  <div class="flex items-center gap-3 mb-2">
+                    <div v-if="item.discount && item.discount_price" class="flex items-center gap-2">
+                      <span class="text-sm md:text-base font-semibold">
+                        {{ formatPrice(item.discount_price) }}
+                      </span>
+                      <span class="text-sm md:text-base line-through opacity-70">
+                        {{ formatPrice(item.price) }}
+                      </span>
+                    </div>
+                    <span v-else class="text-sm md:text-base font-semibold">
+                      {{ formatPrice(item.price) }}
+                    </span>
+                  </div>
+                  
+                  <div class="flex items-center gap-2 mb-2">
+                    <div 
+                      v-for="(color, colorIdx) in item.colors?.slice(0, 4)"
+                      :key="colorIdx"
+                      class="relative"
+                      @mouseenter="onEnterColor(item, color, colorIdx)"
+                      @mouseleave="onLeaveColor(item)"
                     >
-                      <Icon
-                        name="lucide:square-arrow-out-up-right"
-                        class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
+                      <img
+                        :src="color.avatar_image"
+                        :alt="color.color"
+                        class="w-8 h-8 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
+                        @click="goToProduct(item.slug, color.variant_slug)"
                       />
                     </div>
                   </div>
+
+                  <NuxtLink
+                    :to="`/product/${item.slug}/${item.colors?.[0]?.variant_slug}`"
+                    class="btn btn--secondary inline-flex text-sm"
+                  >
+                    <span class="btn__text">Discover</span>
+                    <span class="btn__fill"></span>
+                  </NuxtLink>
                 </div>
               </div>
             </article>
@@ -138,83 +143,76 @@
         </div>
 
         <div v-else class="pb-8 md:pb-12">
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 md:gap-x-8 lg:gap-x-24 gap-y-8" :class="section.layout === 'reversed' ? 'md:flex md:flex-row-reverse' : ''">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-4 md:gap-x-8 lg:gap-x-24 gap-y-8">
             <article
-              v-for="item in section.items"
-              :key="item.slug"
-              class="group cursor-pointer col-span-2 md:col-span-1"
+              class="group cursor-pointer relative h-[60vh] md:h-[800px] overflow-hidden w-full md:col-span-1"
+              :class="section.layout === 'reversed' ? 'md:order-2' : 'md:order-1'"
             >
-              <div class="relative overflow-hidden">
-                <img
-                  :src="item.currentImage || item.colors?.[0]?.avatar_image"
-                  :alt="item.alt_text || item.name"
-                  class="hidden md:block w-full h-full object-cover border border-text_color/30 transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                  @mouseenter="hoveredSlug = item.slug"
-                  @mouseleave="hoveredSlug = null"
-                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                />
+              <img
+                :src="section.items[0].currentImage || section.items[0].colors?.[0]?.avatar_image"
+                :alt="section.items[0].alt_text || section.items[0].name"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                @mouseenter="hoveredSlug = section.items[0].slug"
+                @mouseleave="hoveredSlug = null"
+              />
+              <div class="absolute inset-0"></div>
+              
+              <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-text_color bg-background_color/85 w-full">
+                <div class="hero-content">
+                  <p class="text-xs tracking-widest uppercase mb-1 opacity-80">
+                    {{ section.items[0].category }}
+                  </p>
+                  <h2 class="hero-title text-xl md:text-2xl font-bold mb-1 uppercase tracking-tight">
+                    {{ section.items[0].name }}
+                  </h2>
 
-                <MobileColorSlider
-                  v-if="item.colors && item.colors.length > 0"
-                  :colors="item.colors"
-                  @go="(variantSlug: string) => goToProduct(item.slug, variantSlug)"
-                />
-                <div v-else class="block md:hidden">
-                  <img
-                    :src="item.currentImage"
-                    :alt="item.alt_text || item.name"
-                    class="w-full h-auto object-cover border border-text_color/30"
-                    loading="lazy"
-                    @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                  />
-                </div>
-
-                <button
-                  v-show="hoveredSlug === item.slug"
-                  type="button"
-                  class="absolute top-4 left-4 bg-text_color text-background_color tracking-wider text-xs font-light px-2 transition-opacity duration-200"
-                  :class="{ 'opacity-100': hoveredSlug === item.slug, 'opacity-0': hoveredSlug !== item.slug }"
-                  @click="goToProduct(item.slug, item.colors?.[0]?.variant_slug)"
-                >
-                  VIEW
-                </button>
-              </div>
-
-              <div class="pt-3 md:pt-4 text-left">
-                <p class="text-xs tracking-wider font-extralight">{{ item.category }}</p>
-                <h3 class="uppercase tracking-wider text-sm font-normal truncate py-1">{{ item.name }}</h3>
-                
-                <div v-if="item.colors && item.colors.length > 0" class="mt-1 flex items-center gap-2">
-                  <div
-                    v-for="(color, colorIdx) in item.colors"
-                    :key="colorIdx"
-                    class="relative"
-                    @mouseenter="onEnterColor(item, color, colorIdx)"
-                    @mouseleave="onLeaveColor(item)"
-                  >
-                    <img
-                      :src="color.avatar_image"
-                      :alt="color.color"
-                      class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_text_color/40 cursor-pointer"
-                      loading="lazy"
-                      @click="goToProduct(item.slug, color.variant_slug)"
-                    />
-                    <div
-                      class="absolute inset-0 pointer-events-none transition-opacity duration-200 w-8 h-8 bg-text_color"
-                      :class="isColorHovered(item, colorIdx) ? 'opacity-100' : 'opacity-0'"
+                  <div class="flex items-center gap-3 mb-2">
+                    <div v-if="section.items[0].discount && section.items[0].discount_price" class="flex items-center gap-2">
+                      <span class="text-sm md:text-base font-semibold">
+                        {{ formatPrice(section.items[0].discount_price) }}
+                      </span>
+                      <span class="text-sm md:text-base line-through opacity-70">
+                        {{ formatPrice(section.items[0].price) }}
+                      </span>
+                    </div>
+                    <span v-else class="text-sm md:text-base font-semibold">
+                      {{ formatPrice(section.items[0].price) }}
+                    </span>
+                  </div>
+                  
+                  <div class="flex items-center gap-2 mb-2">
+                    <div 
+                      v-for="(color, colorIdx) in section.items[0].colors?.slice(0, 4)"
+                      :key="colorIdx"
+                      class="relative"
+                      @mouseenter="onEnterColor(section.items[0], color, colorIdx)"
+                      @mouseleave="onLeaveColor(section.items[0])"
                     >
-                      <Icon
-                        name="lucide:square-arrow-out-up-right"
-                        class="absolute inset-0 w-4 h-4 z-10 text-background_color m-auto"
+                      <img
+                        :src="color.avatar_image"
+                        :alt="color.color"
+                        class="w-8 h-8 md:w-10 md:h-10 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
+                        @click="goToProduct(section.items[0].slug, color.variant_slug)"
                       />
                     </div>
                   </div>
+
+                  <NuxtLink
+                    :to="`/product/${section.items[0].slug}/${section.items[0].colors?.[0]?.variant_slug}`"
+                    class="btn btn--secondary inline-flex text-sm"
+                  >
+                    <span class="btn__text">Discover</span>
+                    <span class="btn__fill"></span>
+                  </NuxtLink>
                 </div>
               </div>
             </article>
 
-            <div class="col-span-2 md:col-span-2 flex flex-col justify-center section-trigger-line">
+            <div 
+              class="flex flex-col justify-center section-trigger-line md:col-span-2"
+              :class="section.layout === 'reversed' ? 'md:order-1' : 'md:order-2'"
+            >
               <h4 class="section-heading uppercase tracking-wider text-xs md:text-sm mb-3 px-4">
                 {{ section.heading }}
               </h4>
@@ -256,6 +254,8 @@ interface Product {
   name: string
   category: string
   price: string
+  discount_price?: string | null
+  discount?: boolean
   alt_text?: string
   hot?: boolean
   colors?: ProductColor[]
@@ -308,7 +308,6 @@ const sections = computed<GridSection[]>(() => {
   const result: GridSection[] = []
   let i = 0
   
-  // Product 1 (standard + text 1)
   if (allProducts.length >= 1) {
     result.push({
       layout: 'standard',
@@ -319,7 +318,6 @@ const sections = computed<GridSection[]>(() => {
     i = 1
   }
   
-  // Product 2 (reversed + text 2)
   if (allProducts.length >= 2) {
     result.push({
       layout: 'reversed',
@@ -330,7 +328,6 @@ const sections = computed<GridSection[]>(() => {
     i = 2
   }
   
-  // Product 3 (standard + text 3)
   if (allProducts.length >= 3) {
     result.push({
       layout: 'standard',
@@ -341,7 +338,6 @@ const sections = computed<GridSection[]>(() => {
     i = 3
   }
   
-  // Products 4+5 (hero, no text)
   if (allProducts.length >= 5) {
     result.push({
       layout: 'hero',
@@ -352,7 +348,6 @@ const sections = computed<GridSection[]>(() => {
     i = 5
   }
   
-  // Product 6 (reversed + text 4)
   if (allProducts.length >= 6) {
     result.push({
       layout: 'reversed',
@@ -363,7 +358,6 @@ const sections = computed<GridSection[]>(() => {
     i = 6
   }
   
-  // Product 7 (standard + text 5)
   if (allProducts.length >= 7) {
     result.push({
       layout: 'standard',
@@ -374,12 +368,10 @@ const sections = computed<GridSection[]>(() => {
     i = 7
   }
   
-  // After first 7 products: hero every 3rd section, triple for others
   let sectionsAfterText = 0
   while (i < allProducts.length) {
     const remaining = allProducts.length - i
     
-    // Every 3rd section is hero (2 products)
     if (sectionsAfterText > 0 && sectionsAfterText % 3 === 0 && remaining >= 2) {
       result.push({
         layout: 'hero',
@@ -390,7 +382,6 @@ const sections = computed<GridSection[]>(() => {
       i += 2
       sectionsAfterText++
     } else {
-      // Triple layout (3 products per row)
       const take = Math.min(3, remaining)
       result.push({
         layout: 'triple',
@@ -406,8 +397,19 @@ const sections = computed<GridSection[]>(() => {
   return result
 })
 
-function isColorHovered(item: Product, colorIdx: number): boolean {
-  return hoveredColorIndex.value[item.slug] === colorIdx
+function formatPrice(price: string | number | null | undefined): string {
+  if (!price) return 'N/A'
+  
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price
+  
+  if (isNaN(numPrice)) return 'N/A'
+  
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numPrice)
 }
 
 function onEnterColor(item: Product, color: ProductColor, colorIdx: number): void {

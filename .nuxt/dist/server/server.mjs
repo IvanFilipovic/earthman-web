@@ -9,7 +9,7 @@ import { defu, defuFn } from "/home/kai/Projekti/webshop/node_modules/defu/dist/
 import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, useRoute as useRoute$1, RouterView } from "vue-router";
 import { toRouteMatcher, createRouter } from "/home/kai/Projekti/webshop/node_modules/radix3/dist/index.mjs";
 import { klona } from "/home/kai/Projekti/webshop/node_modules/klona/dist/index.mjs";
-import { useHead as useHead$1, headSymbol } from "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
+import { useHead as useHead$1, headSymbol, useSeoMeta as useSeoMeta$1 } from "/home/kai/Projekti/webshop/node_modules/@unhead/vue/dist/index.mjs";
 import { createPathIndexLanguageParser, parseAcceptLanguage } from "@intlify/utils";
 import { parse as parse$1 } from "/home/kai/Projekti/webshop/node_modules/cookie-es/dist/index.mjs";
 import destr from "/home/kai/Projekti/webshop/node_modules/destr/dist/index.mjs";
@@ -620,6 +620,12 @@ function useHead(input, options = {}) {
     return useHead$1(input, { head, ...options });
   }
 }
+function useSeoMeta(input, options = {}) {
+  const head = injectHead(options.nuxt);
+  if (head) {
+    return useSeoMeta$1(input, { head, ...options });
+  }
+}
 async function getRouteRules(arg) {
   const path = typeof arg === "string" ? arg : arg.path;
   {
@@ -658,43 +664,53 @@ const __nuxt_page_meta$1 = null;
 const __nuxt_page_meta = null;
 const _routes = [
   {
+    name: "faq___en",
+    path: "/faq",
+    component: () => import("./_nuxt/faq-oD2rd91q.js")
+  },
+  {
     name: "cart___en",
     path: "/cart",
-    component: () => import("./_nuxt/cart-txG0XdY1.js")
+    component: () => import("./_nuxt/cart-RziQKoOc.js")
   },
   {
     name: __nuxt_page_meta$2?.name,
     path: "/shop",
-    component: () => import("./_nuxt/shop-Bqqohwry.js"),
+    component: () => import("./_nuxt/shop-Ca8ivMNw.js"),
     children: [
       {
         name: "shop___en",
         path: "",
-        component: () => import("./_nuxt/index-C49CCQlU.js")
+        component: () => import("./_nuxt/index-DWUaO_MP.js")
       }
     ]
   },
   {
     name: __nuxt_page_meta$1?.name,
     path: "/about",
-    component: () => import("./_nuxt/about-DA_Xx9px.js"),
+    component: () => import("./_nuxt/about--dIDKzKf.js"),
     children: [
       {
         name: "about___en",
         path: "",
-        component: () => import("./_nuxt/index-DVT58mta.js")
+        component: () => import("./_nuxt/index-DW4ZS3Y6.js")
       }
     ]
   },
   {
     name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-BchPZOjG.js")
+    component: () => import("./_nuxt/index-FNT_ml9d.js")
   },
   {
     name: "terms___en",
     path: "/terms",
     component: () => import("./_nuxt/terms-CHdH2R3U.js")
+  },
+  {
+    name: "contact___en",
+    path: "/contact",
+    component: () => import("./_nuxt/contact-Btk1wvGJ.js")
   },
   {
     name: "privacy___en",
@@ -704,34 +720,54 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-C7kHWhkb.js")
+    component: () => import("./_nuxt/checkout-CZTEhpj6.js")
+  },
+  {
+    name: "size-guide___en",
+    path: "/size-guide",
+    component: () => import("./_nuxt/size-guide-MSK4RGhb.js")
   },
   {
     name: __nuxt_page_meta?.name,
     path: "/collections",
-    component: () => import("./_nuxt/collections-H4tbJagx.js"),
+    component: () => import("./_nuxt/collections-Dh7ioTxE.js"),
     children: [
       {
         name: "collections___en",
         path: "",
-        component: () => import("./_nuxt/index-C3-K_v0N.js")
+        component: () => import("./_nuxt/index-CUsZ1GIv.js")
       },
       {
         name: "collections-slug___en",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-BlFoCgih.js")
+        component: () => import("./_nuxt/_...slug_-CcAgeIFh.js")
       }
     ]
   },
   {
     name: "cookie-policy___en",
     path: "/cookie-policy",
-    component: () => import("./_nuxt/cookie-policy-BR-LPMip.js")
+    component: () => import("./_nuxt/cookie-policy-YwEX_J3T.js")
+  },
+  {
+    name: "privacy-policy___en",
+    path: "/privacy-policy",
+    component: () => import("./_nuxt/privacy-policy-C3fAL8bk.js")
+  },
+  {
+    name: "delivery-returns___en",
+    path: "/delivery-returns",
+    component: () => import("./_nuxt/delivery-returns-DAboGSkW.js")
+  },
+  {
+    name: "terms-conditions___en",
+    path: "/terms-conditions",
+    component: () => import("./_nuxt/terms-conditions-TInDwUQO.js")
   },
   {
     name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-Qv_d6mYM.js")
+    component: () => import("./_nuxt/_...product_-B_v8nI6H.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1423,7 +1459,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     };
   }
 });
-const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-qGNUStbk.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
+const LazyIcon = defineAsyncComponent(() => import("./_nuxt/index-DSJLL3Jq.js").then((n) => n.i).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["Icon", LazyIcon]
 ];
@@ -7169,7 +7205,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-D0MJZjKW.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-BbSj5mDq.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -7439,7 +7475,7 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-CgoDMJ1H.js"));
+    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-iQCmRSab.js"));
     const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-D7leASOP.js"));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
@@ -7522,30 +7558,31 @@ let entry;
 const entry$1 = (ssrContext) => entry(ssrContext);
 export {
   _export_sfc as _,
-  __nuxt_component_0 as a,
-  useRouter as b,
-  useRoute as c,
-  __nuxt_component_4 as d,
+  useSeoMeta as a,
+  __nuxt_component_0 as b,
+  useRouter as c,
+  useRoute as d,
   entry$1 as default,
-  useRuntimeConfig as e,
-  useRequestEvent as f,
-  encodeParam as g,
+  __nuxt_component_4 as e,
+  useRuntimeConfig as f,
+  useNuxtApp as g,
   hasProtocol as h,
-  encodePath as i,
+  withoutTrailingSlash as i,
   joinURL as j,
-  useNuxtApp as k,
-  parseQuery as l,
-  withTrailingSlash as m,
+  nuxtLinkDefaults as k,
+  asyncDataDefaults as l,
+  createError as m,
   navigateTo as n,
-  withoutTrailingSlash as o,
-  parseURL as p,
-  nuxtLinkDefaults as q,
+  useAppConfig as o,
+  parseQuery as p,
+  useRequestEvent as q,
   resolveRouteObject as r,
-  asyncDataDefaults as s,
-  createError as t,
+  withLeadingSlash as s,
+  parseURL as t,
   useHead as u,
-  useAppConfig as v,
-  withLeadingSlash as w,
-  useCookie as x
+  encodeParam as v,
+  withTrailingSlash as w,
+  encodePath as x,
+  useCookie as y
 };
 //# sourceMappingURL=server.mjs.map
