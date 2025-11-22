@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     public: {
       cartSessionCookie: process.env.NUXT_PUBLIC_CART_SESSION_COOKIE || 'cart_session_id',
       apiBase: 'https://earthmanweb.pythonanywhere.com',
+      stripePublishableKey: 'pk_test_51RnI9RQqhIDHHphjzZhgi2Bj4akApzISbSLyFA63nwjhQOylD5jzuoKMiRUboP6kqLTPqErM4y0kjiFLUbBqMK0k00Df3oBPkP',
     },
   },
 
@@ -34,14 +35,18 @@ export default defineNuxtConfig({
         { name: 'twitter:site', content: '@exitthree' },
       ],
       link: [
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/neue-einstellung/NeueEinstellung-Regular.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/neue-einstellung/NeueEinstellung-Medium.woff2', crossorigin: 'anonymous' },
         { rel: 'preconnect', href: 'https://earthmanweb.pythonanywhere.com' },
         { rel: 'preconnect', href: 'https://www.google-analytics.com' },
         { rel: 'dns-prefetch', href: 'https://www.google-analytics.com' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon_e3.svg' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
-      ]
+      ],
+      script: [
+        {
+          src: 'https://js.stripe.com/v3/',
+          async: true,
+        },
+      ],
     }
   },
 

@@ -666,7 +666,7 @@ const _routes = [
   {
     name: "faq___en",
     path: "/faq",
-    component: () => import("./_nuxt/faq-oD2rd91q.js")
+    component: () => import("./_nuxt/faq-CPbb5G0m.js")
   },
   {
     name: "cart___en",
@@ -681,7 +681,7 @@ const _routes = [
       {
         name: "shop___en",
         path: "",
-        component: () => import("./_nuxt/index-DWUaO_MP.js")
+        component: () => import("./_nuxt/index-Be7ygHW0.js")
       }
     ]
   },
@@ -693,14 +693,14 @@ const _routes = [
       {
         name: "about___en",
         path: "",
-        component: () => import("./_nuxt/index-DW4ZS3Y6.js")
+        component: () => import("./_nuxt/index-DX4Yueil.js")
       }
     ]
   },
   {
     name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-FNT_ml9d.js")
+    component: () => import("./_nuxt/index-SK8pJyC8.js")
   },
   {
     name: "terms___en",
@@ -710,7 +710,12 @@ const _routes = [
   {
     name: "contact___en",
     path: "/contact",
-    component: () => import("./_nuxt/contact-Btk1wvGJ.js")
+    component: () => import("./_nuxt/contact-1_dvVA7F.js")
+  },
+  {
+    name: "payment___en",
+    path: "/payment",
+    component: () => import("./_nuxt/payment-DdFWV_YF.js")
   },
   {
     name: "privacy___en",
@@ -720,12 +725,17 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-CZTEhpj6.js")
+    component: () => import("./_nuxt/checkout-DhzvCpHI.js")
+  },
+  {
+    name: "thank-you___en",
+    path: "/thank-you",
+    component: () => import("./_nuxt/thank-you-C66pck-p.js")
   },
   {
     name: "size-guide___en",
     path: "/size-guide",
-    component: () => import("./_nuxt/size-guide-MSK4RGhb.js")
+    component: () => import("./_nuxt/size-guide-DbDOkniu.js")
   },
   {
     name: __nuxt_page_meta?.name,
@@ -735,39 +745,39 @@ const _routes = [
       {
         name: "collections___en",
         path: "",
-        component: () => import("./_nuxt/index-CUsZ1GIv.js")
+        component: () => import("./_nuxt/index-O0nRmudl.js")
       },
       {
         name: "collections-slug___en",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-CcAgeIFh.js")
+        component: () => import("./_nuxt/_...slug_-CyoMMKcJ.js")
       }
     ]
   },
   {
     name: "cookie-policy___en",
     path: "/cookie-policy",
-    component: () => import("./_nuxt/cookie-policy-YwEX_J3T.js")
+    component: () => import("./_nuxt/cookie-policy-CIvGsLDs.js")
   },
   {
     name: "privacy-policy___en",
     path: "/privacy-policy",
-    component: () => import("./_nuxt/privacy-policy-C3fAL8bk.js")
+    component: () => import("./_nuxt/privacy-policy-U-2PTkPU.js")
   },
   {
     name: "delivery-returns___en",
     path: "/delivery-returns",
-    component: () => import("./_nuxt/delivery-returns-DAboGSkW.js")
+    component: () => import("./_nuxt/delivery-returns-BWYS0Pr_.js")
   },
   {
     name: "terms-conditions___en",
     path: "/terms-conditions",
-    component: () => import("./_nuxt/terms-conditions-TInDwUQO.js")
+    component: () => import("./_nuxt/terms-conditions-NHWHwq25.js")
   },
   {
     name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-B_v8nI6H.js")
+    component: () => import("./_nuxt/_...product_-E2iwyEMm.js")
   }
 ];
 const _wrapInTransition = (props, children) => {

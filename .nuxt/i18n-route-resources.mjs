@@ -21,11 +21,17 @@ export const pathToI18nConfig = {
   "/contact": {
     "en": "/contact"
   },
+  "/payment": {
+    "en": "/payment"
+  },
   "/privacy": {
     "en": "/privacy"
   },
   "/checkout": {
     "en": "/checkout"
+  },
+  "/thank-you": {
+    "en": "/thank-you"
   },
   "/size-guide": {
     "en": "/size-guide"
@@ -60,8 +66,10 @@ export const i18nPathToPath = {
   "/": "/",
   "/terms": "/terms",
   "/contact": "/contact",
+  "/payment": "/payment",
   "/privacy": "/privacy",
   "/checkout": "/checkout",
+  "/thank-you": "/thank-you",
   "/size-guide": "/size-guide",
   "/collections": "/collections",
   "/collections/:slug(.*)*": "/collections/:slug(.*)*",

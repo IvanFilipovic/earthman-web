@@ -3,8 +3,8 @@
     <!-- Desktop Navigation -->
     <div class="hidden md:flex flex-col lg:flex-row w-full z-50">
       <!-- Logo Section -->
-      <div class="flex flex-col w-full lg:w-1/2 h-full">          
-        <div class="absolute inset-x-0 top-0 w-1/2 h-full md:px-8">
+      <div class="flex flex-col w-full lg:w-1/2">          
+        <div class="absolute inset-x-0 top-0 w-1/2 md:px-8">
           <NuxtLink
             to="/"
             class="flex justify-center py-6"

@@ -342,6 +342,8 @@ declare module 'nuxt/schema' {
 
    apiBase: string,
 
+   stripePublishableKey: string,
+
    gtag: {
       enabled: boolean,
 

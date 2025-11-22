@@ -4,6 +4,9 @@
     "index.html": {
       "path": ""
     },
+    "contact/index.html": {
+      "path": "contact"
+    },
     "delivery-returns/index.html": {
       "path": "delivery-returns"
     },
@@ -22,6 +25,9 @@
     "terms/index.html": {
       "path": "terms"
     },
+    "payment/index.html": {
+      "path": "payment"
+    },
     "privacy/index.html": {
       "path": "privacy"
     },
@@ -31,11 +37,11 @@
     "collections/index.html": {
       "path": "collections"
     },
-    "shop/index.html": {
-      "path": "shop"
-    },
     "faq/index.html": {
       "path": "faq"
+    },
+    "shop/index.html": {
+      "path": "shop"
     },
     "size-guide/index.html": {
       "path": "size-guide"
@@ -43,8 +49,8 @@
     "checkout/index.html": {
       "path": "checkout"
     },
-    "contact/index.html": {
-      "path": "contact"
+    "thank-you/index.html": {
+      "path": "thank-you"
     }
   },
   "routes": [

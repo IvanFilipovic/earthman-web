@@ -62,6 +62,8 @@ const formValues = reactive({
   newsletter: false
 })
 
+const { sessionId } = useCartSession()
+
 const toNumber = (value: unknown): number => {
   return Number.parseFloat(String(value ?? '0').replace(',', '.')) || 0
 }
@@ -204,7 +206,9 @@ async function handleSubmit(): Promise<void> {
   try {
     submitting.value = true
     
-    const payload: OrderPayload = {
+    const cartSessionCookie = useCookie('cart_session_id')
+    
+    const payload = {
       email: formValues.email,
       country: formValues.country,
       address: formValues.address,
@@ -215,8 +219,11 @@ async function handleSubmit(): Promise<void> {
       delivery_city: formValues.delivery_city,
       delivery_postal_code: formValues.delivery_postal_code,
       payment_method: selectedPaymentMethod.value,
-      shipping_cost: shippingFee.value
+      shipping_cost: shippingFee.value,
+      session_id: cartSessionCookie.value
     }
+
+    console.log('📤 Sending payload:', payload)
 
     const response = await $fetch<{
       order_reference: string
@@ -224,7 +231,7 @@ async function handleSubmit(): Promise<void> {
       payment_method: string
       client_secret?: string
     }>(
-      `${config.public.apiBase}/public/orders/create/`,
+      `${config.public.apiBase}/api/orders/create/`,
       {
         method: 'POST',
         credentials: 'include',
@@ -233,8 +240,10 @@ async function handleSubmit(): Promise<void> {
       }
     )
 
-    // If card payment, redirect to payment page
+    console.log('📥 Response received:', response)
+
     if (response.payment_method === 'card' && response.client_secret) {
+      console.log('💳 Redirecting to payment page...')
       await navigateTo({
         path: '/payment',
         query: {
@@ -244,7 +253,7 @@ async function handleSubmit(): Promise<void> {
         }
       })
     } else {
-      // For other payment methods, go directly to thank you page
+      console.log('✅ Redirecting to thank you page...')
       await navigateTo({
         path: '/thank-you',
         query: {
@@ -254,8 +263,10 @@ async function handleSubmit(): Promise<void> {
       })
     }
   } catch (error: any) {
+    console.error('❌ Order error:', error)
+    console.error('❌ Error data:', error?.data)
+    console.error('❌ Error status:', error?.status)
     errorMsg.value = error?.data?.detail || 'Could not create order. Please try again.'
-    console.error('Order creation failed:', error)
   } finally {
     submitting.value = false
   }
