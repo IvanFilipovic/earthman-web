@@ -285,7 +285,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DHRlBzuh.js",
+    "file": "BaRyTZbW.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -360,7 +360,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BmHmn_6L.js",
+    "file": "DNHijNe4.js",
     "name": "checkout",
     "src": "pages/checkout.vue",
     "isDynamicEntry": true,
@@ -376,8 +376,8 @@ export default {
     ],
     "css": []
   },
-  "checkout.ZPhpYgsA.css": {
-    "file": "checkout.ZPhpYgsA.css",
+  "checkout.C2reHRyZ.css": {
+    "file": "checkout.C2reHRyZ.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

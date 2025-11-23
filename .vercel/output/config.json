@@ -4,9 +4,6 @@
     "index.html": {
       "path": ""
     },
-    "contact/index.html": {
-      "path": "contact"
-    },
     "delivery-returns/index.html": {
       "path": "delivery-returns"
     },
@@ -37,11 +34,14 @@
     "collections/index.html": {
       "path": "collections"
     },
+    "shop/index.html": {
+      "path": "shop"
+    },
     "faq/index.html": {
       "path": "faq"
     },
-    "shop/index.html": {
-      "path": "shop"
+    "contact/index.html": {
+      "path": "contact"
     },
     "size-guide/index.html": {
       "path": "size-guide"

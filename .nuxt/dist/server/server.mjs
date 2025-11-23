@@ -725,7 +725,7 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-DhzvCpHI.js")
+    component: () => import("./_nuxt/checkout-wC2ZNQA9.js")
   },
   {
     name: "thank-you___en",
