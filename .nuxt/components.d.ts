@@ -20,6 +20,7 @@ export const AppNavigation: typeof import("../components/AppNavigation.vue")['de
 export const BackgroundVideo: typeof import("../components/BackgroundVideo.vue")['default']
 export const CartPanel: typeof import("../components/CartPanel.vue")['default']
 export const Carusel: typeof import("../components/Carusel.vue")['default']
+export const CheckoutForm: typeof import("../components/CheckoutForm.vue")['default']
 export const CollectionHome: typeof import("../components/CollectionHome.vue")['default']
 export const CollectionListing: typeof import("../components/CollectionListing.vue")['default']
 export const CollectionShopListing: typeof import("../components/CollectionShopListing.vue")['default']
@@ -120,6 +121,7 @@ export const LazyAppNavigation: LazyComponent<typeof import("../components/AppNa
 export const LazyBackgroundVideo: LazyComponent<typeof import("../components/BackgroundVideo.vue")['default']>
 export const LazyCartPanel: LazyComponent<typeof import("../components/CartPanel.vue")['default']>
 export const LazyCarusel: LazyComponent<typeof import("../components/Carusel.vue")['default']>
+export const LazyCheckoutForm: LazyComponent<typeof import("../components/CheckoutForm.vue")['default']>
 export const LazyCollectionHome: LazyComponent<typeof import("../components/CollectionHome.vue")['default']>
 export const LazyCollectionListing: LazyComponent<typeof import("../components/CollectionListing.vue")['default']>
 export const LazyCollectionShopListing: LazyComponent<typeof import("../components/CollectionShopListing.vue")['default']>

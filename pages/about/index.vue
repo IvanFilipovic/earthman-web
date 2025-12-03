@@ -8,7 +8,7 @@
           <div class="relative pt-8 px-4 md:px-8">
             <div class="hero-section relative w-full h-[70vh] border border-text_color/30 overflow-hidden">
               <img
-                src="https://static.zara.net/assets/public/b850/3c51/c51444638aaf/b950e3e9cbf2/08073243712-a1/08073243712-a1.jpg?ts=1760368012248&w=801"
+                v-bind="getHeroImageAttrs(heroImage)"
                 alt="Material study"
                 class="absolute inset-0 w-full h-full object-cover"
               />
@@ -32,9 +32,9 @@
           <div class="flex flex-col lg:flex-row gap-10 items-start px-4 md:px-8 pb-14 md:py-0">
             <div class="w-full lg:w-1/2 my-auto pb-10">
               <img
-                class="section-image w-full h-[70vh] object-cover border border-text_color/30"
-                src="https://static.zara.net/assets/public/b850/3c51/c51444638aaf/b950e3e9cbf2/08073243712-a1/08073243712-a1.jpg?ts=1760368012248&w=801"
+                v-bind="getSectionImageAttrs(section1Image)"
                 alt="Studio story"
+                class="section-image w-full h-[70vh] object-cover border border-text_color/30"
                 loading="lazy"
               />
             </div>
@@ -57,9 +57,9 @@
           <div class="flex flex-col lg:flex-row-reverse gap-10 items-start px-4 md:px-8 min-h-screen">
             <div class="w-full lg:w-1/2 my-auto">
               <img
-                class="section-image w-full h-[70vh] object-cover border border-background_color/30"
-                src="https://static.zara.net/assets/public/b850/3c51/c51444638aaf/b950e3e9cbf2/08073243712-a1/08073243712-a1.jpg?ts=1760368012248&w=801"
+                v-bind="getSectionImageAttrs(section2Image)"
                 alt="Community story"
+                class="section-image w-full h-[70vh] object-cover border border-background_color/30"
                 loading="lazy"
               />
             </div>
@@ -90,6 +90,8 @@
         </div>
       </div>
     </div>
+    <div class="earth-scroll"></div>
+
   </section>
 </template>
 
@@ -119,14 +121,54 @@ const wrapperClass = computed(() =>
   isDark.value ? 'bg-text_color text-background_color' : 'bg-background_color text-text_color'
 )
 
+// Image URLs - Replace with your CDN URLs
+const heroImage = 'https://static.earth-man.eu/penguin_female1.jpg'
+const section1Image = 'https://static.earth-man.eu/penguin_female1.jpg'
+const section2Image = 'https://static.earth-man.eu/penguin_female1.jpg'
+
+// Responsive image helpers
+const { getResponsiveImages } = useImageTransform()
+
+/**
+ * Hero image: Full-width at all breakpoints
+ * Layout: w-full (100vw)
+ * Height: h-[70vh]
+ */
+function getHeroImageAttrs(url: string) {
+  return getResponsiveImages(
+    url,
+    [800, 1200, 1920, 2560], // Full-width hero: mobile to 4K
+    '100vw' // Always full viewport width
+  )
+}
+
+/**
+ * Section images: Half-width on desktop, full on mobile
+ * Desktop: lg:w-1/2 (50vw)
+ * Mobile: w-full (100vw)
+ * Height: h-[70vh]
+ */
+function getSectionImageAttrs(url: string) {
+  if (!url) return {}
+  const isMobile =
+    typeof window !== 'undefined' &&
+    window.innerWidth <= 768
+
+  // What you want:
+  const mainWidth = isMobile ? 900 : 1600
+  return getResponsiveImages(
+    url,
+    [mainWidth], // Mobile to desktop retina
+    '(max-width: 1023px) 100vw, 50vw' // Full on mobile, half on desktop
+  )
+}
+
 const posts: InstagramPost[] = [
-  { image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', link: 'https://instagram.com/p/xyz' },
-  { image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff', link: 'https://instagram.com/p/xyz2' },
-  { image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee', link: 'https://instagram.com/p/xyz2' },
-  { image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba', link: 'https://instagram.com/p/xyz2' },
-  { image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d', link: 'https://instagram.com/p/xyz2' },
-  { image: 'https://images.unsplash.com/photo-1503602642458-232111445657', link: 'https://instagram.com/p/xyz2' },
-  { image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d', link: 'https://instagram.com/p/xyz2' },
+  { image: 'https://static.earth-man.eu/penguin_female1.jpg', link: 'https://www.instagram.com/earth_man.line/' },
+  { image: 'https://static.earth-man.eu/penguin_female2.jpg', link: 'https://www.instagram.com/earth_man.line/' },
+  { image: 'https://static.earth-man.eu/penguin_kid1.jpg', link: 'https://www.instagram.com/earth_man.line/' },
+  { image: 'https://static.earth-man.eu/penguin_male.jpg', link: 'https://www.instagram.com/earth_man.line/' },
+  { image: 'https://static.earth-man.eu/penguin_female1.jpg', link: 'https://www.instagram.com/earth_man.line/' },
 ]
 
 let smoother: any = null
@@ -300,9 +342,49 @@ onBeforeUnmount(() => {
   smoother?.kill?.()
   ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 })
+
 // Handle CartPanel and other panels
 if (import.meta.client) {
   const smootherRef = computed(() => smoother)
   useScrollSmootherPanels(smootherRef)
 }
 </script>
+<style scoped>
+.earth-scroll {
+  margin: auto;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+
+  /* 3D shading for realism */
+  box-shadow:
+    inset 40px 0 80px rgba(255, 255, 255, 0.05),
+    inset -20px 0 100px rgba(0, 0, 0, 0.20);
+
+  /* The trick: a repeating horizontal gradient */
+  background: repeating-linear-gradient(
+    90deg,
+    #00c90d 0%,
+    #00c90d 50%,
+    #0040ff 50%,
+    #0040ff 100%
+  );
+
+  background-size: 200% 100%;  /* 2 colors across 100% sphere width */
+  animation: scrollColors 3s linear infinite;
+}
+
+/* Move background left → simulating Y-axis rotation */
+@keyframes scrollColors {
+  from {
+    background-position-x: 0%;
+  }
+  to {
+    background-position-x: -200%;
+  }
+}
+
+
+</style>

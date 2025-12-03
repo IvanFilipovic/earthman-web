@@ -1,2 +1,0 @@
-const d=".slide-product[data-v-f4ee3af4]{max-width:170px;min-width:170px}.slide-cta[data-v-f4ee3af4]{max-width:260px;min-width:260px}@media (min-width:640px){.slide-product[data-v-f4ee3af4]{max-width:210px;min-width:210px}.slide-cta[data-v-f4ee3af4]{max-width:360px;min-width:360px}}@media (min-width:1024px){.slide-product[data-v-f4ee3af4]{max-width:300px;min-width:300px}.slide-cta[data-v-f4ee3af4]{max-width:660px;min-width:660px}}.keen-slider__slide[data-v-f4ee3af4]{display:block}";export{d as C};
-//# sourceMappingURL=Carusel-styles-1.mjs-BYqfgjLA.mjs.map

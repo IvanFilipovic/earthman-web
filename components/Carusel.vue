@@ -1,55 +1,66 @@
 <template>
-  <div class="py-28">
-    <div ref="sliderEl" class="keen-slider my-auto">
-      <div
-        v-for="(s, i) in computedSlides"
-        :key="s.key || i"
-        class="keen-slider__slide px-2 my-auto"
-        :class="s.type === 'cta' ? 'slide-cta' : 'slide-product'"
-      >
-        <div v-if="s.type === 'cta'" class="w-full h-full">
-          <button
-            type="button"
-            class="group w-full h-full flex items-center justify-center bg-background_color p-6 text-center"
-            @click="onCtaClick(s.cta)"
-          >
-            <div class="space-y-4">
-              <h3 class="text-xl md:text-2xl font-bold">{{ s.cta.title }}</h3>
-              <p class="text-sm opacity-80">{{ s.cta.subtitle }}</p>
-              <div class="btn btn--primary mx-auto">
-                <span class="btn__text">{{ s.cta.button }}</span>
-                <span class="btn__fill"></span>
+  <div class="gsap-carousel-main">
+    <div class="gsap-carousel-container">
+      <div class="gsap-carousel-inner">
+        <div 
+          v-for="(slideGroup, slideIndex) in slideGroups" 
+          :key="`gsap-slide-${slideIndex}`"
+          class="gsap-carousel-slide"
+        >
+          <div class="gsap-slide-products">
+            <NuxtLink
+              v-for="product in slideGroup"
+              :key="product.id"
+              :to="`/product/${product.slug}/${encodeURIComponent(product.colors[0].variant_slug)}`"
+              class="gsap-product-card"
+            >
+              <div class="gsap-product-image">
+                <img
+                  v-bind="getProductImageAttrs(product)"
+                  :alt="product.alt_text || product.name"
+                  loading="lazy"
+                />
               </div>
-            </div>
-          </button>
-        </div>
-
-        <div v-else class="w-full">
-          <NuxtLink 
-            :to="`/product/${s.item.slug}/${encodeURIComponent(s.item.colors[0].variant_slug)}`" 
-            class="w-full overflow-hidden bg-background_color"
-          >
-            <img
-              :src="firstColor(s.item)?.avatar_image || s.item.link_image"
-              :alt="s.item.alt_text || s.item.name"
-              class="w-full object-cover border border-text_color/30"
-              loading="lazy"
-              decoding="async"
-            />
-          </NuxtLink>
-          <div class="mt-3 text-text_color truncate text-center">
-            <p class="text-xs font-light mb-1">{{ s.item.category }}</p>
-            <p class="text-sm">{{ s.item.name }}</p>
+              <div class="gsap-product-info">
+                <p class="gsap-product-category">{{ product.category }}</p>
+                <p class="gsap-product-name">{{ product.name }}</p>
+              </div>
+            </NuxtLink>
           </div>
         </div>
       </div>
+    </div>
+    
+    <div class="gsap-cta-section">
+      <button
+        type="button"
+        class="gsap-cta-button"
+        @click="router.push('/shop')"
+      >
+        <h3 class="text-xl md:text-2xl font-bold mb-2">See Everything</h3>
+        <p class="text-sm opacity-70 mb-4">Browse all products</p>
+        <div class="btn btn--primary">
+          <span class="btn__text">View All</span>
+          <span class="btn__fill"></span>
+        </div>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import 'keen-slider/keen-slider.min.css'
-import KeenSlider, { type KeenSliderInstance } from 'keen-slider'
+import gsap from 'gsap'
+import { Draggable } from 'gsap/Draggable'
+
+let InertiaPlugin: any = null
+try {
+  InertiaPlugin = (await import('gsap/InertiaPlugin')).InertiaPlugin
+} catch {
+  console.warn('InertiaPlugin not available')
+}
+
+gsap.registerPlugin(Draggable)
+if (InertiaPlugin) gsap.registerPlugin(InertiaPlugin)
 
 interface ColorEntry {
   color: string
@@ -60,14 +71,8 @@ interface ColorEntry {
 interface ProductItem {
   id: number
   name: string
-  collection: string
   slug: string
-  gender: string
-  price: string
-  discount: boolean
-  discount_price: string | null
   category: number
-  available: boolean
   link_image: string
   alt_text: string
   colors: ColorEntry[]
@@ -78,156 +83,333 @@ interface ProductsResponse {
   results: ProductItem[]
 }
 
-interface CtaSlide {
-  type: 'cta'
-  key: string
-  cta: {
-    title: string
-    subtitle: string
-    button: string
-  }
-}
-
-interface ProductSlide {
-  type: 'product'
-  key: string
-  item: ProductItem
-}
-
-type Slide = CtaSlide | ProductSlide
-
 const config = useRuntimeConfig()
 const router = useRouter()
+const { getResponsiveImages } = useImageTransform()
 
-const sliderEl = ref<HTMLElement | null>(null)
 const items = ref<ProductItem[]>([])
+const productsPerSlide = ref(3)
 
-let slider: KeenSliderInstance | null = null
-
-function firstColor(product: ProductItem): ColorEntry | null {
-  return product.colors && product.colors.length > 0 ? product.colors[0] : null
+function getProductImageAttrs(product: ProductItem) {
+  const imageUrl = product.colors?.[0]?.avatar_image || product.link_image
+  return getResponsiveImages(
+    imageUrl,
+    [400, 600, 800, 1000],
+    '(max-width: 767px) 80vw, (max-width: 1023px) 42vw, 28vw'
+  )
 }
+
 
 async function loadProducts(): Promise<void> {
   try {
     const response = await $fetch<ProductsResponse>(
-      `${config.public.apiBase}/public/products-all/?page=1&page_size=12&hot=true`,
+      `${config.public.apiBase}/public/products-all/?page=1&page_size=6&hot=true`,
       { credentials: 'include' }
     )
-    items.value = Array.isArray(response?.results) ? response.results : []
+    items.value = response?.results ?? []
   } catch (error) {
-    console.error('Failed to fetch hot products:', error)
+    console.error('Failed to fetch products:', error)
     items.value = []
   }
 }
 
-const computedSlides = computed<Slide[]>(() => {
-  const startCTA: CtaSlide = {
-    type: 'cta',
-    key: 'cta-start',
-    cta: {
-      title: 'See all of our stories',
-      subtitle: 'Fresh drops you love',
-      button: 'See Stories'
-    }
+const slideGroups = computed(() => {
+  const perSlide = productsPerSlide.value
+  const groups: ProductItem[][] = []
+  
+  for (let i = 0; i < items.value.length; i += perSlide) {
+    groups.push(items.value.slice(i, i + perSlide))
   }
   
-  const endCTA: CtaSlide = {
-    type: 'cta',
-    key: 'cta-end',
-    cta: {
-      title: 'See Everything',
-      subtitle: 'Browse through all stories',
-      button: 'View All'
-    }
-  }
-  
-  const productSlides: ProductSlide[] = items.value.map((item) => ({
-    type: 'product',
-    key: `prod-${item.id}`,
-    item
-  }))
-  
-  return [startCTA, ...productSlides, endCTA]
+  return groups
 })
 
-function onCtaClick(cta: { title: string; button: string }): void {
-  if (cta.button.toLowerCase().includes('stories')) {
-    router.push('/collections')
+function updateProductsPerSlide() {
+  if (window.innerWidth < 768) {
+    productsPerSlide.value = 1 // Mobile: 1 product
+  } else if (window.innerWidth < 1024) {
+    productsPerSlide.value = 2 // Tablet: 2 products
   } else {
-    router.push('/shop')
+    productsPerSlide.value = 3 // Desktop: 3 products
   }
-}
-
-function initializeSlider(): void {
-  if (!sliderEl.value) return
-
-  slider = new KeenSlider(sliderEl.value, {
-    loop: false,
-    mode: 'snap',
-    rtl: false,
-    slides: {
-      perView: 'auto',
-      spacing: 2,
-    },
-    created(instance) {
-      const images = sliderEl.value?.querySelectorAll('img') || []
-      images.forEach(img => {
-        if (!img.complete) {
-          img.addEventListener('load', () => instance.update(), { once: true })
-        }
-      })
-    },
-  })
 }
 
 onMounted(async () => {
   await loadProducts()
+  updateProductsPerSlide()
+  
   nextTick(() => {
-    initializeSlider()
+    var snapX: any
+    var slides = document.querySelectorAll(".gsap-carousel-slide") as NodeListOf<HTMLElement>
+    
+    console.log('Slides found:', slides.length)
+    
+    if (slides.length === 0) {
+      console.error('No slides found!')
+      return
+    }
+    
+    var progressWrap = gsap.utils.wrap(0, 1)
+    var numSlides = slides.length
+    
+    gsap.set(slides, {
+      xPercent: (i: number) => i * 100,
+      opacity: 1,
+      visibility: 'visible',
+      display: 'flex'
+    })
+    
+    var wrap = gsap.utils.wrap(-100, (numSlides - 1) * 100)
+    
+    var animation = gsap.to(slides, {
+      xPercent: "+=" + (numSlides * 100),
+      duration: 1,
+      ease: "none",
+      paused: true,
+      repeat: -1,
+      modifiers: {
+        xPercent: wrap
+      }
+    })
+    
+    var proxy = document.createElement("div")
+    var slideWidth = 0
+    var wrapWidth = 0
+    
+    function resize() {
+      var norm = ((gsap.getProperty(proxy, "x") as number) / wrapWidth) || 0
+      
+      slideWidth = slides[0].offsetWidth
+      wrapWidth = slideWidth * numSlides
+      snapX = gsap.utils.snap(slideWidth)
+      
+      gsap.set(proxy, {
+        x: norm * wrapWidth
+      })
+      
+      updateProgress()
+    }
+    
+    function updateProgress() {
+      animation.progress(progressWrap((gsap.getProperty(proxy, "x") as number) / wrapWidth))
+    }
+    
+    resize()
+    
+    var draggable = new Draggable(proxy, {
+      trigger: ".gsap-carousel-container",
+      type: "x",
+      inertia: InertiaPlugin ? true : false,
+      onDrag: updateProgress,
+      onThrowUpdate: updateProgress,
+      snap: {
+        x: (value: number) => snapX(value)
+      }
+    })
+    
+    function handleResize() {
+      updateProductsPerSlide()
+      resize()
+    }
+    
+    window.addEventListener("resize", handleResize)
+    
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", handleResize)
+      animation.kill()
+      draggable.kill()
+    })
   })
-})
-
-onBeforeUnmount(() => {
-  slider?.destroy()
-  slider = null
 })
 </script>
 
 <style scoped>
-.slide-product {
-  min-width: 170px;
-  max-width: 170px;
+/* Main container */
+.gsap-carousel-main {
+  position: relative;
+  width: 100%;
+  z-index: 1;
 }
 
-.slide-cta {
-  min-width: 260px;
-  max-width: 260px;
+/* Full screen carousel container */
+.gsap-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  cursor: grab;
+  background: transparent;
 }
 
-@media (min-width: 640px) {
-  .slide-product {
-    min-width: 210px;
-    max-width: 210px;
-  }
-  .slide-cta {
-    min-width: 360px;
-    max-width: 360px;
-  }
+.gsap-carousel-container:active {
+  cursor: grabbing;
 }
 
-@media (min-width: 1024px) {
-  .slide-product {
-    min-width: 300px;
-    max-width: 300px;
-  }
-  .slide-cta {
-    min-width: 660px;
-    max-width: 660px;
-  }
+/* Inner wrapper */
+.gsap-carousel-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-.keen-slider__slide {
+/* Individual slides - full screen */
+.gsap-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Products flex container - evenly spread */
+.gsap-slide-products {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* Product card - fixed width for proper spacing */
+.gsap-product-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+  width: 28vw;
+  max-width: 450px;
+  flex-shrink: 0;
+}
+
+.gsap-product-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Product image - maintains aspect ratio */
+.gsap-product-image {
+  width: 100%;
+  height: 70vh;
+  max-height: 700px;
+  overflow: hidden;
+  background: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.gsap-product-card:hover .gsap-product-image {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.gsap-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+}
+
+/* Product info */
+.gsap-product-info {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.gsap-product-category {
+  font-size: 0.875rem;
+  color: #666;
+  opacity: 0.7;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gsap-product-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* CTA Section */
+.gsap-cta-section {
+  padding: 80px 20px;
+  background: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gsap-cta-button {
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.gsap-cta-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Mobile: 1 product per slide */
+@media (max-width: 767px) {
+  .gsap-slide-products {
+    justify-content: center; /* Center single product */
+  }
+  
+  .gsap-product-card {
+    width: 80vw; /* Larger single product */
+    max-width: 400px;
+  }
+  
+  .gsap-cta-section {
+    padding: 40px 20px;
+  }
+  .gsap-product-image {
+    height: 65vh;
+    max-height: 600px;
+  }
+  
+  .gsap-carousel-slide {
+    padding: 20px;
+  }
+}
+
+/* Tablet: 2 products per slide */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .gsap-slide-products {
+    justify-content: space-around;
+  }
+  
+  .gsap-product-card {
+    width: 42vw;
+    max-width: 380px;
+  }
+  
+  .gsap-product-image {
+    height: 65vh;
+  }
+}
+
+/* Large desktop - more breathing room */
+@media (min-width: 1400px) {
+  .gsap-product-card {
+    width: 25vw;
+    max-width: 500px;
+  }
+  
+  .gsap-slide-products {
+    max-width: 1800px;
+  }
 }
 </style>

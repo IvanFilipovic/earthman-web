@@ -245,13 +245,11 @@ const HASH_RE = /#/g;
 const AMPERSAND_RE = /&/g;
 const SLASH_RE = /\//g;
 const EQUAL_RE = /=/g;
-const IM_RE = /\?/g;
 const PLUS_RE = /\+/g;
 const ENC_CARET_RE = /%5e/gi;
 const ENC_BACKTICK_RE = /%60/gi;
 const ENC_PIPE_RE = /%7c/gi;
 const ENC_SPACE_RE = /%20/gi;
-const ENC_ENC_SLASH_RE = /%252f/gi;
 function encode(text) {
   return encodeURI("" + text).replace(ENC_PIPE_RE, "|");
 }
@@ -260,12 +258,6 @@ function encodeQueryValue(input) {
 }
 function encodeQueryKey(text) {
   return encodeQueryValue(text).replace(EQUAL_RE, "%3D");
-}
-function encodePath(text) {
-  return encode(text).replace(HASH_RE, "%23").replace(IM_RE, "%3F").replace(ENC_ENC_SLASH_RE, "%2F").replace(AMPERSAND_RE, "%26").replace(PLUS_RE, "%2B");
-}
-function encodeParam(text) {
-  return encodePath(text).replace(SLASH_RE, "%2F");
 }
 function decode(text = "") {
   try {
@@ -681,7 +673,7 @@ const _routes = [
       {
         name: "shop___en",
         path: "",
-        component: () => import("./_nuxt/index-Be7ygHW0.js")
+        component: () => import("./_nuxt/index-B9lKGThw.js")
       }
     ]
   },
@@ -693,14 +685,14 @@ const _routes = [
       {
         name: "about___en",
         path: "",
-        component: () => import("./_nuxt/index-DX4Yueil.js")
+        component: () => import("./_nuxt/index-CUHDb7vS.js")
       }
     ]
   },
   {
     name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-SK8pJyC8.js")
+    component: () => import("./_nuxt/index-MsctvSzB.js")
   },
   {
     name: "terms___en",
@@ -713,11 +705,6 @@ const _routes = [
     component: () => import("./_nuxt/contact-1_dvVA7F.js")
   },
   {
-    name: "payment___en",
-    path: "/payment",
-    component: () => import("./_nuxt/payment-DdFWV_YF.js")
-  },
-  {
     name: "privacy___en",
     path: "/privacy",
     component: () => import("./_nuxt/privacy-cqxSvzRZ.js")
@@ -725,7 +712,7 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-wC2ZNQA9.js")
+    component: () => import("./_nuxt/checkout-DWVigQQU.js")
   },
   {
     name: "thank-you___en",
@@ -745,14 +732,19 @@ const _routes = [
       {
         name: "collections___en",
         path: "",
-        component: () => import("./_nuxt/index-O0nRmudl.js")
+        component: () => import("./_nuxt/index-DfFe9fXA.js")
       },
       {
         name: "collections-slug___en",
         path: ":slug(.*)*",
-        component: () => import("./_nuxt/_...slug_-CyoMMKcJ.js")
+        component: () => import("./_nuxt/_...slug_-CPvUwe9r.js")
       }
     ]
+  },
+  {
+    name: "payment-card___en",
+    path: "/payment/card",
+    component: () => import("./_nuxt/card-DFpACojW.js")
   },
   {
     name: "cookie-policy___en",
@@ -775,9 +767,19 @@ const _routes = [
     component: () => import("./_nuxt/terms-conditions-NHWHwq25.js")
   },
   {
+    name: "payment-paypal-cancel___en",
+    path: "/payment/paypal/cancel",
+    component: () => import("./_nuxt/cancel-DNlB7R3w.js")
+  },
+  {
+    name: "payment-paypal-success___en",
+    path: "/payment/paypal/success",
+    component: () => import("./_nuxt/success-jce_IF2X.js")
+  },
+  {
     name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-E2iwyEMm.js")
+    component: () => import("./_nuxt/_...product_-pGjo7MMj.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -7215,7 +7217,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-BbSj5mDq.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-CwAmdySt.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -7585,14 +7587,9 @@ export {
   navigateTo as n,
   useAppConfig as o,
   parseQuery as p,
-  useRequestEvent as q,
+  useCookie as q,
   resolveRouteObject as r,
-  withLeadingSlash as s,
-  parseURL as t,
   useHead as u,
-  encodeParam as v,
-  withTrailingSlash as w,
-  encodePath as x,
-  useCookie as y
+  withTrailingSlash as w
 };
 //# sourceMappingURL=server.mjs.map

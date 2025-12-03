@@ -4,8 +4,8 @@
     "index.html": {
       "path": ""
     },
-    "delivery-returns/index.html": {
-      "path": "delivery-returns"
+    "contact/index.html": {
+      "path": "contact"
     },
     "privacy-policy/index.html": {
       "path": "privacy-policy"
@@ -13,17 +13,14 @@
     "cookie-policy/index.html": {
       "path": "cookie-policy"
     },
+    "delivery-returns/index.html": {
+      "path": "delivery-returns"
+    },
     "terms-conditions/index.html": {
       "path": "terms-conditions"
     },
     "cart/index.html": {
       "path": "cart"
-    },
-    "terms/index.html": {
-      "path": "terms"
-    },
-    "payment/index.html": {
-      "path": "payment"
     },
     "privacy/index.html": {
       "path": "privacy"
@@ -34,14 +31,14 @@
     "collections/index.html": {
       "path": "collections"
     },
+    "terms/index.html": {
+      "path": "terms"
+    },
     "shop/index.html": {
       "path": "shop"
     },
     "faq/index.html": {
       "path": "faq"
-    },
-    "contact/index.html": {
-      "path": "contact"
     },
     "size-guide/index.html": {
       "path": "size-guide"
@@ -51,6 +48,15 @@
     },
     "thank-you/index.html": {
       "path": "thank-you"
+    },
+    "payment/card/index.html": {
+      "path": "payment/card"
+    },
+    "payment/paypal/success/index.html": {
+      "path": "payment/paypal/success"
+    },
+    "payment/paypal/cancel/index.html": {
+      "path": "payment/paypal/cancel"
     }
   },
   "routes": [

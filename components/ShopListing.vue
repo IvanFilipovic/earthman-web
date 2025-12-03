@@ -14,7 +14,7 @@
           >
             <!-- Desktop Main Image -->
             <img
-              :src="getMainImage(item)"
+              v-bind="getMainImageAttrs(getMainImage(item))"
               :alt="item.alt_text || item.name"
               class="hidden md:block max-w-[100%] h-auto object-cover transition-opacity duration-200 border border-text_color/30"
               loading="lazy"
@@ -33,7 +33,7 @@
                   class="keen-slider__slide"
                 >
                   <img
-                    :src="color.avatar_image"
+                    v-bind="getMobileSliderImageAttrs(color.avatar_image)"
                     :alt="color.color"
                     class="w-full h-auto object-cover border border-text_color/30"
                     loading="lazy"
@@ -72,7 +72,7 @@
                 @mouseleave="onLeaveColor(item)"
               >
                 <img
-                  :src="color.avatar_image"
+                  v-bind="getSwatchImageAttrs(color.avatar_image)"
                   :alt="color.color"
                   class="w-7 h-7 md:h-8 md:w-8 object-cover border border-project_black/30 cursor-pointer"
                   loading="lazy"
@@ -155,6 +155,36 @@ const filteredColors = computed<string[]>(() => {
   
   return [normalizeColorName(String(colorParam))]
 })
+
+// Responsive image helpers
+const { getResponsiveImages } = useImageTransform()
+
+// Main product images in grid (2 cols mobile, 4 cols desktop)
+const getMainImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [300, 400, 600, 800], // Widths for srcset
+    '(max-width: 767px) 50vw, 25vw' // Mobile: 2 cols (50%), Desktop: 4 cols (25%)
+  )
+}
+
+// Mobile slider images (full width within grid cell)
+const getMobileSliderImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [300, 400, 600], // Mobile-focused widths
+    '50vw' // 2 columns on mobile = 50% viewport width
+  )
+}
+
+// Color swatch thumbnails (fixed small size)
+const getSwatchImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [50, 100], // Just 1x and 2x for small thumbnails
+    '32px' // Fixed size (w-8/h-8)
+  )
+}
 
 // Normalize color names for matching (lowercase, trim, remove extra spaces)
 function normalizeColorName(color: string): string {

@@ -36,9 +36,9 @@
         <div class="col col--2">
           <div class="col__image-wrap">
             <img
-              class="img"
-              :src="collection.element_one_image"
+              v-bind="getImageAttrs(collection.element_two_image)"
               :alt="collection.name || `Collection ${i + 1}`"
+              class="img"
               loading="lazy"
               decoding="async"
             />
@@ -68,11 +68,23 @@ interface Collection {
   slug: string
   element_one: string
   element_one_image: string
+  element_two_image: string
 }
 
 const config = useRuntimeConfig()
 const collections = ref<Collection[]>([])
 const loading = ref(true)
+
+// Responsive image helper
+const { getResponsiveImages } = useImageTransform()
+
+function getImageAttrs(url: string) {
+  return getResponsiveImages(
+    url,
+    [400, 600, 800, 1200, 1600], // Widths for srcset
+    '50vw' // Always half viewport width
+  )
+}
 
 async function fetchCollections(): Promise<void> {
   try {
@@ -176,6 +188,7 @@ onBeforeUnmount(() => {
 function handleResize(): void {
   ScrollTrigger.refresh()
 }
+
 // Handle CartPanel and other panels
 if (import.meta.client) {
   const smootherRef = computed(() => smoother)
@@ -265,7 +278,7 @@ if (import.meta.client) {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 160vh;
+  height: 100vh;
 }
 
 .img {

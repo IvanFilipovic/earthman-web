@@ -7,7 +7,7 @@
         class="keen-slider__slide"
       >
         <img
-          :src="img.image"
+          v-bind="getImageAttrs(img.image)"
           :alt="img.alt_text || productName"
           loading="lazy"
           class="gallery-image"
@@ -58,6 +58,16 @@ interface Props {
 const props = defineProps<Props>()
 
 const currentSlide = ref(0)
+const { getResponsiveImages } = useImageTransform()
+
+const getImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 800, 1200, 1600], // Widths for srcset
+    '(max-width: 1023px) 100vw, 33vw' // Desktop: 8/12 grid = ~66vw
+  )
+}
+
 
 const [sliderRef, slider] = useKeenSlider({
   initial: 0,
@@ -90,6 +100,7 @@ const atEnd = computed(() => false)
 }
 
 .gallery-image {
+  transition: all 0.9s ease;
   display: block;
   margin-left: auto;
   margin-right: auto;

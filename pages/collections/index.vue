@@ -17,7 +17,7 @@
             class="slide"
             :class="`slide--${(i % 2) + 1}`"
           >
-            <div class="slide__bg" :style="{ backgroundImage: `url(${collection.element_one_image})` }">
+            <div class="slide__bg" :style="{ backgroundImage: `url(${getOptimizedBgUrl(collection.element_one_image)})`}">
               <div class="slide__overlay"></div>
             </div>
 
@@ -96,6 +96,18 @@ const collections = ref<Collection[]>([])
 let smoother: any = null
 let ctx: gsap.Context | null = null
 
+const { getTransformedUrl } = useImageTransform()
+
+function getOptimizedBgUrl(url: string): string {
+  if (!url) return ''
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+  const targetWidth = isMobile ? 800 : 1920
+  return getTransformedUrl(url, targetWidth, {
+    quality: 85,
+    format: 'auto',
+  })
+}
+
 function scrollToNext(index: number): void {
   const target = document.querySelector(`.slide:nth-child(${index + 1})`)
   if (target) {
@@ -106,6 +118,7 @@ function scrollToNext(index: number): void {
     })
   }
 }
+
 function scrollToTop(): void {
   const target = document.querySelector(`.slide:nth-child(${1})`)
   if (target) {
@@ -243,6 +256,7 @@ onBeforeUnmount(() => {
   smoother?.kill?.()
   ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 })
+
 // Handle CartPanel and other panels
 if (import.meta.client) {
   const smootherRef = computed(() => smoother)
@@ -322,7 +336,6 @@ if (import.meta.client) {
 .slide__bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
   background-position: center;
   z-index: 1;
 }

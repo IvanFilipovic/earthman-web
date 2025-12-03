@@ -62,12 +62,12 @@
                   <article 
                     v-for="(item, idx) in cartStore.items" 
                     :key="`${item.product_slug}-${idx}`"
-                    class="grid grid-cols-[88px,1fr,auto] gap-1"
+                    class="grid grid-cols-[auto,1fr,auto] gap-1"
                   >
                     <img 
-                      :src="item.avatar_image" 
+                      v-bind="getThumbnailAttrs(item.avatar_image)"
                       :alt="item.product"
-                      class="w-22 h-22 object-cover border"
+                      class="object-cover border"
                       loading="lazy"
                     />
 
@@ -228,6 +228,18 @@ const cartStore = useCartStore()
 
 const removingSlug = ref<string | null>(null)
 const isClearing = ref(false)
+
+// Responsive image helper for small thumbnails
+const { getResponsiveImages } = useImageTransform()
+
+
+function getThumbnailAttrs(url: string) {
+  return getResponsiveImages(
+    url,
+    [100, 200, 500], // Small thumbnail sizes
+    '12vh' // Fixed size in pixels
+  )
+}
 
 // Disable checkout if cart is empty or being cleared
 const isCheckoutDisabled = computed(() => {

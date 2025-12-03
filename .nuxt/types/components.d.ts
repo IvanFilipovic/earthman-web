@@ -20,6 +20,7 @@ interface _GlobalComponents {
     'BackgroundVideo': typeof import("../../components/BackgroundVideo.vue")['default']
     'CartPanel': typeof import("../../components/CartPanel.vue")['default']
     'Carusel': typeof import("../../components/Carusel.vue")['default']
+    'CheckoutForm': typeof import("../../components/CheckoutForm.vue")['default']
     'CollectionHome': typeof import("../../components/CollectionHome.vue")['default']
     'CollectionListing': typeof import("../../components/CollectionListing.vue")['default']
     'CollectionShopListing': typeof import("../../components/CollectionShopListing.vue")['default']
@@ -120,6 +121,7 @@ interface _GlobalComponents {
     'LazyBackgroundVideo': LazyComponent<typeof import("../../components/BackgroundVideo.vue")['default']>
     'LazyCartPanel': LazyComponent<typeof import("../../components/CartPanel.vue")['default']>
     'LazyCarusel': LazyComponent<typeof import("../../components/Carusel.vue")['default']>
+    'LazyCheckoutForm': LazyComponent<typeof import("../../components/CheckoutForm.vue")['default']>
     'LazyCollectionHome': LazyComponent<typeof import("../../components/CollectionHome.vue")['default']>
     'LazyCollectionListing': LazyComponent<typeof import("../../components/CollectionListing.vue")['default']>
     'LazyCollectionShopListing': LazyComponent<typeof import("../../components/CollectionShopListing.vue")['default']>

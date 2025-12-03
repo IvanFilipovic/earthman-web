@@ -3,23 +3,23 @@
   <section>
     <AppNavigation :dark="false" />
 
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-8 pt-4 gap-2">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between px-4 lg:px-8 pt-4 gap-2">
       <div class="flex justify-start w-full">
-        <div class="flex items-center py-1 text-[12px] md:text-sm text-text_color uppercase tracking-widest">
-          <NuxtLink to="/" class="hover:underline pr-1 md:pr-2">HOME</NuxtLink>
-          <span class="pr-1 md:pr-2">/</span>
-          <NuxtLink to="/shop" class="hover:underline pr-1 md:pr-2">Shop</NuxtLink>
-          <span class="pr-1 md:pr-2">/</span>
-          <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-1 md:pr-2">
+        <div class="flex items-center py-1 text-[10px] lg:text-xs text-text_color uppercase tracking-widest">
+          <NuxtLink to="/" class="hover:underline pr-1 lg:pr-2">HOME</NuxtLink>
+          <span class="pr-1 lg:pr-2">/</span>
+          <NuxtLink to="/shop" class="hover:underline pr-1 lg:pr-2">Shop</NuxtLink>
+          <span class="pr-1 lg:pr-2">/</span>
+          <NuxtLink :to="`/collections/${product?.collection_slug}`" class="hover:underline pr-1 lg:pr-2">
             {{ product?.collection_slug }}
           </NuxtLink>
-          <span class="pr-1 md:pr-2">/</span>
-          <span class="pr-1 md:pr-2">{{ productName }}</span>
+          <span class="pr-1 lg:pr-2">/</span>
+          <span class="pr-1 lg:pr-2">{{ productName }}</span>
         </div>
       </div>
     </div>
 
-    <div class="hidden md:block">
+    <div class="hidden lg:block">
       <div class="relative grid grid-cols-12 gap-8 pt-8 mt-2 md:mt-6 px-4 md:px-8 items-start">
         <div class="md:col-span-8">
           <ProductGallerySlider 
@@ -162,14 +162,14 @@
             title: 'Shipping & Returns',
             content: `We offer UPS Standard, Express Saver, and Express shipping options. Final prices are calculated at checkout and exclude import duties which will be charged by UPS after clearing customs.
 
-      We accept returns within 14 days. We kindly remind you that sale items can only be refunded as store credit.`,
+We accept returns within 14 days. We kindly remind you that sale items can only be refunded as store credit.`,
             link: { href: '#', label: 'More info' }
           }
         ]"
       />
     </div>
 
-    <div class="block md:hidden mt-2 pt-8" id="mobile-product-wrap">
+    <div class="block lg:hidden mt-2 pt-8" id="mobile-product-wrap">
       <div v-if="variantGroups.length" ref="sliderRef" class="keen-slider">
         <div
           v-for="(img, i) in variantGroups[activeColorIndex]?.gallery || []"
@@ -177,9 +177,9 @@
           class="keen-slider__slide"
         >
           <img 
-            :src="img.image" 
+            v-bind="getMobileImageAttrs(img.image)"
             :alt="img.alt_text || productName"
-            class="w-full h-auto object-cover border-t border-b border-text_color/30"
+            class="h-auto object-cover border-t border-b border-text_color/30 mx-auto"
           />
         </div>
       </div>
@@ -451,6 +451,27 @@ const activeSizes = computed<SizeItem[]>(() => variantGroups.value[activeColorIn
 const inStock = computed(() => activeSizes.value.some(s => s?.available))
 const activeColorName = computed(() => variantGroups.value[activeColorIndex.value]?.color?.name ?? '')
 const imagesToShow = computed(() => variantGroups.value[activeColorIndex.value]?.gallery ?? [])
+
+// Helper to get transformed image URLs
+const { getResponsiveImages } = useImageTransform()
+
+// Desktop gallery images (8-column grid = ~66vw on desktop, 100vw on mobile < lg)
+const getDesktopImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 800, 1200, 1600], // Widths for srcset - covers mobile to desktop retina
+    '(max-width: 1023px) 100vw, 66vw' // Actual rendered sizes based on layout
+  )
+}
+
+// Mobile slider images (full width)
+const getMobileImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 600, 800], // Widths for srcset - mobile range
+    '100vw' // Full width on all mobile screens
+  )
+}
 
 const [sliderRef, slider] = useKeenSlider({
   loop: true,

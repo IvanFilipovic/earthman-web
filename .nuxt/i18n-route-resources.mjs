@@ -21,9 +21,6 @@ export const pathToI18nConfig = {
   "/contact": {
     "en": "/contact"
   },
-  "/payment": {
-    "en": "/payment"
-  },
   "/privacy": {
     "en": "/privacy"
   },
@@ -42,6 +39,9 @@ export const pathToI18nConfig = {
   "/collections/:slug(.*)*": {
     "en": "/collections/:slug(.*)*"
   },
+  "/payment/card": {
+    "en": "/payment/card"
+  },
   "/cookie-policy": {
     "en": "/cookie-policy"
   },
@@ -53,6 +53,12 @@ export const pathToI18nConfig = {
   },
   "/terms-conditions": {
     "en": "/terms-conditions"
+  },
+  "/payment/paypal/cancel": {
+    "en": "/payment/paypal/cancel"
+  },
+  "/payment/paypal/success": {
+    "en": "/payment/paypal/success"
   },
   "/product/:collection()/:product(.*)*": {
     "en": "/product/:collection()/:product(.*)*"
@@ -66,16 +72,18 @@ export const i18nPathToPath = {
   "/": "/",
   "/terms": "/terms",
   "/contact": "/contact",
-  "/payment": "/payment",
   "/privacy": "/privacy",
   "/checkout": "/checkout",
   "/thank-you": "/thank-you",
   "/size-guide": "/size-guide",
   "/collections": "/collections",
   "/collections/:slug(.*)*": "/collections/:slug(.*)*",
+  "/payment/card": "/payment/card",
   "/cookie-policy": "/cookie-policy",
   "/privacy-policy": "/privacy-policy",
   "/delivery-returns": "/delivery-returns",
   "/terms-conditions": "/terms-conditions",
+  "/payment/paypal/cancel": "/payment/paypal/cancel",
+  "/payment/paypal/success": "/payment/paypal/success",
   "/product/:collection()/:product(.*)*": "/product/:collection()/:product(.*)*"
 };

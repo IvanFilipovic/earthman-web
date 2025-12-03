@@ -7,10 +7,10 @@
             <article
               v-for="item in section.items"
               :key="item.slug"
-              class="group cursor-pointer relative h-[100vh] overflow-hidden w-full md:w-2/3 mx-auto"
+              class="group cursor-pointer relative h-[80vh] overflow-hidden w-full md:w-2/3 mx-auto"
             >
               <img
-                :src="item.currentImage || item.colors?.[0]?.avatar_image"
+                v-bind="getHeroImageAttrs(item.currentImage || item.colors?.[0]?.avatar_image)"
                 :alt="item.alt_text || item.name"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
@@ -51,7 +51,7 @@
                       @mouseleave="onLeaveColor(item)"
                     >
                       <img
-                        :src="color.avatar_image"
+                        v-bind="getSwatchImageAttrs(color.avatar_image)"
                         :alt="color.color"
                         class="w-8 h-8 md:w-10 md:h-10 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
                         @click="goToProduct(item.slug, color.variant_slug)"
@@ -80,7 +80,7 @@
               class="group cursor-pointer relative h-[100vh] overflow-hidden w-full"
             >
               <img
-                :src="item.currentImage || item.colors?.[0]?.avatar_image"
+                v-bind="getTripleImageAttrs(item.currentImage || item.colors?.[0]?.avatar_image)"
                 :alt="item.alt_text || item.name"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
@@ -121,7 +121,7 @@
                       @mouseleave="onLeaveColor(item)"
                     >
                       <img
-                        :src="color.avatar_image"
+                        v-bind="getSwatchImageAttrs(color.avatar_image)"
                         :alt="color.color"
                         class="w-8 h-8 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
                         @click="goToProduct(item.slug, color.variant_slug)"
@@ -145,11 +145,11 @@
         <div v-else class="pb-8 md:pb-12">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-x-4 md:gap-x-8 lg:gap-x-24 gap-y-8">
             <article
-              class="group cursor-pointer relative h-[60vh] md:h-[800px] overflow-hidden w-full md:col-span-1"
+              class="group cursor-pointer relative h-[80vh] overflow-hidden w-full md:col-span-1"
               :class="section.layout === 'reversed' ? 'md:order-2' : 'md:order-1'"
             >
               <img
-                :src="section.items[0].currentImage || section.items[0].colors?.[0]?.avatar_image"
+                v-bind="getStandardImageAttrs(section.items[0].currentImage || section.items[0].colors?.[0]?.avatar_image)"
                 :alt="section.items[0].alt_text || section.items[0].name"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
@@ -190,7 +190,7 @@
                       @mouseleave="onLeaveColor(section.items[0])"
                     >
                       <img
-                        :src="color.avatar_image"
+                        v-bind="getSwatchImageAttrs(color.avatar_image)"
                         :alt="color.color"
                         class="w-8 h-8 md:w-10 md:h-10 object-cover border border-text_color/30 cursor-pointer transition-transform hover:scale-110"
                         @click="goToProduct(section.items[0].slug, color.variant_slug)"
@@ -291,6 +291,48 @@ const hoveredSlug = ref<string | null>(null)
 const hoveredColorIndex = ref<Record<string, number | null>>({})
 
 let ctx: gsap.Context | null = null
+
+// Responsive image helpers
+const { getResponsiveImages } = useImageTransform()
+
+// Hero layout: 2 columns on desktop, each with w-2/3 mx-auto = ~33vw
+// Mobile: full width
+const getHeroImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 600, 800, 1200, 1600],
+    '(max-width: 767px) 100vw, 33vw'
+  )
+}
+
+// Triple layout: 3 columns on desktop = 33vw each
+// Mobile: full width
+const getTripleImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 600, 800, 1200, 1600],
+    '(max-width: 767px) 100vw, 33vw'
+  )
+}
+
+// Standard/Reversed layout: 1 column in 3-column grid = 33vw
+// Mobile: full width
+const getStandardImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [400, 600, 800, 1200, 1600],
+    '(max-width: 767px) 100vw, 33vw'
+  )
+}
+
+// Color swatches: Fixed small size (32-40px)
+const getSwatchImageAttrs = (url: string) => {
+  return getResponsiveImages(
+    url,
+    [50, 100],
+    '40px'
+  )
+}
 
 const textElements = computed(() => {
   const c = props.collection || {}

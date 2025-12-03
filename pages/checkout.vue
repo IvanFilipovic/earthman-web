@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Form as VForm, Field, ErrorMessage } from 'vee-validate'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { useCartStore } from '~/stores/cart'
 
@@ -14,20 +13,6 @@ interface CartItem {
   product_variant_slug?: string
 }
 
-interface OrderPayload {
-  email: string
-  country: string
-  address: string
-  city: string
-  postal_code: string
-  phone_number: string
-  delivery_address: string
-  delivery_city: string
-  delivery_postal_code: string
-  payment_method: string
-  shipping_cost: number
-}
-
 const config = useRuntimeConfig()
 const cartStore = useCartStore()
 
@@ -38,6 +23,34 @@ const removingSlug = ref<string | null>(null)
 const submitting = ref(false)
 const errorMsg = ref('')
 const selectedPaymentMethod = ref<'card' | 'paypal' | ''>('')
+
+// Responsive image helper
+const { getResponsiveImages } = useImageTransform()
+
+/**
+ * Get responsive image attributes for checkout product thumbnails
+ * Desktop sidebar: w-22 h-40 (88px × 160px)
+ * Mobile collapsed: w-20 h-24 (80px × 96px)
+ */
+function getCheckoutThumbnailAttrs(url: string) {
+  return getResponsiveImages(
+    url,
+    [500], // Small thumbnails for DPR
+    '12vh' // Fixed width (larger of the two sizes)
+  )
+}
+
+/**
+ * Get responsive image attributes for mobile collapsed cart
+ * Smaller size: w-20 h-24 (80px × 96px)
+ */
+function getMobileCollapsedThumbnailAttrs(url: string) {
+  return getResponsiveImages(
+    url,
+    [500], // Even smaller for collapsed view
+    '10vh' // Fixed width
+  )
+}
 
 // Use cart from store
 const cart = computed(() => ({
@@ -111,62 +124,6 @@ const isSubmitDisabled = computed(() => {
   return !hasRequiredFields
 })
 
-function createRequiredRule(label: string, maxLength?: number) {
-  return (value: unknown): string | true => {
-    const val = value ?? ''
-    const str = String(val)
-    if (!str || !str.trim()) {
-      return `${label} is required`
-    }
-    if (maxLength && str.length > maxLength) {
-      return `${label} must be less than ${maxLength + 1} characters`
-    }
-    return true
-  }
-}
-
-function emailRule(value: unknown): string | true {
-  const val = String(value ?? '')
-  if (!val || !val.trim()) {
-    return 'Email is required'
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
-  if (!emailRegex.test(val)) {
-    return 'Please enter a valid email address'
-  }
-  return true
-}
-
-function phoneRule(value: unknown): string | true {
-  const val = String(value ?? '')
-  if (!val || !val.trim()) {
-    return 'Phone number is required'
-  }
-  const phoneRegex = /^[+()\-.\s\d]{7,20}$/
-  if (!phoneRegex.test(val)) {
-    return 'Please enter a valid phone number (+, digits, spaces, (), -)'
-  }
-  return true
-}
-
-function createPostalRule(label = 'Postal code') {
-  return (value: unknown): string | true => {
-    const val = String(value ?? '')
-    if (!val || !val.trim()) {
-      return `${label} is required`
-    }
-    const postalRegex = /^[A-Za-z0-9\s\-]{3,10}$/
-    if (!postalRegex.test(val)) {
-      return `${label} looks invalid`
-    }
-    return true
-  }
-}
-
-function privacyRule(value: unknown): string | true {
-  return Boolean(value) ? true : 'You must accept the Privacy Policy'
-}
-
 function selectPaymentMethod(method: 'card' | 'paypal'): void {
   selectedPaymentMethod.value = method
 }
@@ -181,7 +138,6 @@ async function removeCartItem(item: CartItem): Promise<void> {
 
   removingSlug.value = slug
   try {
-    // Ensure product_slug is a string (store expects non-optional) by defaulting to the computed slug
     await cartStore.removeFromCart({ ...item, product_slug: item.product_slug ?? slug })
   } catch (error) {
     console.error('Failed to remove item:', error)
@@ -223,13 +179,12 @@ async function handleSubmit(): Promise<void> {
       session_id: cartSessionCookie.value
     }
 
-    console.log('📤 Sending payload:', payload)
-
     const response = await $fetch<{
       order_reference: string
       total_price: string
       payment_method: string
       client_secret?: string
+      paypal_approval_url?: string
     }>(
       `${config.public.apiBase}/api/orders/create/`,
       {
@@ -240,20 +195,20 @@ async function handleSubmit(): Promise<void> {
       }
     )
 
-    console.log('📥 Response received:', response)
-
     if (response.payment_method === 'card' && response.client_secret) {
-      console.log('💳 Redirecting to payment page...')
       await navigateTo({
-        path: '/payment',
+        path: '/payment/card',
         query: {
           ref: response.order_reference,
           clientSecret: response.client_secret,
           amount: response.total_price
         }
       })
-    } else {
-      console.log('✅ Redirecting to thank you page...')
+    } 
+    else if (response.payment_method === 'paypal' && response.paypal_approval_url) {
+      window.location.href = response.paypal_approval_url
+    }
+    else {
       await navigateTo({
         path: '/thank-you',
         query: {
@@ -263,9 +218,7 @@ async function handleSubmit(): Promise<void> {
       })
     }
   } catch (error: any) {
-    console.error('❌ Order error:', error)
-    console.error('❌ Error data:', error?.data)
-    console.error('❌ Error status:', error?.status)
+    console.error('Order error:', error)
     errorMsg.value = error?.data?.detail || 'Could not create order. Please try again.'
   } finally {
     submitting.value = false
@@ -293,394 +246,17 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- DESKTOP FORM -->
+    <!-- DESKTOP LAYOUT -->
     <div class="hidden md:flex flex-col md:flex-row py-8 md:px-8 mt-6 md:gap-x-16">
-      <VForm class="w-full" @submit="handleSubmit">
-        <div class="space-y-8">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Billing</h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="email-desktop" class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
-              <Field 
-                id="email-desktop"
-                name="email" 
-                type="email" 
-                :rules="emailRule"
-                v-model="formValues.email"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  aria-describedby="email-error-desktop"
-                />
-                <div id="email-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="firstName-desktop" class="block text-xs uppercase tracking-widest mb-2">Name</label>
-              <Field 
-                id="firstName-desktop"
-                name="firstName" 
-                :rules="createRequiredRule('Name', 50)"
-                v-model="formValues.firstName"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="50"
-                  aria-describedby="firstName-error-desktop"
-                />
-                <div id="firstName-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="lastName-desktop" class="block text-xs uppercase tracking-widest mb-2">Surname</label>
-              <Field 
-                id="lastName-desktop"
-                name="lastName" 
-                :rules="createRequiredRule('Surname', 50)"
-                v-model="formValues.lastName"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="50"
-                  aria-describedby="lastName-error-desktop"
-                />
-                <div id="lastName-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="address-desktop" class="block text-xs uppercase tracking-widest mb-2">Address</label>
-              <Field 
-                id="address-desktop"
-                name="address" 
-                :rules="createRequiredRule('Address', 120)"
-                v-model="formValues.address"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="120" 
-                  placeholder="Street, number"
-                  aria-describedby="address-error-desktop"
-                />
-                <div id="address-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="postal_code-desktop" class="block text-xs uppercase tracking-widest mb-2">Post code</label>
-              <Field 
-                id="postal_code-desktop"
-                name="postal_code" 
-                :rules="createPostalRule('Post code')"
-                v-model="formValues.postal_code"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  inputmode="numeric" 
-                  maxlength="10"
-                  aria-describedby="postal_code-error-desktop"
-                />
-                <div id="postal_code-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="city-desktop" class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
-              <Field 
-                id="city-desktop"
-                name="city" 
-                :rules="createRequiredRule('City', 60)"
-                v-model="formValues.city"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="60"
-                  aria-describedby="city-error-desktop"
-                />
-                <div id="city-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-6">
-            <div>
-              <label for="country-desktop" class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
-              <Field 
-                id="country-desktop"
-                name="country" 
-                :rules="createRequiredRule('Country')"
-                v-model="formValues.country"
-                v-slot="{ field, errorMessage }"
-              >
-                <select 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  aria-describedby="country-error-desktop"
-                >
-                  <option value="">Select country</option>
-                  <option value="Croatia">Croatia</option>
-                  <option value="Slovenia">Slovenia</option>
-                  <option value="Austria">Austria</option>
-                  <option value="Germany">Germany</option>
-                  <option value="Italy">Italy</option>
-                </select>
-                <div id="country-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="phone_number-desktop" class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
-              <Field 
-                id="phone_number-desktop"
-                name="phone_number" 
-                :rules="phoneRule"
-                v-model="formValues.phone_number"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="tel" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="20"
-                  aria-describedby="phone_number-error-desktop"
-                />
-                <div id="phone_number-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-8 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Delivery</h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="delivery_address-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
-              <Field 
-                id="delivery_address-desktop"
-                name="delivery_address" 
-                :rules="createRequiredRule('Delivery address', 120)"
-                v-model="formValues.delivery_address"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="120" 
-                  placeholder="Street, number"
-                  aria-describedby="delivery_address-error-desktop"
-                />
-                <div id="delivery_address-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="delivery_postal_code-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
-              <Field 
-                id="delivery_postal_code-desktop"
-                name="delivery_postal_code" 
-                :rules="createPostalRule('Delivery post code')"
-                v-model="formValues.delivery_postal_code"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  inputmode="numeric" 
-                  maxlength="10"
-                  aria-describedby="delivery_postal_code-error-desktop"
-                />
-                <div id="delivery_postal_code-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="delivery_city-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
-              <Field 
-                id="delivery_city-desktop"
-                name="delivery_city" 
-                :rules="createRequiredRule('Delivery city', 60)"
-                v-model="formValues.delivery_city"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="60"
-                  aria-describedby="delivery_city-error-desktop"
-                />
-                <div id="delivery_city-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-6 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
-
-          <div class="flex flex-col md:flex-row gap-3">
-            <label class="flex-1 cursor-pointer">
-              <input 
-                type="radio" 
-                name="payment" 
-                value="card" 
-                class="sr-only peer" 
-                @change="selectPaymentMethod('card')"
-              />
-              <div 
-                class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
-                :class="selectedPaymentMethod === 'card' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
-              >
-                <img src="/logo/stripe.png" alt="Card Payment" class="w-5 h-5 object-contain" />
-                <span>Card</span>
-              </div>
-            </label>
-
-            <label class="flex-1 cursor-pointer">
-              <input 
-                type="radio" 
-                name="payment" 
-                value="paypal" 
-                class="sr-only peer" 
-                @change="selectPaymentMethod('paypal')"
-              />
-              <div 
-                class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
-                :class="selectedPaymentMethod === 'paypal' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
-              >
-                <img src="/logo/paypal.png" alt="PayPal" class="w-5 h-5 object-contain" />
-                <span>PayPal</span>
-              </div>
-            </label>
-          </div>
-
-          <div class="space-y-4 pt-2">
-            <label class="flex items-start gap-3 text-sm cursor-pointer">
-              <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" v-model="formValues.newsletter" class="mt-0.5" />
-              <span>I want to receive personalised commercial communications by email.</span>
-            </label>
-
-            <label class="flex items-start gap-3 text-sm cursor-pointer">
-              <Field
-                name="privacyAccepted"
-                type="checkbox"
-                :value="true"
-                :unchecked-value="false"
-                :rules="privacyRule"
-                v-model="formValues.privacyAccepted"
-                class="mt-0.5"
-              />
-              <span>
-                <a href="#" class="underline hover:no-underline">I have read and understand the Privacy and Cookies Policy.</a>
-              </span>
-            </label>
-            <div class="mt-1 h-4 overflow-hidden">
-              <ErrorMessage name="privacyAccepted" v-slot="{ message }">
-                <transition name="fade-error">
-                  <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
-                </transition>
-              </ErrorMessage>
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-6">
-          <button
-            type="submit"
-            class="w-full btn"
-            :class="isSubmitDisabled ? 'btn--disabled' : 'btn--primary'"
-            :disabled="isSubmitDisabled"
-          >
-            <span class="btn__text">{{ submitting ? 'Placing Order…' : 'Place Order' }}</span>
-            <span class="btn__fill"></span>
-          </button>
-          <div class="mt-3 h-5 overflow-hidden">
-            <transition name="fade-error">
-              <p v-if="errorMsg" class="text-sm text-error_text_color">{{ errorMsg }}</p>
-            </transition>
-          </div>
-        </div>
-      </VForm>
+      <CheckoutForm
+        :form-values="formValues"
+        :selected-payment-method="selectedPaymentMethod"
+        :submitting="submitting"
+        :error-msg="errorMsg"
+        :is-submit-disabled="isSubmitDisabled"
+        @submit="handleSubmit"
+        @select-payment="selectPaymentMethod"
+      />
 
       <!-- Order Summary -->
       <aside class="w-full mt-10 md:mt-0">
@@ -689,7 +265,12 @@ onMounted(async () => {
 
           <div v-if="cart.items.length" class="grid grid-cols-1 gap-y-4">
             <div v-for="(item, idx) in cart.items" :key="idx" class="flex gap-4">
-              <img :src="item.avatar_image" :alt="item.product" class="w-22 h-40 object-cover border" loading="lazy" />
+              <img 
+                v-bind="getCheckoutThumbnailAttrs(item.avatar_image)"
+                :alt="item.product" 
+                class="object-cover border" 
+                loading="lazy" 
+              />
               <div class="flex-1">
                 <div class="text-sm md:text-base leading-tight tracking-wider px-3">{{ item.product }}</div>
                 <div class="text-xs mt-1 tracking-wider px-3">Size: {{ item.size }}</div>
@@ -739,7 +320,7 @@ onMounted(async () => {
       </aside>
     </div>
 
-    <!-- MOBILE FORM -->
+    <!-- MOBILE LAYOUT -->
     <div class="md:hidden pb-10 max-w-screen-md mx-auto px-4 md:px-8 pt-4 gap-6">
       <!-- Mobile cart summary -->
       <div class="border-t border-b border-text_color/30 bg-background_color text-text_color rounded-sm">
@@ -793,7 +374,12 @@ onMounted(async () => {
                   :key="idx"
                   class="flex gap-3 py-3"
                 >
-                  <img :src="item.avatar_image" :alt="item.product" class="w-20 h-24 object-cover border" loading="lazy" />
+                  <img 
+                    v-bind="getMobileCollapsedThumbnailAttrs(item.avatar_image)"
+                    :alt="item.product" 
+                    class="object-cover border" 
+                    loading="lazy" 
+                  />
                   <div class="flex-1 min-w-0">
                     <div class="text-sm leading-tight line-clamp-2">{{ item.product }}</div>
                     <div class="mt-1 text-xs opacity-70">Size: {{ item.size }}</div>
@@ -824,409 +410,15 @@ onMounted(async () => {
         </Popover>
       </div>
 
-      <VForm class="w-full" @submit="handleSubmit">
-        <div class="space-y-8">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Billing</h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="email-desktop" class="block text-xs uppercase tracking-widest mb-2">E-mail</label>
-              <Field 
-                id="email-desktop"
-                name="email" 
-                type="email" 
-                :rules="emailRule"
-                v-model="formValues.email"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  aria-describedby="email-error-desktop"
-                />
-                <div id="email-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="firstName-desktop" class="block text-xs uppercase tracking-widest mb-2">Name</label>
-              <Field 
-                id="firstName-desktop"
-                name="firstName" 
-                :rules="createRequiredRule('Name', 50)"
-                v-model="formValues.firstName"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="50"
-                  aria-describedby="firstName-error-desktop"
-                />
-                <div id="firstName-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="lastName-desktop" class="block text-xs uppercase tracking-widest mb-2">Surname</label>
-              <Field 
-                id="lastName-desktop"
-                name="lastName" 
-                :rules="createRequiredRule('Surname', 50)"
-                v-model="formValues.lastName"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="50"
-                  aria-describedby="lastName-error-desktop"
-                />
-                <div id="lastName-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="address-desktop" class="block text-xs uppercase tracking-widest mb-2">Address</label>
-              <Field 
-                id="address-desktop"
-                name="address" 
-                :rules="createRequiredRule('Address', 120)"
-                v-model="formValues.address"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="120" 
-                  placeholder="Street, number"
-                  aria-describedby="address-error-desktop"
-                />
-                <div id="address-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="postal_code-desktop" class="block text-xs uppercase tracking-widest mb-2">Post code</label>
-              <Field 
-                id="postal_code-desktop"
-                name="postal_code" 
-                :rules="createPostalRule('Post code')"
-                v-model="formValues.postal_code"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  inputmode="numeric" 
-                  maxlength="10"
-                  aria-describedby="postal_code-error-desktop"
-                />
-                <div id="postal_code-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="city-desktop" class="block text-xs uppercase tracking-widest mb-2">Town / City</label>
-              <Field 
-                id="city-desktop"
-                name="city" 
-                :rules="createRequiredRule('City', 60)"
-                v-model="formValues.city"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="60"
-                  aria-describedby="city-error-desktop"
-                />
-                <div id="city-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-6">
-            <div>
-              <label for="country-desktop" class="block text-xs uppercase tracking-widest mb-2">Country / Region</label>
-              <Field 
-                id="country-desktop"
-                name="country" 
-                :rules="createRequiredRule('Country')"
-                v-model="formValues.country"
-                v-slot="{ field, errorMessage }"
-              >
-                <select 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  aria-describedby="country-error-desktop"
-                >
-                  <option value="">Select country</option>
-                  <option value="Croatia">Croatia</option>
-                  <option value="Slovenia">Slovenia</option>
-                  <option value="Austria">Austria</option>
-                  <option value="Germany">Germany</option>
-                  <option value="Italy">Italy</option>
-                </select>
-                <div id="country-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="phone_number-desktop" class="block text-xs uppercase tracking-widest mb-2">Telephone</label>
-              <Field 
-                id="phone_number-desktop"
-                name="phone_number" 
-                :rules="phoneRule"
-                v-model="formValues.phone_number"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="tel" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="20"
-                  aria-describedby="phone_number-error-desktop"
-                />
-                <div id="phone_number-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-8 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Delivery</h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label for="delivery_address-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery Address</label>
-              <Field 
-                id="delivery_address-desktop"
-                name="delivery_address" 
-                :rules="createRequiredRule('Delivery address', 120)"
-                v-model="formValues.delivery_address"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="120" 
-                  placeholder="Street, number"
-                  aria-describedby="delivery_address-error-desktop"
-                />
-                <div id="delivery_address-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="delivery_postal_code-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery Post code</label>
-              <Field 
-                id="delivery_postal_code-desktop"
-                name="delivery_postal_code" 
-                :rules="createPostalRule('Delivery post code')"
-                v-model="formValues.delivery_postal_code"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  inputmode="numeric" 
-                  maxlength="10"
-                  aria-describedby="delivery_postal_code-error-desktop"
-                />
-                <div id="delivery_postal_code-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-            <div>
-              <label for="delivery_city-desktop" class="block text-xs uppercase tracking-widest mb-2">Delivery City</label>
-              <Field 
-                id="delivery_city-desktop"
-                name="delivery_city" 
-                :rules="createRequiredRule('Delivery city', 60)"
-                v-model="formValues.delivery_city"
-                v-slot="{ field, errorMessage }"
-              >
-                <input 
-                  v-bind="field" 
-                  type="text" 
-                  class="input" 
-                  :class="{ 'border-error_text_color': errorMessage }"
-                  maxlength="60"
-                  aria-describedby="delivery_city-error-desktop"
-                />
-                <div id="delivery_city-error-desktop" class="mt-1 h-4 overflow-hidden">
-                  <transition name="fade-error">
-                    <p v-if="errorMessage" class="text-xs text-error_text_color leading-4">{{ errorMessage }}</p>
-                  </transition>
-                </div>
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-6 mt-10">
-          <h3 class="text-base uppercase tracking-widest py-2 -mx-4 px-4 md:-mx-8 md:px-8 bg-text_color text-background_color">Payment</h3>
-
-          <div class="flex flex-col md:flex-row gap-3">
-            <label class="flex-1 cursor-pointer">
-              <input 
-                type="radio" 
-                name="payment" 
-                value="card" 
-                class="sr-only peer" 
-                @change="selectPaymentMethod('card')"
-              />
-              <div 
-                class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
-                :class="selectedPaymentMethod === 'card' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
-              >
-                <img src="/logo/stripe.png" alt="Card Payment" class="w-5 h-5 object-contain" />
-                <span>Card</span>
-              </div>
-            </label>
-
-            <label class="flex-1 cursor-pointer">
-              <input 
-                type="radio" 
-                name="payment" 
-                value="paypal" 
-                class="sr-only peer" 
-                @change="selectPaymentMethod('paypal')"
-              />
-              <div 
-                class="px-4 py-3 border text-sm uppercase transition-colors flex items-center gap-2 peer-checked:border-text_color peer-checked:bg-text_color/50 peer-checked:font-medium peer-checked:text-background_color hover:border-text_color/50"
-                :class="selectedPaymentMethod === 'paypal' ? 'border-text_color bg-text_color/5 font-medium' : 'border-text_color/30'"
-              >
-                <img src="/logo/paypal.png" alt="PayPal" class="w-5 h-5 object-contain" />
-                <span>PayPal</span>
-              </div>
-            </label>
-          </div>
-
-          <div class="space-y-4 pt-2">
-            <label class="flex items-start gap-3 text-sm cursor-pointer">
-              <Field name="newsletter" type="checkbox" :value="true" :unchecked-value="false" v-model="formValues.newsletter" class="mt-0.5" />
-              <span>I want to receive personalised commercial communications by email.</span>
-            </label>
-
-            <label class="flex items-start gap-3 text-sm cursor-pointer">
-              <Field
-                name="privacyAccepted"
-                type="checkbox"
-                :value="true"
-                :unchecked-value="false"
-                :rules="privacyRule"
-                v-model="formValues.privacyAccepted"
-                class="mt-0.5"
-              />
-              <span>
-                <a href="#" class="underline hover:no-underline">I have read and understand the Privacy and Cookies Policy.</a>
-              </span>
-            </label>
-            <div class="mt-1 h-4 overflow-hidden">
-              <ErrorMessage name="privacyAccepted" v-slot="{ message }">
-                <transition name="fade-error">
-                  <p v-if="message" class="text-xs text-error_text_color leading-4">{{ message }}</p>
-                </transition>
-              </ErrorMessage>
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-6">
-          <button
-            type="submit"
-            class="w-full btn"
-            :class="isSubmitDisabled ? 'btn--disabled' : 'btn--primary'"
-            :disabled="isSubmitDisabled"
-          >
-            <span class="btn__text">{{ submitting ? 'Placing Order…' : 'Place Order' }}</span>
-            <span class="btn__fill"></span>
-          </button>
-          <div class="mt-3 h-5 overflow-hidden">
-            <transition name="fade-error">
-              <p v-if="errorMsg" class="text-sm text-error_text_color">{{ errorMsg }}</p>
-            </transition>
-          </div>
-        </div>
-      </VForm>
+      <CheckoutForm
+        :form-values="formValues"
+        :selected-payment-method="selectedPaymentMethod"
+        :submitting="submitting"
+        :error-msg="errorMsg"
+        :is-submit-disabled="isSubmitDisabled"
+        @submit="handleSubmit"
+        @select-payment="selectPaymentMethod"
+      />
     </div>
   </section>
 </template>
-
-<style scoped>
-.fade-error-enter-active,
-.fade-error-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-error-enter-from {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
-.fade-error-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-</style>
