@@ -692,7 +692,7 @@ const _routes = [
   {
     name: "index___en",
     path: "/",
-    component: () => import("./_nuxt/index-MsctvSzB.js")
+    component: () => import("./_nuxt/index-Dwh-7d6a.js")
   },
   {
     name: "terms___en",
@@ -712,7 +712,7 @@ const _routes = [
   {
     name: "checkout___en",
     path: "/checkout",
-    component: () => import("./_nuxt/checkout-DWVigQQU.js")
+    component: () => import("./_nuxt/checkout-u-MPgVPt.js")
   },
   {
     name: "thank-you___en",
@@ -744,7 +744,7 @@ const _routes = [
   {
     name: "payment-card___en",
     path: "/payment/card",
-    component: () => import("./_nuxt/card-DFpACojW.js")
+    component: () => import("./_nuxt/card-CHmn2hqx.js")
   },
   {
     name: "cookie-policy___en",
@@ -774,12 +774,12 @@ const _routes = [
   {
     name: "payment-paypal-success___en",
     path: "/payment/paypal/success",
-    component: () => import("./_nuxt/success-jce_IF2X.js")
+    component: () => import("./_nuxt/success-DNg1vAST.js")
   },
   {
     name: "product-collection-product___en",
     path: "/product/:collection()/:product(.*)*",
-    component: () => import("./_nuxt/_...product_-pGjo7MMj.js")
+    component: () => import("./_nuxt/_...product_-oNG0vaCA.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -7217,7 +7217,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import("./_nuxt/default-CwAmdySt.js").then((m) => m.default || m))
+  default: defineAsyncComponent(() => import("./_nuxt/default-DzIq8GZt.js").then((m) => m.default || m))
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",

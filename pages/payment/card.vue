@@ -1,10 +1,9 @@
-<!-- pages/payment.vue -->
+<!-- pages/payment/card.vue -->
 <script setup lang="ts">
 const route = useRoute()
 
-const clientSecret = computed(() => route.query.clientSecret as string)
+const paymentId = computed(() => route.query.payment_id as string)
 const orderReference = computed(() => route.query.ref as string)
-const amount = computed(() => route.query.amount as string)
 
 const isProcessing = ref(false)
 const errorMessage = ref('')
@@ -12,18 +11,40 @@ const isLoading = ref(true)
 
 let stripe: any = null
 let elements: any = null
+let clientSecret = ''
+let amount = 0
+let currency = 'EUR'
 
+/**
+ * Initialize Stripe Elements with client secret from encrypted token
+ */
 async function initializeStripe() {
-  if (!clientSecret.value) {
+  if (!paymentId.value || !orderReference.value) {
     errorMessage.value = 'Invalid payment session'
     isLoading.value = false
     return
   }
+  
   if (typeof window === 'undefined') return
 
   try {
+    // Fetch client secret securely from server (decrypts token)
+    const paymentData = await $fetch<{
+      client_secret: string
+      amount: number
+      currency: string
+    }>('/api/payment/get-client-secret', {
+      method: 'POST',
+      body: {
+        payment_id: paymentId.value
+      }
+    })
+    
+    clientSecret = paymentData.client_secret
+    amount = paymentData.amount
+    currency = paymentData.currency
 
-    // Dynamically load Stripe
+    // Load Stripe.js
     const { loadStripe } = await import('@stripe/stripe-js')
     const config = useRuntimeConfig()
     
@@ -33,7 +54,7 @@ async function initializeStripe() {
       throw new Error('Failed to load Stripe')
     }
 
-    // Create elements with appearance
+    // Create Stripe Elements with custom appearance
     const appearance = {
       theme: 'stripe' as const,
       variables: {
@@ -59,7 +80,7 @@ async function initializeStripe() {
     }
 
     elements = stripe.elements({
-      clientSecret: clientSecret.value,
+      clientSecret,
       appearance,
     })
 
@@ -71,12 +92,15 @@ async function initializeStripe() {
     isLoading.value = false
 
   } catch (error: any) {
-    console.error('❌ Error:', error)
-    errorMessage.value = error.message || 'Failed to load payment form'
+    console.error('Error initializing payment:', error)
+    errorMessage.value = error?.data?.message || 'Failed to load payment form'
     isLoading.value = false
   }
 }
 
+/**
+ * Handle payment submission with server-side verification
+ */
 async function handleSubmit(e: Event) {
   e.preventDefault()
   
@@ -89,29 +113,60 @@ async function handleSubmit(e: Event) {
   errorMessage.value = ''
 
   try {
-    const { error } = await stripe.confirmPayment({
+    // Confirm payment with Stripe
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
+      redirect: 'if_required',
       confirmParams: {
-        return_url: `${window.location.origin}/thank-you?ref=${orderReference.value}&total=${amount.value}`,
+        return_url: `${window.location.origin}/payment/card/processing`,
       },
     })
 
     if (error) {
-      if (error.type === 'card_error' || error.type === 'validation_error') {
-        errorMessage.value = error.message
-      } else {
-        errorMessage.value = 'An unexpected error occurred.'
-      }
+      errorMessage.value = error.message || 'Payment failed'
+      isProcessing.value = false
+      return
     }
-  } catch (err) {
-    errorMessage.value = 'Payment failed. Please try again.'
+
+    // Verify payment server-side before redirecting
+    if (paymentIntent && paymentIntent.status === 'succeeded') {
+      const verification = await $fetch<{
+        success: boolean
+        order_reference: string
+        total_price: string
+      }>('/api/payment/verify', {
+        method: 'POST',
+        body: {
+          payment_intent_id: paymentIntent.id,
+          order_reference: orderReference.value,
+          payment_id: paymentId.value
+        }
+      })
+
+      if (verification.success) {
+        await navigateTo({
+          path: '/thank-you',
+          query: {
+            ref: verification.order_reference,
+            total: verification.total_price,
+            payment_intent: 'completed'
+          }
+        })
+      } else {
+        errorMessage.value = 'Payment verification failed. Please contact support.'
+      }
+    } else {
+      errorMessage.value = 'Payment was not completed successfully'
+    }
+    
+  } catch (err: any) {
+    errorMessage.value = err?.data?.message || 'Payment failed. Please try again.'
     console.error('Payment error:', err)
   } finally {
     isProcessing.value = false
   }
 }
 
-// Initialize when component is mounted on client
 onMounted(() => {
   if (import.meta.client) {
     initializeStripe()
@@ -144,8 +199,7 @@ onMounted(() => {
           <p class="text-sm text-text_color">Loading payment form...</p>
         </div>
 
-        <div v-show="!isLoading" id="payment-element" class="mb-6">
-        </div>
+        <div v-show="!isLoading" id="payment-element" class="mb-6"></div>
 
         <button
           v-show="!isLoading"

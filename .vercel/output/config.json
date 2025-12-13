@@ -4,8 +4,8 @@
     "index.html": {
       "path": ""
     },
-    "contact/index.html": {
-      "path": "contact"
+    "delivery-returns/index.html": {
+      "path": "delivery-returns"
     },
     "privacy-policy/index.html": {
       "path": "privacy-policy"
@@ -13,14 +13,14 @@
     "cookie-policy/index.html": {
       "path": "cookie-policy"
     },
-    "delivery-returns/index.html": {
-      "path": "delivery-returns"
-    },
     "terms-conditions/index.html": {
       "path": "terms-conditions"
     },
     "cart/index.html": {
       "path": "cart"
+    },
+    "terms/index.html": {
+      "path": "terms"
     },
     "privacy/index.html": {
       "path": "privacy"
@@ -31,14 +31,14 @@
     "collections/index.html": {
       "path": "collections"
     },
-    "terms/index.html": {
-      "path": "terms"
-    },
     "shop/index.html": {
       "path": "shop"
     },
     "faq/index.html": {
       "path": "faq"
+    },
+    "contact/index.html": {
+      "path": "contact"
     },
     "size-guide/index.html": {
       "path": "size-guide"
@@ -52,11 +52,11 @@
     "payment/card/index.html": {
       "path": "payment/card"
     },
-    "payment/paypal/success/index.html": {
-      "path": "payment/paypal/success"
-    },
     "payment/paypal/cancel/index.html": {
       "path": "payment/paypal/cancel"
+    },
+    "payment/paypal/success/index.html": {
+      "path": "payment/paypal/success"
     }
   },
   "routes": [

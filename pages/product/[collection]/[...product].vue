@@ -412,7 +412,7 @@ interface ProductApi {
 
 const config = useRuntimeConfig()
 const route = useRoute()
-const { success, error } = useToast()
+const { addedToCart, error } = useToast()
 const cartStore = useCartStore()
 
 const mobilePanelOpen = ref(false)
@@ -582,8 +582,16 @@ async function addToCart(): Promise<void> {
   try {
     await cartStore.addToCart(selectedVariantSlug.value, quantity.value)
     
-    const totalQuantity = currentCartQuantity.value
-    success(`Added ${quantity.value} to cart (total: ${totalQuantity})`)
+    // Get product info for toast
+    const currentVariant = activeSizes.value.find(s => s.slug === selectedVariantSlug.value)
+    const avatarImage = variantGroups.value[activeColorIndex.value]?.avatar_image
+    
+    // Show new cart toast with product details
+    addedToCart({
+      productName: `${productName.value} - ${currentVariant?.size?.name || ''}`,
+      productImage: avatarImage,
+      quantity: quantity.value
+    })
     
     mobilePanelOpen.value = false
     quantity.value = 1

@@ -1,2 +1,0 @@
-import{ref as o}from"file:///home/kai/Projekti/webshop/node_modules/vue/index.mjs";const e=o([]);let s=0;function useToast(){function show(o,t="info",u=2500){const n=++s;e.value.push({id:n,type:t,message:o,timeout:u})}return{toasts:e,show:show,success:function(o,e){show(o,"success",null!=e?e:2500)},error:function(o,e){show(o,"error",null!=e?e:3500)},remove:function(o){e.value=e.value.filter(e=>e.id!==o)}}}export{useToast as u};
-//# sourceMappingURL=useToast-pOzf8V9B.mjs.map

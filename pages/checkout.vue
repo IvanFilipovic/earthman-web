@@ -1,3 +1,4 @@
+<!-- pages/checkout.vue -->
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { useCartStore } from '~/stores/cart'
@@ -13,7 +14,6 @@ interface CartItem {
   product_variant_slug?: string
 }
 
-const config = useRuntimeConfig()
 const cartStore = useCartStore()
 
 const FREE_THRESHOLD = 200
@@ -24,41 +24,28 @@ const submitting = ref(false)
 const errorMsg = ref('')
 const selectedPaymentMethod = ref<'card' | 'paypal' | ''>('')
 
-// Responsive image helper
 const { getResponsiveImages } = useImageTransform()
 
 /**
- * Get responsive image attributes for checkout product thumbnails
- * Desktop sidebar: w-22 h-40 (88px × 160px)
- * Mobile collapsed: w-20 h-24 (80px × 96px)
+ * Get responsive image attributes for checkout thumbnails
  */
 function getCheckoutThumbnailAttrs(url: string) {
-  return getResponsiveImages(
-    url,
-    [500], // Small thumbnails for DPR
-    '12vh' // Fixed width (larger of the two sizes)
-  )
+  return getResponsiveImages(url, [500], '12vh')
 }
 
 /**
  * Get responsive image attributes for mobile collapsed cart
- * Smaller size: w-20 h-24 (80px × 96px)
  */
 function getMobileCollapsedThumbnailAttrs(url: string) {
-  return getResponsiveImages(
-    url,
-    [500], // Even smaller for collapsed view
-    '10vh' // Fixed width
-  )
+  return getResponsiveImages(url, [500], '10vh')
 }
 
-// Use cart from store
 const cart = computed(() => ({
   items: cartStore.items,
   cart_total_to_pay: cartStore.totals.toPay
 }))
 
-// SHARED FORM STATE
+// Shared form state
 const formValues = reactive({
   email: '',
   firstName: '',
@@ -85,12 +72,6 @@ const formatMoney = (amount: number): string => {
   return Number.isInteger(amount) ? amount.toString() : amount.toFixed(2)
 }
 
-const calculateLineTotal = (item: CartItem): number => {
-  const price = toNumber(item.unit_price_discounted ?? item.unit_price_original)
-  return price * (item.quantity ?? 0)
-}
-
-// Use store's merchandiseTotal getter
 const subtotal = computed(() => cartStore.merchandiseTotal)
 
 const shippingFee = computed(() => {
@@ -138,7 +119,10 @@ async function removeCartItem(item: CartItem): Promise<void> {
 
   removingSlug.value = slug
   try {
-    await cartStore.removeFromCart({ ...item, product_slug: item.product_slug ?? slug })
+    await cartStore.removeFromCart({ 
+      ...item, 
+      product_slug: item.product_slug ?? slug 
+    })
   } catch (error) {
     console.error('Failed to remove item:', error)
   } finally {
@@ -146,6 +130,9 @@ async function removeCartItem(item: CartItem): Promise<void> {
   }
 }
 
+/**
+ * Handle checkout submission - unified for both payment methods
+ */
 async function handleSubmit(): Promise<void> {
   errorMsg.value = ''
 
@@ -162,8 +149,6 @@ async function handleSubmit(): Promise<void> {
   try {
     submitting.value = true
     
-    const cartSessionCookie = useCookie('cart_session_id')
-    
     const payload = {
       email: formValues.email,
       country: formValues.country,
@@ -176,50 +161,48 @@ async function handleSubmit(): Promise<void> {
       delivery_postal_code: formValues.delivery_postal_code,
       payment_method: selectedPaymentMethod.value,
       shipping_cost: shippingFee.value,
-      session_id: cartSessionCookie.value
+      session_id: sessionId.value
     }
 
+    // Call secure Nuxt server API
     const response = await $fetch<{
+      payment_id: string
       order_reference: string
       total_price: string
       payment_method: string
-      client_secret?: string
-      paypal_approval_url?: string
-    }>(
-      `${config.public.apiBase}/api/orders/create/`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload
-      }
-    )
+    }>('/api/orders/create', {
+      method: 'POST',
+      body: payload
+    })
 
-    if (response.payment_method === 'card' && response.client_secret) {
+    // Route based on payment method
+    if (response.payment_method === 'card') {
+      // Navigate to card payment page with encrypted token
       await navigateTo({
         path: '/payment/card',
         query: {
-          ref: response.order_reference,
-          clientSecret: response.client_secret,
-          amount: response.total_price
+          payment_id: response.payment_id,
+          ref: response.order_reference
         }
       })
     } 
-    else if (response.payment_method === 'paypal' && response.paypal_approval_url) {
-      window.location.href = response.paypal_approval_url
-    }
-    else {
-      await navigateTo({
-        path: '/thank-you',
-        query: {
-          ref: response.order_reference,
-          total: response.total_price
-        }
+    else if (response.payment_method === 'paypal') {
+      // Get PayPal approval URL from encrypted token
+      const paypalData = await $fetch<{
+        type: string
+        approval_url: string
+      }>('/api/payment/initialize', {
+        method: 'POST',
+        body: { payment_id: response.payment_id }
       })
+      
+      // Redirect to PayPal with payment session ID for later verification
+      window.location.href = `${paypalData.approval_url}&payment_session_id=${response.payment_id}`
     }
+    
   } catch (error: any) {
     console.error('Order error:', error)
-    errorMsg.value = error?.data?.detail || 'Could not create order. Please try again.'
+    errorMsg.value = error?.data?.message || 'Could not create order. Please try again.'
   } finally {
     submitting.value = false
   }

@@ -19,6 +19,7 @@ declare global {
   const createEvent: typeof import('../../node_modules/h3').createEvent
   const createEventStream: typeof import('../../node_modules/h3').createEventStream
   const createRouter: typeof import('../../node_modules/h3').createRouter
+  const decryptPaymentToken: typeof import('../../server/utils/paymentToken').decryptPaymentToken
   const defaultContentType: typeof import('../../node_modules/h3').defaultContentType
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/utils/config').defineAppConfig
   const defineCachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').defineCachedEventHandler
@@ -40,12 +41,16 @@ declare global {
   const defineWebSocket: typeof import('../../node_modules/h3').defineWebSocket
   const defineWebSocketHandler: typeof import('../../node_modules/h3').defineWebSocketHandler
   const deleteCookie: typeof import('../../node_modules/h3').deleteCookie
+  const deletePaymentSession: typeof import('../../server/utils/paymentSession').deletePaymentSession
   const dynamicEventHandler: typeof import('../../node_modules/h3').dynamicEventHandler
+  const encryptPaymentToken: typeof import('../../server/utils/paymentToken').encryptPaymentToken
   const eventHandler: typeof import('../../node_modules/h3').eventHandler
   const fetchWithEvent: typeof import('../../node_modules/h3').fetchWithEvent
   const fromNodeMiddleware: typeof import('../../node_modules/h3').fromNodeMiddleware
   const fromPlainHandler: typeof import('../../node_modules/h3').fromPlainHandler
   const fromWebHandler: typeof import('../../node_modules/h3').fromWebHandler
+  const generateEncryptionKey: typeof import('../../server/utils/paymentToken').generateEncryptionKey
+  const generatePaymentId: typeof import('../../server/utils/paymentSession').generatePaymentId
   const getCookie: typeof import('../../node_modules/h3').getCookie
   const getCookieLocale: typeof import('../../node_modules/@intlify/utils/dist/h3').getCookieLocale
   const getHeader: typeof import('../../node_modules/h3').getHeader
@@ -56,6 +61,7 @@ declare global {
   const getHeaders: typeof import('../../node_modules/h3').getHeaders
   const getMethod: typeof import('../../node_modules/h3').getMethod
   const getPathLocale: typeof import('../../node_modules/@intlify/utils/dist/h3').getPathLocale
+  const getPaymentSession: typeof import('../../server/utils/paymentSession').getPaymentSession
   const getProxyRequestHeaders: typeof import('../../node_modules/h3').getProxyRequestHeaders
   const getQuery: typeof import('../../node_modules/h3').getQuery
   const getQueryLocale: typeof import('../../node_modules/@intlify/utils/dist/h3').getQueryLocale
@@ -116,6 +122,7 @@ declare global {
   const setCookieLocale: typeof import('../../node_modules/@intlify/utils/dist/h3').setCookieLocale
   const setHeader: typeof import('../../node_modules/h3').setHeader
   const setHeaders: typeof import('../../node_modules/h3').setHeaders
+  const setPaymentSession: typeof import('../../server/utils/paymentSession').setPaymentSession
   const setResponseHeader: typeof import('../../node_modules/h3').setResponseHeader
   const setResponseHeaders: typeof import('../../node_modules/h3').setResponseHeaders
   const setResponseStatus: typeof import('../../node_modules/h3').setResponseStatus
@@ -141,6 +148,8 @@ declare global {
   const useSession: typeof import('../../node_modules/h3').useSession
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
   const useTranslation: typeof import('../../node_modules/@intlify/h3').useTranslation
+  const validatePaymentSession: typeof import('../../server/utils/paymentSession').validatePaymentSession
+  const validatePaymentToken: typeof import('../../server/utils/paymentToken').validatePaymentToken
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
 }
 export { useTranslation } from '@intlify/h3';
@@ -162,3 +171,5 @@ export { useNodeMailer } from '/home/kai/Projekti/webshop/node_modules/nuxt-node
 export { defineI18nLocale, defineI18nConfig } from '/home/kai/Projekti/webshop/node_modules/@nuxtjs/i18n/dist/runtime/composables/shared';
 export { defineI18nLocaleDetector } from '/home/kai/Projekti/webshop/node_modules/@nuxtjs/i18n/dist/runtime/composables/server';
 export { getCookieLocale, getHeaderLanguage, getHeaderLanguages, getHeaderLocale, getHeaderLocales, getPathLocale, getQueryLocale, setCookieLocale, tryCookieLocale, tryHeaderLocale, tryHeaderLocales, tryPathLocale, tryQueryLocale } from '/home/kai/Projekti/webshop/node_modules/@intlify/utils/dist/h3';
+export { generatePaymentId, setPaymentSession, getPaymentSession, deletePaymentSession, validatePaymentSession } from '/home/kai/Projekti/webshop/server/utils/paymentSession';
+export { encryptPaymentToken, decryptPaymentToken, validatePaymentToken, generateEncryptionKey } from '/home/kai/Projekti/webshop/server/utils/paymentToken';

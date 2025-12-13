@@ -1,2 +1,0 @@
-import{ref as o}from"vue";const s=o([]);let e=0;function useToast(){function show(o,t="info",u=2500){const n=++e;s.value.push({id:n,type:t,message:o,timeout:u})}return{toasts:s,show:show,success:function(o,s){show(o,"success",null!=s?s:2500)},error:function(o,s){show(o,"error",null!=s?s:3500)},remove:function(o){s.value=s.value.filter(s=>s.id!==o)}}}export{useToast as u};
-//# sourceMappingURL=useToast-pOzf8V9B.mjs.map

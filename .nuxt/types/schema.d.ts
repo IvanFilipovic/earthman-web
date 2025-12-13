@@ -313,6 +313,8 @@ declare module 'nuxt/schema' {
 
    contactEmailRecipient: string,
 
+   paymentEncryptionKey: string,
+
    nitro: {
       envPrefix: string,
    },

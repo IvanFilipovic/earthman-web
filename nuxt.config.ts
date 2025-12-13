@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     apiSecret: '',
     apiBase: process.env.INTERNAL_API_BASE || 'https://earthmanweb.pythonanywhere.com',
     contactEmailRecipient: 'ivan.filipovic233@gmail.com',
+    paymentEncryptionKey: 'fada803edc9b334ffa99e94a3ef4433890d15afd5c0deec175bc86e5e96ec4f1',
     // Public keys (exposed to client-side)
     public: {
       cartSessionCookie: process.env.NUXT_PUBLIC_CART_SESSION_COOKIE || 'cart_session_id',

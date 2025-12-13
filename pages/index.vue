@@ -1,7 +1,7 @@
 <template>
   <section class="relative">
     <BackgroundVideo
-      src="/video/test.mp4"
+      src="/video/intro.mp4"
       poster="/logo/earth-man-black.png"
       overlay
       overlayClasses="bg-gradient-to-b from-text_color/50 to-transparent"

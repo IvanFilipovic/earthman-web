@@ -1,15 +1,18 @@
 <!-- pages/payment/paypal/success.vue -->
 <script setup lang="ts">
 const route = useRoute()
-const config = useRuntimeConfig()
 
 const paymentId = computed(() => route.query.paymentId as string)
 const payerId = computed(() => route.query.PayerID as string)
 const orderRef = computed(() => route.query.order_ref as string)
+const paymentSessionId = computed(() => route.query.payment_session_id as string)
 
 const processing = ref(true)
 const error = ref('')
 
+/**
+ * Execute PayPal payment with server-side verification
+ */
 async function executePayment() {
   if (!paymentId.value || !payerId.value || !orderRef.value) {
     error.value = 'Missing payment parameters'
@@ -24,23 +27,20 @@ async function executePayment() {
       orderRef: orderRef.value
     })
 
+    // Execute payment through secure server API
     const response = await $fetch<{
       success: boolean
       order_reference: string
       total_price: string
-    }>(
-      `${config.public.apiBase}/api/paypal/execute/`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: {
-          payment_id: paymentId.value,
-          payer_id: payerId.value,
-          order_reference: orderRef.value
-        }
+    }>('/api/paypal/execute', {
+      method: 'POST',
+      body: {
+        payment_id: paymentId.value,
+        payer_id: payerId.value,
+        order_reference: orderRef.value,
+        payment_session_id: paymentSessionId.value
       }
-    )
-
+    })
 
     if (response.success) {
       // Redirect to thank you page
@@ -49,16 +49,17 @@ async function executePayment() {
         query: {
           ref: response.order_reference,
           total: response.total_price,
-          payment_intent: response.success ? 'completed' : ''
+          payment_intent: 'completed'
         }
       })
     } else {
-      error.value = 'Payment execution failed'
+      error.value = 'Payment execution failed. Please contact support.'
       processing.value = false
     }
+    
   } catch (err: any) {
     console.error('PayPal execution error:', err)
-    error.value = err?.data?.detail || 'Payment failed'
+    error.value = err?.data?.message || 'Payment failed. Please try again or contact support.'
     processing.value = false
   }
 }
@@ -70,7 +71,6 @@ onMounted(() => {
 
 <template>
   <section class="min-h-screen bg-background_color flex items-center justify-center">
-
     <div class="max-w-md mx-auto px-4 text-center">
       <!-- Processing State -->
       <div v-if="processing" class="space-y-4">
@@ -88,13 +88,11 @@ onMounted(() => {
         </div>
         <h2 class="text-xl uppercase tracking-widest text-error_text_color">Payment Failed</h2>
         <p class="text-sm text-text_color/70">{{ error }}</p>
-        
         <div class="flex flex-col gap-3 mt-6">
           <NuxtLink to="/checkout" class="btn btn--primary">
             <span class="btn__text">Try Again</span>
             <span class="btn__fill"></span>
           </NuxtLink>
-          
           <NuxtLink to="/" class="text-sm underline text-text_color/70 hover:text-text_color">
             Return Home
           </NuxtLink>

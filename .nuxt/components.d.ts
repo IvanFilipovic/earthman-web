@@ -17,6 +17,7 @@ type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}
 export const AppFooter: typeof import("../components/AppFooter.vue")['default']
 export const AppHeader: typeof import("../components/AppHeader.vue")['default']
 export const AppNavigation: typeof import("../components/AppNavigation.vue")['default']
+export const AppToastContainer: typeof import("../components/AppToastContainer.vue")['default']
 export const BackgroundVideo: typeof import("../components/BackgroundVideo.vue")['default']
 export const CartPanel: typeof import("../components/CartPanel.vue")['default']
 export const Carusel: typeof import("../components/Carusel.vue")['default']
@@ -37,7 +38,6 @@ export const ProductAccordion: typeof import("../components/ProductAccordion.vue
 export const ProductGallerySlider: typeof import("../components/ProductGallerySlider.vue")['default']
 export const ShopListing: typeof import("../components/ShopListing.vue")['default']
 export const ShopListingskeleton: typeof import("../components/ShopListingskeleton.vue")['default']
-export const Toast: typeof import("../components/Toast.vue")['default']
 export const Test: typeof import("../components/test.vue")['default']
 export const TestCollectionListing: typeof import("../components/testCollectionListing.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -118,6 +118,7 @@ export const NuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/co
 export const LazyAppFooter: LazyComponent<typeof import("../components/AppFooter.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../components/AppHeader.vue")['default']>
 export const LazyAppNavigation: LazyComponent<typeof import("../components/AppNavigation.vue")['default']>
+export const LazyAppToastContainer: LazyComponent<typeof import("../components/AppToastContainer.vue")['default']>
 export const LazyBackgroundVideo: LazyComponent<typeof import("../components/BackgroundVideo.vue")['default']>
 export const LazyCartPanel: LazyComponent<typeof import("../components/CartPanel.vue")['default']>
 export const LazyCarusel: LazyComponent<typeof import("../components/Carusel.vue")['default']>
@@ -138,7 +139,6 @@ export const LazyProductAccordion: LazyComponent<typeof import("../components/Pr
 export const LazyProductGallerySlider: LazyComponent<typeof import("../components/ProductGallerySlider.vue")['default']>
 export const LazyShopListing: LazyComponent<typeof import("../components/ShopListing.vue")['default']>
 export const LazyShopListingskeleton: LazyComponent<typeof import("../components/ShopListingskeleton.vue")['default']>
-export const LazyToast: LazyComponent<typeof import("../components/Toast.vue")['default']>
 export const LazyTest: LazyComponent<typeof import("../components/test.vue")['default']>
 export const LazyTestCollectionListing: LazyComponent<typeof import("../components/testCollectionListing.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

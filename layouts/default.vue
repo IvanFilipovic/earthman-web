@@ -4,7 +4,7 @@
             <slot />
             <AppFooter />
         </div>
-        <Toast />
+        <AppToastContainer />
         <CookieControl />
     </div>
 </template>

@@ -17,6 +17,7 @@ interface _GlobalComponents {
       'AppFooter': typeof import("../../components/AppFooter.vue")['default']
     'AppHeader': typeof import("../../components/AppHeader.vue")['default']
     'AppNavigation': typeof import("../../components/AppNavigation.vue")['default']
+    'AppToastContainer': typeof import("../../components/AppToastContainer.vue")['default']
     'BackgroundVideo': typeof import("../../components/BackgroundVideo.vue")['default']
     'CartPanel': typeof import("../../components/CartPanel.vue")['default']
     'Carusel': typeof import("../../components/Carusel.vue")['default']
@@ -37,7 +38,6 @@ interface _GlobalComponents {
     'ProductGallerySlider': typeof import("../../components/ProductGallerySlider.vue")['default']
     'ShopListing': typeof import("../../components/ShopListing.vue")['default']
     'ShopListingskeleton': typeof import("../../components/ShopListingskeleton.vue")['default']
-    'Toast': typeof import("../../components/Toast.vue")['default']
     'Test': typeof import("../../components/test.vue")['default']
     'TestCollectionListing': typeof import("../../components/testCollectionListing.vue")['default']
     'NuxtWelcome': typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -118,6 +118,7 @@ interface _GlobalComponents {
       'LazyAppFooter': LazyComponent<typeof import("../../components/AppFooter.vue")['default']>
     'LazyAppHeader': LazyComponent<typeof import("../../components/AppHeader.vue")['default']>
     'LazyAppNavigation': LazyComponent<typeof import("../../components/AppNavigation.vue")['default']>
+    'LazyAppToastContainer': LazyComponent<typeof import("../../components/AppToastContainer.vue")['default']>
     'LazyBackgroundVideo': LazyComponent<typeof import("../../components/BackgroundVideo.vue")['default']>
     'LazyCartPanel': LazyComponent<typeof import("../../components/CartPanel.vue")['default']>
     'LazyCarusel': LazyComponent<typeof import("../../components/Carusel.vue")['default']>
@@ -138,7 +139,6 @@ interface _GlobalComponents {
     'LazyProductGallerySlider': LazyComponent<typeof import("../../components/ProductGallerySlider.vue")['default']>
     'LazyShopListing': LazyComponent<typeof import("../../components/ShopListing.vue")['default']>
     'LazyShopListingskeleton': LazyComponent<typeof import("../../components/ShopListingskeleton.vue")['default']>
-    'LazyToast': LazyComponent<typeof import("../../components/Toast.vue")['default']>
     'LazyTest': LazyComponent<typeof import("../../components/test.vue")['default']>
     'LazyTestCollectionListing': LazyComponent<typeof import("../../components/testCollectionListing.vue")['default']>
     'LazyNuxtWelcome': LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

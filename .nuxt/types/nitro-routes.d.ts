@@ -6,6 +6,21 @@ declare module "nitropack/types" {
     '/api/contact': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/contact.post').default>>>>
     }
+    '/api/orders/create': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/orders/create.post').default>>>>
+    }
+    '/api/payment/get-client-secret': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/payment/get-client-secret.post').default>>>>
+    }
+    '/api/payment/initialize': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/payment/initialize.post').default>>>>
+    }
+    '/api/payment/verify': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/payment/verify.post').default>>>>
+    }
+    '/api/paypal/execute': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/paypal/execute.post').default>>>>
+    }
     '/api/private/cart/clear': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/private/cart/clear.delete').default>>>>
     }
