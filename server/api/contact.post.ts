@@ -1,4 +1,6 @@
 // server/api/contact.post.ts
+import validator from 'validator'
+
 export default defineEventHandler(async (event) => {
   const { sendMail } = useNodeMailer()
   const config = useRuntimeConfig()
@@ -17,6 +19,14 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'All fields are required',
+    })
+  }
+
+  // Email validation using validator library
+  if (!validator.isEmail(email)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid email address',
     })
   }
 

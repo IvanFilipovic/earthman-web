@@ -37,7 +37,9 @@ function emailRule(value: string): string | true {
   if (!value || !value.trim()) {
     return 'Email is required'
   }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+  // RFC 5322 compliant email validation regex
+  // This is more comprehensive than the basic pattern
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
   if (!emailRegex.test(value)) {
     return 'Please enter a valid email address'
   }

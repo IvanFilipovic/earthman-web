@@ -1,16 +1,17 @@
 import { encryptPaymentToken } from '../../utils/paymentToken'
+import validator from 'validator'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
-  
+
   // Validate required fields
   const requiredFields = [
     'email', 'country', 'address', 'city', 'postal_code',
     'phone_number', 'delivery_address', 'delivery_city',
     'delivery_postal_code', 'payment_method', 'shipping_cost'
   ]
-  
+
   for (const field of requiredFields) {
     if (!body[field]) {
       throw createError({
@@ -19,7 +20,15 @@ export default defineEventHandler(async (event) => {
       })
     }
   }
-  
+
+  // Email validation using validator library
+  if (!validator.isEmail(body.email)) {
+    throw createError({
+      statusCode: 400,
+      message: 'Invalid email address'
+    })
+  }
+
   // Validate payment method
   if (!['card', 'paypal'].includes(body.payment_method)) {
     throw createError({
