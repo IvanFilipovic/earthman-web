@@ -31,6 +31,7 @@ export { setInterval } from '#app/compat/interval';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { useCartSession } from '../composables/useCartSession';
+export { useCsrf } from '../composables/useCsrf';
 export { useImageTransform } from '../composables/useImageTransform';
 export { useScrollSmootherPanels } from '../composables/useScrollSmootherPanels';
 export { useStripe } from '../composables/useStripe';
@@ -47,4 +48,3 @@ export { useTrackEvent } from '../node_modules/nuxt-gtag/dist/runtime/composable
 export { useGsap } from './gsapComposables';
 export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
 export { useField, useFieldArray, useFieldError, useFieldValue, useForm, useFormContext, useFormErrors, useFormValues, useIsFieldDirty, useIsFieldTouched, useIsFieldValid, useIsFormDirty, useIsFormTouched, useIsFormValid, useIsSubmitting, useIsValidating, useResetForm, useSubmitCount, useSubmitForm, useValidateField, useValidateForm } from 'vee-validate';
-export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

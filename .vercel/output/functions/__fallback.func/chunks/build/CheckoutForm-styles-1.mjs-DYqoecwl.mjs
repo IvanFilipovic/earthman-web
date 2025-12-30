@@ -1,2 +1,0 @@
-const a=".fade-error-enter-active[data-v-fd7f1d70],.fade-error-leave-active[data-v-fd7f1d70]{transition:opacity .2s ease,transform .2s ease}.fade-error-enter-from[data-v-fd7f1d70],.fade-error-leave-to[data-v-fd7f1d70]{opacity:0;transform:translateY(-4px)}";export{a as C};
-//# sourceMappingURL=CheckoutForm-styles-1.mjs-DYqoecwl.mjs.map

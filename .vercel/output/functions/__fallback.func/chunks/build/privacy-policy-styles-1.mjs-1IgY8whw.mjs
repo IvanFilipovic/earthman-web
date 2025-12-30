@@ -1,2 +1,0 @@
-const a=".animate-fade-in-up[data-v-0457e4aa]{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.4,0,.2,1),transform .8s cubic-bezier(.4,0,.2,1)}.animate-fade-in-up.is-visible[data-v-0457e4aa]{opacity:1;transform:translateY(0)}.border-b-3[data-v-0457e4aa]{border-bottom-width:3px}";export{a as p};
-//# sourceMappingURL=privacy-policy-styles-1.mjs-1IgY8whw.mjs.map
