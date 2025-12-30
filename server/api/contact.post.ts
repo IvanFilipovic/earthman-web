@@ -15,12 +15,43 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { name, email, subject, message } = body
 
-  // Validation
+  // Validate required fields exist
   if (!name || !email || !subject || !message) {
     throw createError({
       statusCode: 400,
       statusMessage: 'All fields are required',
     })
+  }
+
+  // Validate field types (must be strings)
+  const fields = { name, email, subject, message }
+  for (const [fieldName, fieldValue] of Object.entries(fields)) {
+    if (typeof fieldValue !== 'string') {
+      throw createError({
+        statusCode: 400,
+        statusMessage: `Field '${fieldName}' must be a string`,
+      })
+    }
+    if (fieldValue.trim().length === 0) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: `Field '${fieldName}' cannot be empty or whitespace only`,
+      })
+    }
+  }
+
+  // Validate maximum lengths (before sanitization)
+  if (name.length > 100) {
+    throw createError({ statusCode: 400, statusMessage: 'Name is too long (max 100 characters)' })
+  }
+  if (email.length > 254) {
+    throw createError({ statusCode: 400, statusMessage: 'Email is too long (max 254 characters)' })
+  }
+  if (subject.length > 200) {
+    throw createError({ statusCode: 400, statusMessage: 'Subject is too long (max 200 characters)' })
+  }
+  if (message.length > 5000) {
+    throw createError({ statusCode: 400, statusMessage: 'Message is too long (max 5000 characters)' })
   }
 
   // Email validation using validator library

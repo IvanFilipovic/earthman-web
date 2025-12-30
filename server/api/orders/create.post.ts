@@ -39,7 +39,51 @@ export default defineEventHandler(async (event) => {
       message: 'Invalid payment method. Must be "card" or "paypal"'
     })
   }
-  
+
+  // Validate field lengths to prevent abuse
+  const fieldLimits = {
+    email: 254,       // RFC 5321 max email length
+    country: 100,
+    address: 500,
+    city: 100,
+    postal_code: 20,
+    phone_number: 30,
+    delivery_address: 500,
+    delivery_city: 100,
+    delivery_postal_code: 20
+  }
+
+  for (const [field, maxLength] of Object.entries(fieldLimits)) {
+    const value = body[field]
+    if (typeof value !== 'string') {
+      throw createError({
+        statusCode: 400,
+        message: `Field '${field}' must be a string`
+      })
+    }
+    if (value.length > maxLength) {
+      throw createError({
+        statusCode: 400,
+        message: `Field '${field}' exceeds maximum length of ${maxLength} characters`
+      })
+    }
+    if (value.trim().length === 0) {
+      throw createError({
+        statusCode: 400,
+        message: `Field '${field}' cannot be empty or whitespace only`
+      })
+    }
+  }
+
+  // Validate phone number format (basic validation)
+  const phoneRegex = /^[\d\s\-\+\(\)]+$/
+  if (!phoneRegex.test(body.phone_number)) {
+    throw createError({
+      statusCode: 400,
+      message: 'Invalid phone number format. Only digits, spaces, and +()-  are allowed'
+    })
+  }
+
   // Sanitize input data and add server-calculated shipping cost
   const sanitizedBody = {
     email: body.email.trim().toLowerCase(),
