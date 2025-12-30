@@ -1,5 +1,6 @@
 // server/api/private/cart.put.ts
 import { defineEventHandler, getCookie, readBody, createError } from 'h3'
+import { getSafeErrorMessage, getSafeStatusCode } from '~/server/utils/errors'
 
 // Validation constants
 const MIN_QUANTITY = 1
@@ -76,21 +77,14 @@ export default defineEventHandler(async (event) => {
     
     return data
   } catch (err: unknown) {
-    console.error('❌ PUT /cart - Django error:', err)
-    const statusCode = (err && typeof err === 'object' && 'status' in err)
-      ? (err as any).status
-      : 500
-    const statusMessage = (err && typeof err === 'object' && 'statusText' in err)
-      ? (err as any).statusText
-      : 'Add to cart failed'
-    const data = (err && typeof err === 'object' && 'data' in err)
-      ? (err as any).data
-      : null
+    // Log detailed error server-side, return generic message to client
+    const safeMessage = getSafeErrorMessage(err, 'Failed to add item to cart', 'PUT /cart')
+    const safeStatus = getSafeStatusCode(err)
 
     throw createError({
-      statusCode,
-      statusMessage,
-      data,
+      statusCode: safeStatus,
+      statusMessage: safeMessage,
+      // Never expose backend error data to client
     })
   }
 })

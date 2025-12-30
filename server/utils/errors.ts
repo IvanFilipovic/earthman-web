@@ -51,3 +51,51 @@ export function getErrorStatus(error: unknown): number {
 
   return 500
 }
+
+/**
+ * Sanitize error message for client exposure
+ * Prevents information disclosure by returning generic messages
+ * Logs detailed error server-side for debugging
+ *
+ * @param error - The error to sanitize
+ * @param fallbackMessage - Generic message to show to client
+ * @param context - Context for server-side logging
+ * @returns Safe error message for client
+ */
+export function getSafeErrorMessage(
+  error: unknown,
+  fallbackMessage: string,
+  context?: string
+): string {
+  // Log detailed error server-side for debugging
+  if (context) {
+    console.error(`[${context}] Error details:`, error)
+  }
+
+  // Only return generic message to client
+  // Never expose backend error details, stack traces, or internal data
+  return fallbackMessage
+}
+
+/**
+ * Get safe HTTP status code from error
+ * Maps backend errors to appropriate client-facing status codes
+ */
+export function getSafeStatusCode(error: unknown): number {
+  const status = getErrorStatus(error)
+
+  // Map backend errors to safe status codes
+  // 5xx errors from backend become generic 500
+  // 4xx errors are preserved (they're client errors)
+  if (status >= 500) {
+    return 500
+  }
+
+  // Preserve client error codes (400-499)
+  if (status >= 400 && status < 500) {
+    return status
+  }
+
+  // Default to 500 for unknown errors
+  return 500
+}

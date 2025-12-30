@@ -1,5 +1,6 @@
 import { encryptPaymentToken } from '../../utils/paymentToken'
 import validator from 'validator'
+import { getSafeErrorMessage, getSafeStatusCode } from '../../utils/errors'
 
 // Server-side shipping cost (flat rate)
 const SHIPPING_COST = 10.00
@@ -143,17 +144,14 @@ export default defineEventHandler(async (event) => {
     }
     
   } catch (error: unknown) {
-    console.error('Order creation failed:', error)
-    const statusCode = (error && typeof error === 'object' && 'statusCode' in error)
-      ? (error as any).statusCode
-      : 500
-    const message = (error && typeof error === 'object' && 'data' in error)
-      ? ((error as any).data?.detail || 'Failed to create order')
-      : 'Failed to create order'
+    // Log detailed error server-side, return generic message to client
+    const safeMessage = getSafeErrorMessage(error, 'Failed to create order', 'POST /orders/create')
+    const safeStatus = getSafeStatusCode(error)
 
     throw createError({
-      statusCode,
-      message
+      statusCode: safeStatus,
+      message: safeMessage,
+      // Never expose backend error details to client
     })
   }
 })
