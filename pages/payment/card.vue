@@ -29,12 +29,14 @@ async function initializeStripe() {
 
   try {
     // Fetch client secret securely from server (decrypts token)
+    const { getCsrfHeaders } = useCsrf()
     const paymentData = await $fetch<{
       client_secret: string
       amount: number
       currency: string
     }>('/api/payment/get-client-secret', {
       method: 'POST',
+      headers: getCsrfHeaders(),
       body: {
         payment_id: paymentId.value
       }
@@ -130,12 +132,14 @@ async function handleSubmit(e: Event) {
 
     // Verify payment server-side before redirecting
     if (paymentIntent && paymentIntent.status === 'succeeded') {
+      const { getCsrfHeaders } = useCsrf()
       const verification = await $fetch<{
         success: boolean
         order_reference: string
         total_price: string
       }>('/api/payment/verify', {
         method: 'POST',
+        headers: getCsrfHeaders(),
         body: {
           payment_intent_id: paymentIntent.id,
           order_reference: orderReference.value,

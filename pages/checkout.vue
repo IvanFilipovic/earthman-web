@@ -148,7 +148,7 @@ async function handleSubmit(): Promise<void> {
 
   try {
     submitting.value = true
-    
+
     const payload = {
       email: formValues.email,
       country: formValues.country,
@@ -165,6 +165,7 @@ async function handleSubmit(): Promise<void> {
     }
 
     // Call secure Nuxt server API
+    const { getCsrfHeaders } = useCsrf()
     const response = await $fetch<{
       payment_id: string
       order_reference: string
@@ -172,6 +173,7 @@ async function handleSubmit(): Promise<void> {
       payment_method: string
     }>('/api/orders/create', {
       method: 'POST',
+      headers: getCsrfHeaders(),
       body: payload
     })
 
@@ -193,6 +195,7 @@ async function handleSubmit(): Promise<void> {
         approval_url: string
       }>('/api/payment/initialize', {
         method: 'POST',
+        headers: getCsrfHeaders(),
         body: { payment_id: response.payment_id }
       })
       

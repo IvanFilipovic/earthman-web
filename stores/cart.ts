@@ -93,8 +93,8 @@ export const useCartStore = defineStore('cart', {
     async addToCart(variantSlug: string, quantity: number): Promise<void> {
       const existingQuantity = this.getVariantQuantity(variantSlug)
       const totalQuantity = existingQuantity + quantity
-      
-      const existingItem = this.items.find(i => 
+
+      const existingItem = this.items.find(i =>
         i.product_slug === variantSlug || i.product_variant_slug === variantSlug
       )
       const oldQuantity = existingItem?.quantity || 0
@@ -107,9 +107,13 @@ export const useCartStore = defineStore('cart', {
       this.totals.toPay = newTotal
 
       try {
+        const { getCsrfHeaders } = useCsrf()
         await $fetch('/api/private/put/cart', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...getCsrfHeaders()
+          },
           body: {
             product_slug: variantSlug,
             quantity: totalQuantity,
@@ -154,8 +158,10 @@ export const useCartStore = defineStore('cart', {
       const removedItem = this.items.splice(index, 1)[0]
 
       try {
+        const { getCsrfHeaders } = useCsrf()
         await $fetch(`/api/private/delete/cart?product_slug=${encodeURIComponent(variantSlug)}`, {
           method: 'DELETE',
+          headers: getCsrfHeaders(),
         })
 
         const newTotal = this.merchandiseTotal.toFixed(2)
@@ -186,9 +192,13 @@ export const useCartStore = defineStore('cart', {
       this.totals.toPay = newTotal
 
       try {
+        const { getCsrfHeaders } = useCsrf()
         await $fetch('/api/private/put/cart', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...getCsrfHeaders()
+          },
           body: {
             product_slug: variantSlug,
             quantity,
@@ -220,8 +230,10 @@ export const useCartStore = defineStore('cart', {
       this.totals = { toPay: '0.00' }
 
       try {
+        const { getCsrfHeaders } = useCsrf()
         await $fetch('/api/private/cart/clear', {
           method: 'DELETE',
+          headers: getCsrfHeaders(),
         })
 
         if (import.meta.client) {

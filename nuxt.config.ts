@@ -70,12 +70,52 @@ export default defineNuxtConfig({
     '@hypernym/nuxt-gsap',
     '@nuxtjs/color-mode',
     'nuxt-nodemailer',
-    '@vee-validate/nuxt'
+    '@vee-validate/nuxt',
+    'nuxt-rate-limit'
   ],
   // ==================== Pinia ====================
   pinia: {
     storesDirs: ['./stores/**']
   },
+
+  // ==================== Rate Limiting Configuration ====================
+  rateLimit: {
+    routes: {
+      '/api/orders/create': {
+        maxRequests: 5,
+        intervalSeconds: 60
+      },
+      '/api/contact': {
+        maxRequests: 3,
+        intervalSeconds: 300
+      },
+      '/api/private/put/cart': {
+        maxRequests: 20,
+        intervalSeconds: 60
+      },
+      '/api/private/delete/cart': {
+        maxRequests: 20,
+        intervalSeconds: 60
+      },
+      '/api/private/cart/clear': {
+        maxRequests: 10,
+        intervalSeconds: 60
+      },
+      '/api/payment/initialize': {
+        maxRequests: 10,
+        intervalSeconds: 60
+      },
+      '/api/payment/get-client-secret': {
+        maxRequests: 10,
+        intervalSeconds: 60
+      },
+      '/api/payment/verify': {
+        maxRequests: 10,
+        intervalSeconds: 60
+      }
+    }
+  },
+
   // ==================== i18n Configuration ====================
   i18n: {
     locales: [

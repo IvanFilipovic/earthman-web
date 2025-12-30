@@ -73,8 +73,10 @@ async function handleSubmit(): Promise<void> {
   submitting.value = true
 
   try {
+    const { getCsrfHeaders } = useCsrf()
     await $fetch('/api/contact', {
       method: 'POST',
+      headers: getCsrfHeaders(),
       body: {
         name: formValues.name,
         email: formValues.email,
