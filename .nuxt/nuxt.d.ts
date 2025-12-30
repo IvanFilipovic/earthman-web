@@ -10,6 +10,7 @@
 /// <reference types="@hypernym/nuxt-gsap" />
 /// <reference types="@nuxtjs/color-mode" />
 /// <reference types="nuxt-nodemailer" />
+/// <reference types="@vee-validate/nuxt" />
 /// <reference types="@nuxt/devtools" />
 /// <reference types="@nuxt/telemetry" />
 /// <reference path="types/builder-env.d.ts" />

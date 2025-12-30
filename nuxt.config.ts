@@ -70,7 +70,12 @@ export default defineNuxtConfig({
     '@hypernym/nuxt-gsap',
     '@nuxtjs/color-mode',
     'nuxt-nodemailer',
+    '@vee-validate/nuxt'
   ],
+  // ==================== Pinia ====================
+  pinia: {
+    storesDirs: ['./stores/**']
+  },
   // ==================== i18n Configuration ====================
   i18n: {
     locales: [

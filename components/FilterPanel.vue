@@ -114,8 +114,8 @@
                       v-for="cat in facets.categories"
                       :key="cat.id"
                       type="button"
-                      @click="toggleFilter('categories', cat.id)"
-                      :class="getChipClass(localFilters.categories.includes(cat.id))"
+                      @click="toggleFilter('categories', cat.name)"
+                      :class="getChipClass(localFilters.categories.includes(cat.name))"
                     >
                       {{ cat.name }}
                     </button>
@@ -243,7 +243,7 @@ interface Facets {
 interface Filters {
   gender: string[]
   collections: string[]
-  categories: number[]
+  categories: string[]
   sizes: string[]
   colors: string[]
 }

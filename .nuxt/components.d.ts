@@ -27,7 +27,6 @@ export const CollectionListing: typeof import("../components/CollectionListing.v
 export const CollectionShopListing: typeof import("../components/CollectionShopListing.vue")['default']
 export const CollectionShopListingSkeleton: typeof import("../components/CollectionShopListingSkeleton.vue")['default']
 export const CookieControl: typeof import("../components/CookieControl.vue")['default']
-export const Filter: typeof import("../components/Filter.vue")['default']
 export const FilterPanel: typeof import("../components/FilterPanel.vue")['default']
 export const HomePageListing: typeof import("../components/HomePageListing.vue")['default']
 export const InstagramGrid: typeof import("../components/InstagramGrid.vue")['default']
@@ -103,6 +102,10 @@ export const HeadlessTabPanel: typeof import("../node_modules/@headlessui/vue/di
 export const HeadlessTransitionChild: typeof import("../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']
 export const HeadlessTransitionRoot: typeof import("../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']
 export const ColorScheme: typeof import("../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
+export const ErrorMessage: typeof import("vee-validate")['ErrorMessage']
+export const Field: typeof import("vee-validate")['Field']
+export const FieldArray: typeof import("vee-validate")['FieldArray']
+export const Form: typeof import("vee-validate")['Form']
 export const NuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
 export const NoScript: typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
 export const Link: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -128,7 +131,6 @@ export const LazyCollectionListing: LazyComponent<typeof import("../components/C
 export const LazyCollectionShopListing: LazyComponent<typeof import("../components/CollectionShopListing.vue")['default']>
 export const LazyCollectionShopListingSkeleton: LazyComponent<typeof import("../components/CollectionShopListingSkeleton.vue")['default']>
 export const LazyCookieControl: LazyComponent<typeof import("../components/CookieControl.vue")['default']>
-export const LazyFilter: LazyComponent<typeof import("../components/Filter.vue")['default']>
 export const LazyFilterPanel: LazyComponent<typeof import("../components/FilterPanel.vue")['default']>
 export const LazyHomePageListing: LazyComponent<typeof import("../components/HomePageListing.vue")['default']>
 export const LazyInstagramGrid: LazyComponent<typeof import("../components/InstagramGrid.vue")['default']>
@@ -204,6 +206,10 @@ export const LazyHeadlessTabPanel: LazyComponent<typeof import("../node_modules/
 export const LazyHeadlessTransitionChild: LazyComponent<typeof import("../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']>
 export const LazyHeadlessTransitionRoot: LazyComponent<typeof import("../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']>
 export const LazyColorScheme: LazyComponent<typeof import("../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
+export const LazyErrorMessage: LazyComponent<typeof import("vee-validate")['ErrorMessage']>
+export const LazyField: LazyComponent<typeof import("vee-validate")['Field']>
+export const LazyFieldArray: LazyComponent<typeof import("vee-validate")['FieldArray']>
+export const LazyForm: LazyComponent<typeof import("vee-validate")['Form']>
 export const LazyNuxtPage: LazyComponent<typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']>
 export const LazyNoScript: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
 export const LazyLink: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']>

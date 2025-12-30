@@ -27,7 +27,6 @@ interface _GlobalComponents {
     'CollectionShopListing': typeof import("../../components/CollectionShopListing.vue")['default']
     'CollectionShopListingSkeleton': typeof import("../../components/CollectionShopListingSkeleton.vue")['default']
     'CookieControl': typeof import("../../components/CookieControl.vue")['default']
-    'Filter': typeof import("../../components/Filter.vue")['default']
     'FilterPanel': typeof import("../../components/FilterPanel.vue")['default']
     'HomePageListing': typeof import("../../components/HomePageListing.vue")['default']
     'InstagramGrid': typeof import("../../components/InstagramGrid.vue")['default']
@@ -103,6 +102,10 @@ interface _GlobalComponents {
     'HeadlessTransitionChild': typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']
     'HeadlessTransitionRoot': typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']
     'ColorScheme': typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
+    'ErrorMessage': typeof import("vee-validate")['ErrorMessage']
+    'Field': typeof import("vee-validate")['Field']
+    'FieldArray': typeof import("vee-validate")['FieldArray']
+    'Form': typeof import("vee-validate")['Form']
     'NuxtPage': typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']
     'NoScript': typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']
     'Link': typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -128,7 +131,6 @@ interface _GlobalComponents {
     'LazyCollectionShopListing': LazyComponent<typeof import("../../components/CollectionShopListing.vue")['default']>
     'LazyCollectionShopListingSkeleton': LazyComponent<typeof import("../../components/CollectionShopListingSkeleton.vue")['default']>
     'LazyCookieControl': LazyComponent<typeof import("../../components/CookieControl.vue")['default']>
-    'LazyFilter': LazyComponent<typeof import("../../components/Filter.vue")['default']>
     'LazyFilterPanel': LazyComponent<typeof import("../../components/FilterPanel.vue")['default']>
     'LazyHomePageListing': LazyComponent<typeof import("../../components/HomePageListing.vue")['default']>
     'LazyInstagramGrid': LazyComponent<typeof import("../../components/InstagramGrid.vue")['default']>
@@ -204,6 +206,10 @@ interface _GlobalComponents {
     'LazyHeadlessTransitionChild': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionChild']>
     'LazyHeadlessTransitionRoot': LazyComponent<typeof import("../../node_modules/@headlessui/vue/dist/components/transitions/transition")['TransitionRoot']>
     'LazyColorScheme': LazyComponent<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
+    'LazyErrorMessage': LazyComponent<typeof import("vee-validate")['ErrorMessage']>
+    'LazyField': LazyComponent<typeof import("vee-validate")['Field']>
+    'LazyFieldArray': LazyComponent<typeof import("vee-validate")['FieldArray']>
+    'LazyForm': LazyComponent<typeof import("vee-validate")['Form']>
     'LazyNuxtPage': LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']>
     'LazyNoScript': LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
     'LazyLink': LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']>

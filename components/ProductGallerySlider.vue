@@ -71,7 +71,6 @@ const getImageAttrs = (url: string) => {
 
 const [sliderRef, slider] = useKeenSlider({
   initial: 0,
-  slidesPerView: 1,
   loop: true,
   slideChanged(s: KeenSliderInstance) {
     currentSlide.value = s.track.details.rel

@@ -54,6 +54,10 @@
   @apply translate-x-0;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Disabled guard (if you’ll use disabled on <button>) */
 .secondary-btn:disabled .sweep-overlay {
   transform: translateX(-100%);

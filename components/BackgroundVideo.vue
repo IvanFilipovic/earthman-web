@@ -11,16 +11,23 @@
       preload="auto"
       @error="handleVideoError"
     >
-      <source :src="src" type="video/mp4" />
+      <source 
+        v-if="isMobile && mobileSrc" 
+        :src="mobileSrc" 
+        type="video/mp4" 
+      />
+      <source 
+        v-else
+        :src="src" 
+        type="video/mp4" 
+      />
       Your browser does not support the video tag.
     </video>
-
     <div
       v-if="overlay"
       class="absolute inset-0"
       :class="overlayClasses"
     ></div>
-
     <div class="flex flex-col items-center justify-center h-full text-background_color px-4">
       <slot />
     </div>
@@ -30,6 +37,7 @@
 <script setup lang="ts">
 interface Props {
   src: string
+  mobileSrc?: string
   poster?: string
   wrapperClasses?: string
   overlay?: boolean
@@ -44,6 +52,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const videoRef = ref<HTMLVideoElement | null>(null)
+
+const isMobile = computed(() => {
+  if (process.client) {
+    return window.innerWidth < 768
+  }
+  return false
+})
 
 function handleVideoError(event: Event): void {
   const video = event.target as HTMLVideoElement
