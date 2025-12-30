@@ -6,12 +6,6 @@ export default defineEventHandler(async (event) => {
   const { sendMail } = useNodeMailer()
   const config = useRuntimeConfig()
 
-  // 🔍 DEBUG: Log the config
-  console.log('🔍 Runtime Config:', {
-    contactEmailRecipient: config.contactEmailRecipient,
-    hasRecipient: !!config.contactEmailRecipient,
-  })
-
   const body = await readBody(event)
   const { name, email, subject, message } = body
 
@@ -70,9 +64,7 @@ export default defineEventHandler(async (event) => {
     message
   })
 
-  // 🔍 DEBUG: Check if recipient exists
   const recipientEmail = config.contactEmailRecipient
-  console.log('📧 Recipient email:', recipientEmail)
 
   if (!recipientEmail) {
     console.error('❌ CRITICAL: No recipient email configured!')
@@ -83,8 +75,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    console.log('📨 Attempting to send to:', recipientEmail)
-
     // Send email using sanitized input
     await sendMail({
       from: '"Earthman Contact" <noreply@earthman.com>',
@@ -93,8 +83,6 @@ export default defineEventHandler(async (event) => {
       subject: `[Earthman Contact] ${sanitized.subject}`,
       text: `From: ${sanitized.name}\nEmail: ${sanitized.email}\n\n${sanitized.message}`,
     })
-
-    console.log('✅ Email sent successfully')
 
     return { success: true }
   } catch (error: unknown) {

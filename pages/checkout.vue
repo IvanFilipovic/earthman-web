@@ -2,17 +2,7 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { useCartStore } from '~/stores/cart'
-
-interface CartItem {
-  product: string
-  quantity: number
-  unit_price_discounted: string
-  unit_price_original: string
-  avatar_image: string
-  size?: string
-  product_slug?: string
-  product_variant_slug?: string
-}
+import type { CartItem } from '~/types/cart'
 
 const cartStore = useCartStore()
 
@@ -118,12 +108,12 @@ async function removeCartItem(item: CartItem): Promise<void> {
 
   removingSlug.value = slug
   try {
-    await cartStore.removeFromCart({ 
-      ...item, 
-      product_slug: item.product_slug ?? slug 
+    await cartStore.removeFromCart({
+      ...item,
+      product_slug: item.product_slug ?? slug
     })
   } catch (error) {
-    console.error('Failed to remove item:', error)
+    // Error handling - silently fail for UX
   } finally {
     removingSlug.value = null
   }
@@ -165,16 +155,15 @@ async function handleSubmit(): Promise<void> {
 
     // Call secure Nuxt server API
     const { getCsrfHeaders } = useCsrf()
-    const response = await $fetch<{
-      payment_id: string
-      order_reference: string
-      total_price: string
-      payment_method: string
-    }>('/api/orders/create', {
+    const apiResponse = await $fetch('/api/orders/create', {
       method: 'POST',
       headers: getCsrfHeaders(),
       body: payload
     })
+
+    // Validate response structure
+    const { validateOrderResponse } = await import('~/utils/validators')
+    const response = validateOrderResponse(apiResponse)
 
     // Route based on payment method
     if (response.payment_method === 'card') {
@@ -202,9 +191,9 @@ async function handleSubmit(): Promise<void> {
       window.location.href = `${paypalData.approval_url}&payment_session_id=${response.payment_id}`
     }
     
-  } catch (error: any) {
-    console.error('Order error:', error)
-    errorMsg.value = error?.data?.message || 'Could not create order. Please try again.'
+  } catch (error: unknown) {
+    const errorData = error as { data?: { message?: string } }
+    errorMsg.value = errorData?.data?.message || 'Could not create order. Please try again.'
   } finally {
     submitting.value = false
   }

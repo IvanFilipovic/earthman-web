@@ -199,17 +199,7 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useCartStore } from '~/stores/cart'
-
-interface CartItem {
-  product: string
-  product_slug: string
-  product_variant_slug?: string
-  avatar_image: string
-  size?: string
-  quantity: number
-  unit_price_original: string
-  unit_price_discounted: string
-}
+import type { CartItem } from '~/types/cart'
 
 interface Props {
   open?: boolean
@@ -266,8 +256,8 @@ async function handleRemoveItem(item: CartItem): Promise<void> {
   
   try {
     await cartStore.removeFromCart(item)
-  } catch (error: any) {
-    console.error('Failed to remove item:', error)
+  } catch (error: unknown) {
+    // Error handling - silently fail for UX
   } finally {
     removingSlug.value = null
   }
@@ -293,8 +283,8 @@ async function handleClearCart(): Promise<void> {
   
   try {
     await cartStore.clearCart()
-  } catch (error: any) {
-    console.error('Failed to clear cart:', error)
+  } catch (error: unknown) {
+    // Error handling - silently fail for UX
   } finally {
     isClearing.value = false
   }

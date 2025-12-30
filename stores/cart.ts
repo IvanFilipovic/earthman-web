@@ -1,6 +1,7 @@
 // stores/cart.ts
 import { defineStore } from 'pinia'
 import type { CartItem, CartData, CartState } from '~/types/cart'
+import { validateCartData } from '~/utils/validators'
 
 export const useCartStore = defineStore('cart', {
   state: (): CartState => ({
@@ -50,12 +51,13 @@ export const useCartStore = defineStore('cart', {
       this.loading = true
 
       try {
-        const data = await $fetch<CartData>('/api/private/get/cart')
-        this.items = data?.items || []
-        this.totals = { toPay: data?.cart_total_to_pay || '0.00' }
+        const response = await $fetch('/api/private/get/cart')
+        const data = validateCartData(response)
+        this.items = data.items
+        this.totals = { toPay: data.cart_total_to_pay }
         this.lastFetched = now
       } catch (error: unknown) {
-        console.error('Failed to fetch cart:', error)
+        // Error handling - reset cart state
         this.items = []
         this.totals = { toPay: '0.00' }
       } finally {
@@ -118,7 +120,6 @@ export const useCartStore = defineStore('cart', {
     async removeFromCart(item: CartItem): Promise<void> {
       const variantSlug = item.product_slug || item.product_variant_slug
       if (!variantSlug) {
-        console.error('No slug found in item:', item)
         return
       }
       
@@ -146,7 +147,7 @@ export const useCartStore = defineStore('cart', {
           }))
         }
       } catch (error) {
-        console.error('❌ removeFromCart - Error:', error)
+        // Revert optimistic update on error
         this.items.splice(index, 0, removedItem)
         throw error
       }
