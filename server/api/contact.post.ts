@@ -97,11 +97,12 @@ export default defineEventHandler(async (event) => {
     console.log('✅ Email sent successfully')
 
     return { success: true }
-  } catch (error: any) {
-    console.error('❌ Contact form error:', error.message)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('❌ Contact form error:', errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: error.message,
+      statusMessage: errorMessage,
     })
   }
 })

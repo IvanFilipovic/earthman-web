@@ -1,33 +1,6 @@
 // stores/cart.ts
 import { defineStore } from 'pinia'
-
-interface CartItem {
-  product: string
-  product_slug: string
-  product_variant_slug?: string
-  avatar_image: string
-  size?: string
-  quantity: number
-  unit_price_original: string
-  unit_price_discounted: string
-}
-
-interface CartData {
-  items: CartItem[]
-  cart_total_to_pay: string
-  cart_total_original_price?: string
-  cart_total_discounted_price?: string
-  cart_total_savings?: string
-}
-
-interface CartState {
-  items: CartItem[]
-  totals: {
-    toPay: string
-  }
-  loading: boolean
-  lastFetched: number | null
-}
+import type { CartItem, CartData, CartState } from '~/types/cart'
 
 export const useCartStore = defineStore('cart', {
   state: (): CartState => ({
@@ -75,13 +48,13 @@ export const useCartStore = defineStore('cart', {
       }
 
       this.loading = true
-      
+
       try {
-        const data = await $fetch<any>('/api/private/get/cart')
+        const data = await $fetch<CartData>('/api/private/get/cart')
         this.items = data?.items || []
         this.totals = { toPay: data?.cart_total_to_pay || '0.00' }
         this.lastFetched = now
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Failed to fetch cart:', error)
         this.items = []
         this.totals = { toPay: '0.00' }

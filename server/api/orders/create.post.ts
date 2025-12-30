@@ -142,11 +142,18 @@ export default defineEventHandler(async (event) => {
       payment_method: response.payment_method
     }
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Order creation failed:', error)
+    const statusCode = (error && typeof error === 'object' && 'statusCode' in error)
+      ? (error as any).statusCode
+      : 500
+    const message = (error && typeof error === 'object' && 'data' in error)
+      ? ((error as any).data?.detail || 'Failed to create order')
+      : 'Failed to create order'
+
     throw createError({
-      statusCode: error.statusCode || 500,
-      message: error.data?.detail || 'Failed to create order'
+      statusCode,
+      message
     })
   }
 })

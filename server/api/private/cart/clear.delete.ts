@@ -18,12 +18,22 @@ export default defineEventHandler(async (event) => {
     })
     
     return data
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('❌ DELETE /cart/clear - Django error:', err)
+    const statusCode = (err && typeof err === 'object' && 'status' in err)
+      ? (err as any).status
+      : 500
+    const statusMessage = (err && typeof err === 'object' && 'statusText' in err)
+      ? (err as any).statusText
+      : 'Clear cart failed'
+    const data = (err && typeof err === 'object' && 'data' in err)
+      ? (err as any).data
+      : null
+
     throw createError({
-      statusCode: err?.status || 500,
-      statusMessage: err?.statusText || 'Clear cart failed',
-      data: err?.data || null,
+      statusCode,
+      statusMessage,
+      data,
     })
   }
 })

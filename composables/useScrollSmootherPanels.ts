@@ -1,5 +1,14 @@
 // composables/useScrollSmootherPanels.ts
-export function useScrollSmootherPanels(smoother: Ref<any>) {
+
+/**
+ * GSAP ScrollSmoother interface
+ * Defines the minimal interface we use from ScrollSmoother
+ */
+interface ScrollSmootherInstance {
+  paused: (value?: boolean) => boolean | void
+}
+
+export function useScrollSmootherPanels(smoother: Ref<ScrollSmootherInstance | null>) {
   if (!import.meta.client) return
 
   const handlePanelOpen = () => {

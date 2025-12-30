@@ -75,12 +75,22 @@ export default defineEventHandler(async (event) => {
     })
     
     return data
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('❌ PUT /cart - Django error:', err)
+    const statusCode = (err && typeof err === 'object' && 'status' in err)
+      ? (err as any).status
+      : 500
+    const statusMessage = (err && typeof err === 'object' && 'statusText' in err)
+      ? (err as any).statusText
+      : 'Add to cart failed'
+    const data = (err && typeof err === 'object' && 'data' in err)
+      ? (err as any).data
+      : null
+
     throw createError({
-      statusCode: err?.status || 500,
-      statusMessage: err?.statusText || 'Add to cart failed',
-      data: err?.data || null,
+      statusCode,
+      statusMessage,
+      data,
     })
   }
 })
