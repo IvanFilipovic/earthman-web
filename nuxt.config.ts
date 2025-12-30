@@ -34,6 +34,24 @@ export default defineNuxtConfig({
         { property: 'og:site_name', content: 'Earthman' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: '@exitthree' },
+        // Content Security Policy
+        {
+          'http-equiv': 'Content-Security-Policy',
+          content: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://*.paypal.com https://*.paypalobjects.com",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https:",
+            "font-src 'self' data:",
+            "connect-src 'self' https://earthmanweb.pythonanywhere.com https://*.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://*.paypal.com",
+            "frame-src https://js.stripe.com https://*.paypal.com",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "upgrade-insecure-requests"
+          ].join('; ')
+        }
       ],
       link: [
         { rel: 'preconnect', href: 'https://earthmanweb.pythonanywhere.com' },
@@ -225,7 +243,7 @@ export default defineNuxtConfig({
   // ==================== Nitro Configuration (VERCEL OPTIMIZED) ====================
   nitro: {
     preset: 'vercel', // ✅ Vercel preset
-    
+
     compressPublicAssets: {
       gzip: true,
       brotli: true,
@@ -240,15 +258,15 @@ export default defineNuxtConfig({
 
     // Vercel-specific route rules
     routeRules: {
-      '/': { 
+      '/': {
         isr: 3600, // ✅ Use ISR (Incremental Static Regeneration) for Vercel
       },
-      
-      '/shop/**': { 
+
+      '/shop/**': {
         isr: 300,
       },
-      
-      '/product/**': { 
+
+      '/product/**': {
         isr: 600,
       },
 
@@ -256,7 +274,7 @@ export default defineNuxtConfig({
         isr: 3600,
       },
 
-      '/api/**': { 
+      '/api/**': {
         cors: true,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate'
@@ -268,6 +286,18 @@ export default defineNuxtConfig({
           'Cache-Control': 'public, max-age=31536000, immutable'
         }
       },
+
+      // Security headers for all routes
+      '/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+        }
+      }
     },
   },
 
