@@ -65,18 +65,15 @@ useSeoMeta({
               Shipping Costs
             </h3>
             <p class="mb-4">
-              We want to make shopping with Earthman as affordable as possible. That's why we offer:
+              We want to make shopping with Earthman straightforward and affordable:
             </p>
             <ul class="space-y-2 pl-6">
               <li class="list-disc">
-                <strong>Free Shipping</strong> on all orders over €200
-              </li>
-              <li class="list-disc">
-                <strong>Flat Rate Shipping</strong> of €12.99 for orders under €200
+                <strong>Flat Rate Shipping</strong> of €10.00 for all orders
               </li>
             </ul>
             <p class="mt-4 text-sm text-text_color/70">
-              Shipping costs are automatically calculated at checkout based on your order total.
+              Shipping costs are automatically added at checkout.
             </p>
           </div>
 

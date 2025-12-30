@@ -16,8 +16,8 @@ interface CartItem {
 
 const cartStore = useCartStore()
 
-const FREE_THRESHOLD = 200
-const FLAT_SHIPPING = 12.99
+// Flat rate shipping (server-side calculated, shown for UI only)
+const FLAT_SHIPPING = 10.00
 
 const removingSlug = ref<string | null>(null)
 const submitting = ref(false)
@@ -74,9 +74,8 @@ const formatMoney = (amount: number): string => {
 
 const subtotal = computed(() => cartStore.merchandiseTotal)
 
-const shippingFee = computed(() => {
-  return subtotal.value >= FREE_THRESHOLD ? 0 : FLAT_SHIPPING
-})
+// Always use flat rate shipping
+const shippingFee = computed(() => FLAT_SHIPPING)
 
 const total = computed(() => {
   return subtotal.value + shippingFee.value
@@ -149,6 +148,7 @@ async function handleSubmit(): Promise<void> {
   try {
     submitting.value = true
 
+    // Shipping cost is calculated server-side, not sent from client
     const payload = {
       email: formValues.email,
       country: formValues.country,
@@ -160,7 +160,6 @@ async function handleSubmit(): Promise<void> {
       delivery_city: formValues.delivery_city,
       delivery_postal_code: formValues.delivery_postal_code,
       payment_method: selectedPaymentMethod.value,
-      shipping_cost: shippingFee.value,
       session_id: sessionId.value
     }
 
@@ -291,8 +290,7 @@ onMounted(async () => {
             </div>
             <div class="flex justify-between">
               <span>Shipping</span>
-              <span v-if="shippingFee === 0">€0 (Free)</span>
-              <span v-else>€{{ formatMoney(shippingFee) }}</span>
+              <span>€{{ formatMoney(shippingFee) }}</span>
             </div>
             <div class="flex justify-between font-medium text-base pt-2">
               <span>Total</span>
@@ -326,8 +324,7 @@ onMounted(async () => {
           </div>
           <div class="flex justify-between">
             <span>Shipping</span>
-            <span v-if="shippingFee === 0">€0 (Free)</span>
-            <span v-else>€{{ formatMoney(shippingFee) }}</span>
+            <span>€{{ formatMoney(shippingFee) }}</span>
           </div>
         </div>
 

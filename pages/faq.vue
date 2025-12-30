@@ -12,7 +12,7 @@ type FaqItem = {
 const shippingFaqs: FaqItem[] = [
   {
     title: 'What are the shipping costs?',
-    content: 'We offer free shipping on all orders over €200. For orders under €200, a flat shipping fee of €12.99 applies. Shipping costs are calculated automatically at checkout based on your order total.',
+    content: 'We charge a flat rate shipping fee of €10.00 for all orders. Shipping costs are automatically added at checkout.',
   },
   {
     title: 'How long does delivery take?',

@@ -1,15 +1,18 @@
 import { encryptPaymentToken } from '../../utils/paymentToken'
 import validator from 'validator'
 
+// Server-side shipping cost (flat rate)
+const SHIPPING_COST = 10.00
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
 
-  // Validate required fields
+  // Validate required fields (shipping_cost removed - calculated server-side)
   const requiredFields = [
     'email', 'country', 'address', 'city', 'postal_code',
     'phone_number', 'delivery_address', 'delivery_city',
-    'delivery_postal_code', 'payment_method', 'shipping_cost'
+    'delivery_postal_code', 'payment_method'
   ]
 
   for (const field of requiredFields) {
@@ -37,15 +40,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   
-  // Validate shipping cost
-  if (typeof body.shipping_cost !== 'number' || body.shipping_cost < 0) {
-    throw createError({
-      statusCode: 400,
-      message: 'Invalid shipping cost'
-    })
-  }
-  
-  // Sanitize input data
+  // Sanitize input data and add server-calculated shipping cost
   const sanitizedBody = {
     email: body.email.trim().toLowerCase(),
     country: body.country.trim(),
@@ -57,7 +52,7 @@ export default defineEventHandler(async (event) => {
     delivery_city: body.delivery_city.trim(),
     delivery_postal_code: body.delivery_postal_code.trim(),
     payment_method: body.payment_method,
-    shipping_cost: body.shipping_cost,
+    shipping_cost: SHIPPING_COST, // Server-side calculated flat rate
     session_id: body.session_id
   }
   
