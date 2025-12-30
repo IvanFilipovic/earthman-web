@@ -1,5 +1,6 @@
 // server/api/contact.post.ts
 import validator from 'validator'
+import { sanitizeContactForm } from '../utils/sanitize'
 
 export default defineEventHandler(async (event) => {
   const { sendMail } = useNodeMailer()
@@ -30,6 +31,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Sanitize all input to prevent email injection and XSS
+  const sanitized = sanitizeContactForm({
+    name,
+    email,
+    subject,
+    message
+  })
+
   // 🔍 DEBUG: Check if recipient exists
   const recipientEmail = config.contactEmailRecipient
   console.log('📧 Recipient email:', recipientEmail)
@@ -45,13 +54,13 @@ export default defineEventHandler(async (event) => {
   try {
     console.log('📨 Attempting to send to:', recipientEmail)
 
-    // Send email
+    // Send email using sanitized input
     await sendMail({
       from: '"Earthman Contact" <noreply@earthman.com>',
-      to: recipientEmail, // Use the variable
-      replyTo: email,
-      subject: `[Earthman Contact] ${subject}`,
-      text: `From: ${name}\nEmail: ${email}\n\n${message}`,
+      to: recipientEmail,
+      replyTo: sanitized.email,
+      subject: `[Earthman Contact] ${sanitized.subject}`,
+      text: `From: ${sanitized.name}\nEmail: ${sanitized.email}\n\n${sanitized.message}`,
     })
 
     console.log('✅ Email sent successfully')
