@@ -33,22 +33,22 @@
               <div class="px-4 md:px-6 py-5 border-b border-text_color/30">
                 <div class="flex items-baseline justify-between">
                   <DialogTitle class="text-md tracking-wider uppercase">
-                    Shopping Cart
+                    {{ $t('cart.title') }}
                   </DialogTitle>
-                  
+
                   <div class="flex items-center flex-nowrap gap-2 text-sm">
                     <span class="mx-2 whitespace-nowrap">
-                      {{ cartStore.itemCount }} {{ cartStore.itemCount === 1 ? 'item' : 'items' }}
+                      {{ cartStore.itemCount }} {{ $t(cartStore.itemCount === 1 ? 'cart.item' : 'cart.items') }}
                     </span>
 
                     <span class="mx-2" aria-hidden="true">|</span>
 
-                    <span class="mx-2 whitespace-nowrap">€{{ cartStore.totals.toPay }}</span>
+                    <span class="mx-2 whitespace-nowrap">{{ $t('common.currency') }}{{ cartStore.totals.toPay }}</span>
 
                     <button
                       type="button"
                       class="ml-2 p-1 inline-flex items-center justify-center hover:bg-text_color/10 shrink-0 rounded transition-colors"
-                      aria-label="Close cart"
+                      :aria-label="$t('cart.closeCart')"
                       @click="closePanel"
                     >
                       <Icon name="lucide:x" class="w-4 h-4" />
@@ -76,10 +76,10 @@
                         {{ item.product }}
                       </h3>
                       <div class="text-xs mt-1 tracking-wider px-3">
-                        Size: <span class="font-medium">{{ item.size ?? '—' }}</span>
+                        {{ $t('cart.size') }} <span class="font-medium">{{ item.size ?? '—' }}</span>
                       </div>
                       <div class="text-xs mt-1 tracking-wider px-3">
-                        Quantity: <span class="font-medium">{{ item.quantity ?? '—' }}</span>
+                        {{ $t('cart.quantity') }} <span class="font-medium">{{ item.quantity ?? '—' }}</span>
                       </div>
                     </div>
 
@@ -98,31 +98,28 @@
                         :disabled="isRemoving(item)"
                         @click="handleRemoveItem(item)"
                       >
-                        {{ isRemoving(item) ? 'Removing...' : 'Remove item' }}
+                        {{ $t(isRemoving(item) ? 'cart.removing' : 'cart.removeItem') }}
                       </button>
                     </div>
                   </article>
                 </div>
 
                 <div v-else class="text-sm opacity-70">
-                  Your cart is empty.
+                  {{ $t('cart.empty') }}
                 </div>
 
                 <ul class="mt-2 space-y-2 text-xs md:text-sm">
                   <li class="flex gap-2">
-                    <span>✓</span> 
-                    <span>Customer rating 4.5/5.0 (3,700+ reviews) via Trustpilot</span>
+                    <span>{{ $t('cart.features.rating') }}</span>
                   </li>
                   <li class="flex gap-2">
-                    <span>✓</span> 
-                    <span>Worldwide shipping</span>
+                    <span>{{ $t('cart.features.shipping') }}</span>
                   </li>
                   <li class="flex gap-2">
-                    <span>✓</span> 
-                    <span>30 days return policy (14 days for sale items)</span>
+                    <span>{{ $t('cart.features.returns') }}</span>
                   </li>
                 </ul>
-                
+
                 <button
                   v-if="cartStore.itemCount > 0"
                   type="button"
@@ -130,34 +127,33 @@
                   :disabled="isClearing"
                   @click="handleClearCart"
                 >
-                  {{ isClearing ? 'Clearing...' : 'Clear Cart' }}
+                  {{ $t(isClearing ? 'cart.clearing' : 'cart.clearCart') }}
                 </button>
 
                 <div class="py-4 border-t border-text_color/30">
                   <div class="flex items-baseline justify-between">
                     <div class="text-xs">
-                      Subtotal
-                      <div class="text-[10px]">Prices include VAT, excluding shipping costs</div>
+                      {{ $t('cart.subtotal') }}
+                      <div class="text-[10px]">{{ $t('cart.disclaimer') }}</div>
                     </div>
-                    <div class="text-sm my-auto">€{{ formatMoney(cartStore.merchandiseTotal) }}</div>
+                    <div class="text-sm my-auto">{{ $t('common.currency') }}{{ formatMoney(cartStore.merchandiseTotal) }}</div>
                   </div>
 
                   <div class="mt-3 flex items-center justify-between">
-                    <div class="text-xs">Shipping</div>
-                    <div class="text-sm my-auto">€0.00</div>
+                    <div class="text-xs">{{ $t('cart.shipping') }}</div>
+                    <div class="text-sm my-auto">{{ $t('common.currency') }}0.00</div>
                   </div>
 
                   <div class="mt-3 flex items-center justify-between text-base font-medium">
-                    <span>Total</span>
-                    <span class="text-sm my-auto">€{{ formatMoney(cartStore.merchandiseTotal) }}</span>
+                    <span>{{ $t('cart.total') }}</span>
+                    <span class="text-sm my-auto">{{ $t('common.currency') }}{{ formatMoney(cartStore.merchandiseTotal) }}</span>
                   </div>
                 </div>
 
                 <div class="space-y-2">
-                  <h4 class="text-xs uppercase tracking-widest">Secure payment</h4>
+                  <h4 class="text-xs uppercase tracking-widest">{{ $t('cart.security.title') }}</h4>
                   <p class="text-xs leading-relaxed opacity-80">
-                    Your safety is important to us. Please review our Privacy Policy and Terms and
-                    Conditions for complete information.
+                    {{ $t('cart.security.description') }}
                   </p>
                 </div>
               </div>
@@ -165,16 +161,16 @@
               <div class="px-6 py-5 border-t border-text_color/30">
                 <div class="flex flex-col gap-3">
                   <!-- Enabled checkout button (link) -->
-                  <NuxtLink 
+                  <NuxtLink
                     v-if="!isCheckoutDisabled"
-                    to="/checkout" 
+                    to="/checkout"
                     class="btn btn--primary w-full"
                     @click="closePanel"
                   >
-                    <span class="btn__text">Checkout</span>
+                    <span class="btn__text">{{ $t('cart.checkout') }}</span>
                     <span class="btn__fill"></span>
                   </NuxtLink>
-                  
+
                   <!-- Disabled checkout button -->
                   <button
                     v-else
@@ -182,7 +178,7 @@
                     class="btn btn--disabled w-full"
                     disabled
                   >
-                    <span class="btn__text">Checkout</span>
+                    <span class="btn__text">{{ $t('cart.checkout') }}</span>
                     <span class="btn__fill"></span>
                   </button>
                 </div>

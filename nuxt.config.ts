@@ -140,6 +140,9 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
     ],
     defaultLocale: 'en',
+    langDir: 'i18n/locales/',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false,
   },
   // ==================== Nodemailer Configuration ====================
   nodemailer: {
